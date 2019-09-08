@@ -12,6 +12,8 @@ const roomsRouter = require('./routes/roomsRouter');
 const app = express();
 const config = require('./config');
 
+const env = process.env.NODE_ENV;
+
 // mongoDB connect
 const mongoUrl = config.mongoUrl;
 const mongoConnect = mongoose.connect(mongoUrl)
@@ -23,7 +25,9 @@ mongoConnect.then(() => {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+if(env !== 'test'){
+  app.use(logger('dev'));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
