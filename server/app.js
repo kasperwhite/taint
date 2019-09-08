@@ -12,6 +12,7 @@ const roomsRouter = require('./routes/roomsRouter');
 const app = express();
 const config = require('./config');
 
+// mongoDB connect
 const mongoUrl = config.mongoUrl;
 const mongoConnect = mongoose.connect(mongoUrl)
 mongoConnect.then(() => {
