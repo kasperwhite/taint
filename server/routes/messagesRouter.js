@@ -1,27 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const RoomModel = require('../models/room');
-const roomsRouter = express.Router();
+const MessageModel = require('../models/message');
+const messagesRouter = express.Router();
 
-roomsRouter.use(bodyParser.json());
+messagesRouter.use(bodyParser.json());
 
-roomsRouter.route('/')
+messagesRouter.route('/')
 .get((req, res, next) => {
-  RoomModel.find({})
-  .populate('creator')
-  .then((rooms) => {
+  MessageModel.find({})
+  .populate('room')
+  .populate('sender')
+  .then(messages => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(rooms);
+    res.json(messages);
   }, err => next(err))
   .catch(err => next(err))
 })
 .post((req, res, next) => {
-  RoomModel.create(req.body)
-  .then((room) => {
+  MessageModel.create(req.body)
+  .then(message => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(room);
+    res.json(message)
   }, err => next(err))
   .catch(err => next(err))
 })
@@ -30,13 +31,13 @@ roomsRouter.route('/')
   res.end('PUT operation not supported')
 })
 .delete((req, res, next) => {
-  RoomModel.remove({})
-  .then((rooms) => {
+  MessageModel.remove({})
+  .then((messages) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(rooms);
+    res.json(messages);
   }, err => next(err))
   .catch(err => next(err))
 })
 
-module.exports = roomsRouter;
+module.exports = messagesRouter;

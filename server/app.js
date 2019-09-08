@@ -6,8 +6,9 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/usersRouter');
 const roomsRouter = require('./routes/roomsRouter');
+const messagesRouter = require('./routes/messagesRouter');
 
 const app = express();
 const config = require('./config');
@@ -18,7 +19,7 @@ const env = process.env.NODE_ENV;
 const mongoUrl = config.mongoUrl;
 const mongoConnect = mongoose.connect(mongoUrl)
 mongoConnect.then(() => {
-  console.log('Connected correctly to server')
+  console.log('Connected correctly to MongoDB Server')
 }, (err) => console.log(err));
 
 // view engine setup
@@ -37,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
+app.use('/messages', messagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
