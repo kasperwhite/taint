@@ -17,18 +17,21 @@ const env = process.env.NODE_ENV;
 
 // mongoDB connect
 const mongoUrl = config.mongoUrl;
-const mongoConnect = mongoose.connect(mongoUrl)
+const mongoConnect = mongoose.connect(mongoUrl, { useNewUrlParser: true })
 mongoConnect.then(() => {
-  console.log('Connected correctly to MongoDB Server')
+  console.log('Connected correctly to MongoDB Server');
 }, (err) => console.log(err));
+
+if(env === 'test'){
+  console.log(':::Test server started:::');
+} else {
+  app.use(logger('dev'));
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-if(env !== 'test'){
-  app.use(logger('dev'));
-}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
