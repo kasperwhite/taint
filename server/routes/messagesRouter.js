@@ -40,6 +40,39 @@ messagesRouter.route('/')
   .catch(err => next(err))
 })
 
+messagesRouter.route('/:messageId')
+.get((req, res, next) => {
+  MessageModel.findById(req.params.messageId)
+  .then((message) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(message);
+  }, err => next(err))
+  .catch(err => next(err))
+})
+.post((req, res, next) => {
+  res.statusCode = 403
+  res.end('POST operation not supported')
+})
+.put((req, res, next) => {
+  MessageModel.findByIdAndUpdate(req.params.messageId, {$set: req.body}, {new: true})
+    .then((message) => {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.json(message)
+    }, (err) => next(err))
+    .catch((err) => next(err))
+})
+.delete((req, res, next) => {
+  MessageModel.findByIdAndRemove(req.params.messageId)
+  .then((message) => {
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.json(message)
+  }, (err) => next(err))
+  .catch((err) => next(err))
+})
+
 messagesRouter.route('/all')
 .get((req, res, next) => {
   MessageModel.find({})
