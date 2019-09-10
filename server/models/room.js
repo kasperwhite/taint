@@ -14,6 +14,18 @@ const messageSchema = new mongoose.Schema({
   timestamps: true
 })
 
+const keySchema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  value: {
+    type: String,
+    required: true
+  }
+})
+
 const roomSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -29,7 +41,8 @@ const roomSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
-  messages: [messageSchema]
+  messages: [messageSchema],
+  keys: [keySchema]
 }, {
   timestamps: true
 })

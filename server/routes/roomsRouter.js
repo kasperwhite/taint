@@ -87,7 +87,8 @@ roomsRouter.route('/:roomId')
 
 roomsRouter.route('/:roomId/messages')
 .get((req, res, next) => {
-  RoomModel.findById(req.params.roomId)
+  const {roomId} = req.params;
+  RoomModel.findById(roomId)
   .populate('messages.sender')
   .then((room) => {
     if(room){
@@ -95,7 +96,7 @@ roomsRouter.route('/:roomId/messages')
       res.setHeader('Content-Type', 'application/json');
       res.json(room.messages);
     } else {
-      err = new Error('Room ' + req.params.roomId + ' not found');
+      err = new Error('Room ' + roomId + ' not found');
       err.status = 404;
       return next(err);
     }
@@ -104,7 +105,8 @@ roomsRouter.route('/:roomId/messages')
 })
 
 .post((req, res, next) => {
-  RoomModel.findById(req.params.roomId)
+  const {roomId} = req.params;
+  RoomModel.findById(roomId)
   .then(room => {
     if(room){
       room.messages.push(req.body)
@@ -119,7 +121,7 @@ roomsRouter.route('/:roomId/messages')
         .catch(err => next(err))
       })
     } else {
-      err = new Error('Room ' + req.params.roomId + ' not found')
+      err = new Error('Room ' + roomId + ' not found')
       err.status = 404
       return next(err)
     }
@@ -133,7 +135,8 @@ roomsRouter.route('/:roomId/messages')
 })
 
 .delete((req, res, next) => {
-  RoomModel.findById(req.params.roomId)
+  const {roomId} = req.params;
+  RoomModel.findById(roomId)
   .then(room => {
     if(room){
       room.messages = []
@@ -148,7 +151,7 @@ roomsRouter.route('/:roomId/messages')
       })
       .catch(err => next(err))
     } else {
-      err = new Error('Room ' + req.params.roomId + ' not found')
+      err = new Error('Room ' + roomId + ' not found')
       err.status = 404
       return next(err)
     }
