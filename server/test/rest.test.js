@@ -26,6 +26,20 @@ describe('REST', () => {
         });
     });
 
+    it('/POST users', done => {
+      chai.request(url)
+        .post(path)
+        .send({
+          login: 'TestUser',
+          password: '123123'
+        })
+        .end((err, res) => {
+          // check
+
+          done();
+        })
+    });
+
     it('/DELETE users', done => {
       chai.request(url)
         .delete(path)
@@ -52,20 +66,68 @@ describe('REST', () => {
         });
     });
 
-  });
-  
-  // Check MESSAGES
-  describe('Messages', () => {
-    const path = '/messages'
-
-    it('/GET messages', done => {
+    it('/POST rooms', done => {
       chai.request(url)
-        .get(path)
+        .post(path)
+        .send({
+          name: 'TestRoom',
+          creator: 'testtesttest',
+          users: []
+        })
         .end((err, res) => {
           // check
 
-          done()
+          done();
+        })
+    });
+
+    it('/DELETE rooms', done => {
+      chai.request(url)
+        .delete(path)
+        .end((err, res) => {
+          // check
+
+          done();
         });
+    });
+
+    describe('Room Messages', () => {
+      
+      it('/GET messages', done => {
+        chai.request(url)
+          .get(path)
+          .end((err, res) => {
+            // check
+  
+            done()
+          });
+      });
+
+      it('/POST messages', done => {
+        chai.request(url)
+          .post(path)
+          .send({
+            text: 'testtesttest',
+            room: 'testtesttesttest',
+            sender: 'testtest'
+          })
+          .end((err, res) => {
+            // check
+  
+            done();
+          })
+      });
+  
+      it('/DELETE messages', done => {
+        chai.request(url)
+          .delete(path)
+          .end((err, res) => {
+            // check
+  
+            done();
+          });
+      });
+
     });
 
   });
