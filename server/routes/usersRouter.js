@@ -61,6 +61,9 @@ usersRouter.route('/:userId')
   res.end('POST operation not supported')
 })
 .put((req, res, next) => {
+  if(req.body.password){
+    req.body.password = crypto.createHash('sha256').update(req.body.password).digest('base64');
+  }
   UserModel.findByIdAndUpdate(req.params.userId, {$set: req.body}, {new: true})
     .then((user) => {
         res.statusCode = 200

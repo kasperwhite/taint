@@ -3,8 +3,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const url = require('../../config').url;
 
-const roomsSpecificTest = require('./roomsSpecific.test');
-
 const { expect } = chai;
 
 chai.use(chaiHttp);
@@ -30,11 +28,20 @@ module.exports = roomsTest = () => {
         })
     })
 
+    after((done) => {
+      chai.request(url)
+        .delete('/users')
+        .end((err, res) => {
+          done()
+        })
+    })
+
     it('/GET rooms', done => {
       chai.request(url)
         .get(path)
         .end((err, res) => {
-          // check
+          expect(res.body).to.be.an('array');
+          expect(res.body.length).to.be.equal(0);
 
           done();
         });
@@ -49,20 +56,20 @@ module.exports = roomsTest = () => {
           users: []
         })
         .end((err, res) => {
-          // check
-          roomId = res.body._id;
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+          expect(res.body.users.length).to.be.equal(1);
 
           done();
         })
     });
 
-    roomsSpecificTest(roomId);
-
     it('/DELETE rooms', done => {
       chai.request(url)
         .delete(path)
         .end((err, res) => {
-          // check
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.all.keys('n', 'ok', 'deletedCount');
 
           done();
         });
