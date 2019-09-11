@@ -16,7 +16,7 @@ const env = process.env.NODE_ENV;
 
 // mongoDB connect
 const mongoUrl = config.mongoUrl;
-const mongoConnect = mongoose.connect(mongoUrl, { useNewUrlParser: true })
+const mongoConnect = mongoose.connect(mongoUrl, { useNewUrlParser: true, useFindAndModify: false })
 mongoConnect.then(() => {
   console.log('Connected correctly to MongoDB Server');
 }, (err) => console.log(err));

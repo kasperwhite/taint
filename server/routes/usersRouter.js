@@ -37,7 +37,7 @@ usersRouter.route('/')
   res.end('PUT operation not supported')
 })
 .delete((req, res, next) => {
-  UserModel.remove({})
+  UserModel.deleteMany({})
   .then((users) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

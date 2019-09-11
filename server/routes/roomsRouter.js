@@ -36,7 +36,7 @@ roomsRouter.route('/')
 })
 
 .delete((req, res, next) => {
-  RoomModel.remove({})
+  RoomModel.deleteMany({})
   .then((rooms) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
