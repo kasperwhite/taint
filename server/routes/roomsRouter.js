@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const RoomModel = require('../models/room');
-const MessageModel = require('../models/message');
 const roomsRouter = express.Router();
 
 roomsRouter.use(bodyParser.json());

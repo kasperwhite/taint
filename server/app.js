@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');
 const roomsRouter = require('./routes/roomsRouter');
-const messagesRouter = require('./routes/messagesRouter');
 
 const app = express();
 const config = require('./config');
