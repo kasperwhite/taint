@@ -11,6 +11,7 @@ describe('Users', () => {
   const path = '/users';
 
   let userId;
+  let oldPassword;
 
   it('/GET users', done => {
     chai.request(url)
@@ -48,7 +49,11 @@ describe('Users', () => {
     chai.request(url)
       .get(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'login', 'password');
+
+        oldPassword = res.body.password;
 
         done();
       })
@@ -64,7 +69,10 @@ describe('Users', () => {
         password: updatedPassword
       })
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'login', 'password');
+        expect(res.body.password).to.not.equal(oldPassword);
 
         done();
       })
@@ -76,7 +84,9 @@ describe('Users', () => {
     chai.request(url)
       .delete(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'login', 'password');
 
         done();
       })

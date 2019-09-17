@@ -73,7 +73,10 @@ describe('Rooms', () => {
     chai.request(url)
       .get(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body.users.length).to.be.equal(1);
 
         done();
       })
@@ -89,7 +92,11 @@ describe('Rooms', () => {
         name: updatedName
       })
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body.users.length).to.be.equal(1);
+        expect(res.body.name).to.be.equal(updatedName);
 
         done();
       })
@@ -135,7 +142,9 @@ describe('Rooms', () => {
     chai.request(url)
       .get(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'text', 'sender');
 
         done();
       })
@@ -151,7 +160,10 @@ describe('Rooms', () => {
         text: updatedText
       })
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'text', 'sender');
+        expect(res.body.text).to.be.equal(updatedText);
 
         done();
       })
@@ -163,7 +175,9 @@ describe('Rooms', () => {
     chai.request(url)
       .delete(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'text', 'sender');
 
         done();
       })
@@ -189,7 +203,10 @@ describe('Rooms', () => {
     chai.request(url)
       .delete(currentPath)
       .end((err, res) => {
-        //check
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body.users.length).to.be.equal(1);
 
         done();
       });
