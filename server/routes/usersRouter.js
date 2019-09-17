@@ -4,6 +4,10 @@ const crypto = require('crypto');
 const UserModel = require('../models/user');
 const usersRouter = express.Router();
 
+const hashPassword = (pass) => {
+  return crypto.createHash('sha256').update(pass).digest('base64');
+}
+
 usersRouter.use(bodyParser.json());
 
 usersRouter.route('/')
@@ -19,7 +23,7 @@ usersRouter.route('/')
 .post((req, res, next) => {
   const { login, password } = req.body;
   if(login && password){
-    const newPassword = crypto.createHash('sha256').update(password).digest('base64');
+    const newPassword = hashPassword(password);
     UserModel.create({login, password:newPassword})
     .then((user) => {
       res.statusCode = 200;

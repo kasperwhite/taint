@@ -7,73 +7,204 @@ const { expect } = chai;
 
 chai.use(chaiHttp);
 
-module.exports = roomsTest = () => {
-  return describe('Rooms', () => {
-    const path = '/rooms';
-    let userId;
-    let roomId;
+describe('Rooms', () => {
+  const path = '/rooms';
 
-    before((done) => {
-      chai.request(url)
-        .post('/users')
-        .send({
-          login: 'TestUser',
-          password: '123123'
-        })
-        .end((err, res) => {
-          // check
-          userId = res.body._id;
+  let userId;
+  let roomId;
+  let messageId;
 
-          done();
-        })
-    })
+  before((done) => {
+    chai.request(url)
+      .post('/users')
+      .send({
+        login: 'TestUser',
+        password: '123123'
+      })
+      .end((err, res) => {
+        userId = res.body._id;
+        done();
+      })
+  })
 
-    after((done) => {
-      chai.request(url)
-        .delete('/users')
-        .end((err, res) => {
-          done()
-        })
-    })
+  after((done) => {
+    chai.request(url)
+      .delete('/users')
+      .end((err, res) => {
+        done()
+      })
+  })
 
-    it('/GET rooms', done => {
-      chai.request(url)
-        .get(path)
-        .end((err, res) => {
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.be.equal(0);
+  it('/GET rooms', done => {
+    chai.request(url)
+      .get(path)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(0);
 
-          done();
-        });
-    });
-
-    it('/POST rooms', done => {
-      chai.request(url)
-        .post(path)
-        .send({
-          name: 'TestRoom',
-          creator: userId,
-          users: []
-        })
-        .end((err, res) => {
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
-          expect(res.body.users.length).to.be.equal(1);
-
-          done();
-        })
-    });
-
-    it('/DELETE rooms', done => {
-      chai.request(url)
-        .delete(path)
-        .end((err, res) => {
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.all.keys('n', 'ok', 'deletedCount');
-
-          done();
-        });
-    });
-
+        done();
+      });
   });
-}
+
+  it('/POST rooms', done => {
+    chai.request(url)
+      .post(path)
+      .send({
+        name: 'TestRoom',
+        creator: userId,
+        users: []
+      })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body.users.length).to.be.equal(1);
+
+        roomId = res.body._id;
+
+        done();
+      })
+  });
+
+  it('/GET rooms/:id', done => {
+    const currentPath = path + '/' + roomId;
+
+    chai.request(url)
+      .get(currentPath)
+      .end((err, res) => {
+        //check
+
+        done();
+      })
+  });
+
+  it('/PUT rooms/:id', done => {
+    const currentPath = path + '/' + roomId;
+    const updatedName = 'UpdatedName';
+
+    chai.request(url)
+      .put(currentPath)
+      .send({
+        name: updatedName
+      })
+      .end((err, res) => {
+        //check
+
+        done();
+      })
+  })
+
+  it('/GET rooms/:id/messages', done => {
+    const currentPath = path + '/' + roomId + '/messages';
+
+    chai.request(url)
+      .get(currentPath)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(0);
+
+        done();
+      })
+  });
+
+  it('/POST rooms/:id/messages', done => {
+    const currentPath = path + '/' + roomId + '/messages';
+
+    chai.request(url)
+      .post(currentPath)
+      .send({
+        text: 'TestTestTest',
+        sender: userId
+      })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(1);
+
+        messageId = res.body[0]._id;
+
+        done();
+      })
+  });
+
+  it('/GET rooms/:id/messages/:id', done => {
+    const currentPath = path + '/' + roomId + '/messages/' + messageId;
+
+    chai.request(url)
+      .get(currentPath)
+      .end((err, res) => {
+        //check
+
+        done();
+      })
+  });
+
+  it('/PUT rooms/:id/messages/:id', done => {
+    const currentPath = path + '/' + roomId + '/messages/' + messageId;
+    const updatedText = 'UpdatedTest';
+
+    chai.request(url)
+      .put(currentPath)
+      .send({
+        text: updatedText
+      })
+      .end((err, res) => {
+        //check
+
+        done();
+      })
+  })
+
+  it('/DELETE rooms/:id/messages/:id', done => {
+    const currentPath = path + '/' + roomId + '/messages/' + messageId;
+
+    chai.request(url)
+      .delete(currentPath)
+      .end((err, res) => {
+        //check
+
+        done();
+      })
+  })
+
+  it('/DELETE rooms/:id/messages', done => {
+    const currentPath = path + '/' + roomId + '/messages';
+
+    chai.request(url)
+      .delete(currentPath)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(0);
+
+        done();
+      })
+  });
+
+  it('/DELETE rooms/:id', done => {
+    const currentPath = path + '/' + roomId;
+
+    chai.request(url)
+      .delete(currentPath)
+      .end((err, res) => {
+        //check
+
+        done();
+      });
+  });
+
+  it('/DELETE rooms', done => {
+    chai.request(url)
+      .delete(path)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.all.keys('n', 'ok', 'deletedCount');
+
+        done();
+      });
+  });
+
+});
