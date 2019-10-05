@@ -1,3 +1,4 @@
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 require('mocha')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
