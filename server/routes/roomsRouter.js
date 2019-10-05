@@ -46,7 +46,7 @@ roomsRouter.route('/')
   }, err => next(err))
   .catch(err => next(err))
 })
-// ---------------------------------------------------
+
 roomsRouter.route('/:roomId')
 .get((req, res, next) => {
   RoomModel.findById(req.params.roomId)
@@ -85,7 +85,7 @@ roomsRouter.route('/:roomId')
   }, (err) => next(err))
   .catch((err) => next(err))
 })
-// --------------------------------------------------- 
+ 
 roomsRouter.route('/:roomId/messages')
 .get((req, res, next) => {
   const {roomId} = req.params;
@@ -159,7 +159,7 @@ roomsRouter.route('/:roomId/messages')
   }, err => next(err))
   .catch(err => next(err))
 })
-// ---------------------------------------------------
+
 roomsRouter.route('/:roomId/messages/:messageId')
 .get((req, res, next) => {
   const {roomId, messageId} = req.params;
