@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');
@@ -16,7 +17,13 @@ const env = process.env.NODE_ENV;
 
 // mongoDB connect
 const mongoUrl = config.mongoUrl;
-const mongoConnect = mongoose.connect(mongoUrl, { useNewUrlParser: true, useFindAndModify: false })
+const mongoOption = {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true
+}
+mongoose.set('useCreateIndex', true);
+const mongoConnect = mongoose.connect(mongoUrl, mongoOption);
 mongoConnect.then(() => {
   console.log('Connected correctly to MongoDB Server');
 }, (err) => console.log(err));
@@ -43,6 +50,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routes
 app.use('/', indexRouter);
