@@ -15,27 +15,6 @@ describe('Rooms', () => {
   let roomId;
   let messageId;
 
-  before((done) => {
-    chai.request(url)
-      .post('/users')
-      .send({
-        login: 'TestUser',
-        password: '123123'
-      })
-      .end((err, res) => {
-        userId = res.body._id;
-        done();
-      })
-  })
-
-  after((done) => {
-    chai.request(url)
-      .delete('/users')
-      .end((err, res) => {
-        done()
-      })
-  })
-
   it('/GET rooms', done => {
     chai.request(url)
       .get(path)

@@ -1,0 +1,43 @@
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+require('mocha')
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const url = require('../../config').url;
+
+const { expect } = chai;
+
+chai.use(chaiHttp);
+
+describe('Authenticate', () => {
+  const path = '/auth';
+
+  it('/POST auth/signup', (done) => {
+    const currentPath = path + '/signup';
+    chai.request(url)
+      .post(currentPath)
+      .send({
+        username: 'test',
+        password: '123123'
+      })
+      .end((err, res) => {
+        console.log(res.body);
+
+        done();
+      })
+  })
+
+  it('/POST auth/login', (done) => {
+    const currentPath = path + '/login';
+    chai.request(url)
+      .post(currentPath)
+      .send({
+        username: 'test',
+        password: '123123'
+      })
+      .end((err, res) => {
+        console.log(res.body);
+
+        done();
+      })
+  })
+})

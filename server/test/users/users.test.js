@@ -25,7 +25,7 @@ describe('Users', () => {
       });
   });
 
-  it('/POST users', done => {
+  /* it('/POST users', done => {
     const password = '123123';
     chai.request(url)
       .post(path)
@@ -42,7 +42,7 @@ describe('Users', () => {
 
         done();
       })
-  });
+  }); */
 
   it('/GET users/:id', done => {
     const currentPath = path + '/' + userId;
@@ -60,7 +60,7 @@ describe('Users', () => {
       })
   });
 
-  it('/PUT users/:id', done => {
+  /* it('/PUT users/:id', done => {
     const currentPath = path + '/' + userId;
     const updatedPassword = '321312';
 
@@ -77,7 +77,7 @@ describe('Users', () => {
 
         done();
       })
-  })
+  }) */
 
   it('/DELETE users/:id', done => {
     const currentPath = path + '/' + userId;

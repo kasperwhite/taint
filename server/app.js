@@ -9,10 +9,11 @@ const passport = require('passport');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');
 const roomsRouter = require('./routes/roomsRouter');
+const authRouter = require('./routes/authRouter');
 
 const app = express();
 const config = require('./config');
-
+const auth = require('./authenticate');
 const env = process.env.NODE_ENV;
 
 // mongoDB connect
@@ -55,6 +56,8 @@ app.use(passport.session());
 
 // routes
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
+app.use(auth.verifyUser, (req, res, next) => next());
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 
