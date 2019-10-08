@@ -3,6 +3,7 @@ require('mocha')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const url = require('../../config').url;
+const auth = require('../../authenticate');
 
 const { expect } = chai;
 
@@ -14,10 +15,26 @@ describe('Rooms', () => {
   let userId;
   let roomId;
   let messageId;
+  let token;
+
+  before((done) => {
+    chai.request(url)
+      .post('/auth/login')
+      .send({
+        username: 'test',
+        password: '123123'
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        userId = auth.jwtDecode(token)._id;
+        done();
+      })
+  });
 
   it('/GET rooms', done => {
     chai.request(url)
       .get(path)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('array');
@@ -30,6 +47,7 @@ describe('Rooms', () => {
   it('/POST rooms', done => {
     chai.request(url)
       .post(path)
+      .set('Authorization', `bearer ${token}`)
       .send({
         name: 'TestRoom',
         creator: userId,
@@ -52,6 +70,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
@@ -68,6 +87,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .put(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .send({
         name: updatedName
       })
@@ -87,6 +107,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('array');
@@ -101,6 +122,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .post(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .send({
         text: 'TestTestTest',
         sender: userId
@@ -121,6 +143,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
@@ -136,6 +159,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .put(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .send({
         text: updatedText
       })
@@ -154,6 +178,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
@@ -168,6 +193,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('array');
@@ -182,6 +208,7 @@ describe('Rooms', () => {
 
     chai.request(url)
       .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
@@ -195,6 +222,7 @@ describe('Rooms', () => {
   it('/DELETE rooms', done => {
     chai.request(url)
       .delete(path)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');

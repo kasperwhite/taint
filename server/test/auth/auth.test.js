@@ -20,7 +20,10 @@ describe('Authenticate', () => {
         password: '123123'
       })
       .end((err, res) => {
-        console.log(res.body);
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('success');
+        expect(res.body.success).to.be.equal(true);
 
         done();
       })
@@ -35,7 +38,10 @@ describe('Authenticate', () => {
         password: '123123'
       })
       .end((err, res) => {
-        console.log(res.body);
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('success', 'token');
+        expect(res.body.success).to.be.equal(true);
 
         done();
       })

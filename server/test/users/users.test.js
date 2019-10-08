@@ -3,6 +3,7 @@ require('mocha')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const url = require('../../config').url;
+const auth = require('../../authenticate');
 
 const { expect } = chai;
 
@@ -12,14 +13,29 @@ describe('Users', () => {
   const path = '/users';
 
   let userId;
-  let oldPassword;
+  let token;
+
+  before((done) => {
+    chai.request(url)
+      .post('/auth/login')
+      .send({
+        username: 'test',
+        password: '123123'
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        userId = auth.jwtDecode(token)._id;
+        done();
+      })
+  });
 
   it('/GET users', done => {
     chai.request(url)
       .get(path)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(0);
+        expect(res.body.length).to.be.equal(1);
 
         done();
       });
@@ -49,45 +65,46 @@ describe('Users', () => {
 
     chai.request(url)
       .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'login', 'password');
-
-        oldPassword = res.body.password;
+        expect(res.body).to.include.all.keys('_id', 'username');
 
         done();
       })
   });
 
-  /* it('/PUT users/:id', done => {
+  it('/PUT users/:id', done => {
     const currentPath = path + '/' + userId;
-    const updatedPassword = '321312';
+    const updatedUsername = '321312';
 
     chai.request(url)
       .put(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .send({
-        password: updatedPassword
+        username: updatedUsername
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'login', 'password');
-        expect(res.body.password).to.not.equal(oldPassword);
+        expect(res.body).to.include.all.keys('_id', 'username');
+        expect(res.body.username).to.be.equal(updatedUsername);
 
         done();
       })
-  }) */
+  })
 
   it('/DELETE users/:id', done => {
     const currentPath = path + '/' + userId;
 
     chai.request(url)
       .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'login', 'password');
+        expect(res.body).to.include.all.keys('_id', 'username');
 
         done();
       })
@@ -96,9 +113,10 @@ describe('Users', () => {
   it('/DELETE users', done => {
     chai.request(url)
       .delete(path)
+      .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.all.keys('n', 'ok', 'deletedCount');
+        expect(res.body).to.be.empty;
 
         done();
       });

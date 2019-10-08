@@ -50,9 +50,8 @@ roomsRouter.route('/')
 roomsRouter.route('/:roomId')
 .get((req, res, next) => {
   RoomModel.findById(req.params.roomId)
-  .populate('creator')
-  .populate('users')
-  .populate('messages.sender')
+  //.populate('creator')
+  //.populate('users')
   .then((room) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

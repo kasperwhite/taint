@@ -5,6 +5,12 @@ const usersRouter = express.Router();
 
 usersRouter.use(bodyParser.json());
 
+const filterKeys = (object, keys) => {
+  Object.keys(object).forEach((key) => {
+    if(keys.indexOf(key) == -1) { delete object[key] }
+  });
+}
+
 usersRouter.route('/')
 .get((req, res, next) => {
   UserModel.find({})
@@ -59,18 +65,17 @@ usersRouter.route('/:userId')
   res.statusCode = 403
   res.end('POST operation not supported')
 })
-/* .put((req, res, next) => {
-  if(req.body.password){
-    req.body.password = crypto.MD5(req.body.password);
-  }
+.put((req, res, next) => {
+  const avKeys = ['username'];
+  filterKeys(req.body, avKeys);
   UserModel.findByIdAndUpdate(req.params.userId, {$set: req.body}, {new: true})
     .then((user) => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.json(user)
+        res.json(user);
     }, (err) => next(err))
     .catch((err) => next(err))
-}) */
+})
 .delete((req, res, next) => {
   UserModel.findByIdAndRemove(req.params.userId)
   .then((user) => {

@@ -4,6 +4,7 @@ const User = require('./models/user');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
+const jwtDecode = require('jwt-decode');
 
 const config = require('./config.js');
 
@@ -36,3 +37,5 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
     }));
 
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+
+exports.jwtDecode = (token) => { return jwtDecode(token) }
