@@ -102,7 +102,7 @@ describe('Rooms', () => {
       })
   })
 
-  it('/GET rooms/:id/messages', done => {
+  /* it('/GET rooms/:id/messages', done => {
     const currentPath = path + '/' + roomId + '/messages';
 
     chai.request(url)
@@ -115,7 +115,7 @@ describe('Rooms', () => {
 
         done();
       })
-  });
+  }); */
 
   it('/POST rooms/:id/messages', done => {
     const currentPath = path + '/' + roomId + '/messages';
