@@ -10,9 +10,6 @@ roomsRouter.use(bodyParser.json());
 roomsRouter.route('/')
 .get((req, res, next) => {
   RoomModel.find({})
-  .populate('creator')
-  .populate('users')
-  .populate('messages.sender')
   .then((rooms) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -22,7 +19,7 @@ roomsRouter.route('/')
 })
 
 .post((req, res, next) => {
-  req.body.users.push(req.body.creator);
+  req.body.users.push(req.user._id);
   RoomModel.create(req.body)
   .then((room) => {
     res.statusCode = 200;
