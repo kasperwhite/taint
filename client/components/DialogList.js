@@ -21,7 +21,11 @@ class DialogList extends Component {
               key={i}
               title={r.name}
               bottomDivider
-              badge={{ value: 15, textStyle: styles.roomBadgeText, containerStyle: styles.roomBadgeCont }}
+              badge={{
+                value: 15,
+                textStyle: styles.roomBadgeText,
+                containerStyle: styles.roomBadgeCont
+              }}
               containerStyle={styles.roomCont}
               titleStyle={styles.roomTitle}
               onPress={() => console.log(r.messages)}

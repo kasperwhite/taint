@@ -8,7 +8,7 @@ const UserModel = require('../models/user');
 authRouter.use(bodyParser.json());
 
 authRouter.post('/signup', (req, res, next) => {
-  UserModel.register(new UserModel({username: req.body.username}), 
+  UserModel.register(new UserModel({username: req.body.username, publicKey: req.body.publicKey}),
     req.body.password, (err, user) => {
     if(err) {
       res.statusCode = 500;

@@ -17,7 +17,8 @@ describe('Authenticate', () => {
       .post(currentPath)
       .send({
         username: 'test',
-        password: '123123'
+        password: '123123',
+        publicKey: '1928473'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);

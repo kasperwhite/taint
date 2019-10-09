@@ -137,7 +137,7 @@ roomsRouter.route('/:roomId/messages')
   .then(room => {
     if(room && room.users.includes(req.user._id)){
       req.body.sender = req.user._id;
-      req.body.textHash = crypto.MD5(req.body.text);
+      req.body.hash = crypto.MD5(req.body);
       room.messages.push(req.body);
       room.save()
       .then((room) => {
@@ -234,7 +234,7 @@ roomsRouter.route('/:roomId/messages/:messageId')
     const message = room.messages.id(messageId);
     if(room && message && String(message.sender) === String(req.user._id)){
       message.text = text;
-      message.textHash = crypto.MD5(text);
+      message.hash = crypto.MD5(message);
       room.save()
       .then((room) => {
         RoomModel.findById(room._id)

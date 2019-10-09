@@ -10,24 +10,12 @@ const messageSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  textHash: {
+  hash: {
     type: String,
     required: true
   }
 }, {
   timestamps: true
-})
-
-const keySchema = new mongoose.Schema({
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  value: {
-    type: String,
-    required: true
-  }
 })
 
 const roomSchema = new mongoose.Schema({
@@ -45,8 +33,7 @@ const roomSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
-  messages: [messageSchema],
-  keys: [keySchema]
+  messages: [messageSchema]
 }, {
   timestamps: true
 })

@@ -56,7 +56,7 @@ describe('Rooms', () => {
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
 
         roomId = res.body._id;
@@ -74,7 +74,7 @@ describe('Rooms', () => {
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
 
         done();
@@ -94,7 +94,7 @@ describe('Rooms', () => {
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
         expect(res.body.name).to.be.equal(updatedName);
 
@@ -212,7 +212,7 @@ describe('Rooms', () => {
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages', 'keys');
+        expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
 
         done();
