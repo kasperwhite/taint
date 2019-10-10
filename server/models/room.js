@@ -23,6 +23,10 @@ const roomSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    required: true
+  },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -33,7 +37,14 @@ const roomSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
-  messages: [messageSchema]
+  messages: [
+    messageSchema
+  ],
+  publicKeys: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Key',
+    required: false
+  }]
 }, {
   timestamps: true
 })
