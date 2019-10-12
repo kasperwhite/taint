@@ -4,8 +4,8 @@ import { Icon } from 'react-native-elements';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import RoomList from './RoomList';
-import Room from './Room';
+import RoomList from './Rooms/RoomList';
+import Room from './Rooms/Room';
 
 const RoomNavigator = createAppContainer(createStackNavigator(
   {

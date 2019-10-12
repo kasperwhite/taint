@@ -308,7 +308,7 @@ roomsRouter.route('/:roomId/messages/:messageId')
 })
 
 roomsRouter.route('/:roomId/users')
-.post(async (req, res, next) => {
+.post(async (req, res, next) => { // ALLOW: add user in chat
   const {roomId} = req.params;
 
   let room = await RoomModel.update({_id: roomId}, {$push: {users: req.body.userId}});
@@ -319,7 +319,7 @@ roomsRouter.route('/:roomId/users')
 })
 
 roomsRouter.route('/:roomId/users/:userId')
-.delete(async (req, res, next) => {
+.delete(async (req, res, next) => { // ALLOW: remove user from chat
   const {roomId, userId} = req.params;
 
   let room = await RoomModel.update({_id: roomId}, {$pullAll: {users: [userId]}})

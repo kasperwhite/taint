@@ -96,7 +96,7 @@ describe('Rooms', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
-        console.log(res.body);
+
         done();
       })
   });

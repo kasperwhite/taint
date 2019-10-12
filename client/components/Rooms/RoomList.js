@@ -20,7 +20,7 @@ class RoomList extends Component {
   static navigationOptions = {
     title: 'Rooms',
     headerStyle: {
-      backgroundColor: '#f4511e',
+      backgroundColor: '#193367',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
