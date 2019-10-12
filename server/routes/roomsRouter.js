@@ -8,7 +8,7 @@ const roomsRouter = express.Router();
 roomsRouter.use(bodyParser.json());
 
 roomsRouter.route('/')
-.get((req, res, next) => {
+.get((req, res, next) => { // NOT ALLOW
   RoomModel.find({})
   .then((rooms) => {
     const userRooms = rooms.filter((r) => r.users.includes(req.user._id));
@@ -19,7 +19,7 @@ roomsRouter.route('/')
   .catch(err => next(err))
 })
 
-.post(async (req, res, next) => {
+.post(async (req, res, next) => { // ALLOW: add room
   const roomTypes = ['private', 'public'];
   if(roomTypes.includes(String(req.body.type))){
     req.body.creator = req.user._id;
@@ -44,7 +44,7 @@ roomsRouter.route('/')
   res.end('PUT operation not supported');
 })
 
-.delete((req, res, next) => {     //only for admin
+.delete((req, res, next) => { // NOT ALLOW
   RoomModel.deleteMany({})
   .then((rooms) => {
     res.statusCode = 200;
@@ -55,7 +55,7 @@ roomsRouter.route('/')
 })
 
 roomsRouter.route('/:roomId')
-.get((req, res, next) => {
+.get((req, res, next) => { // ALLOW: get room
   RoomModel.findById(req.params.roomId)
   .populate('messages')
   .populate('publicKeys')
@@ -78,7 +78,7 @@ roomsRouter.route('/:roomId')
   res.end('POST operation not supported')
 })
 
-.put((req, res, next) => {
+.put((req, res, next) => { // ALLOW: update room
   RoomModel.findById(req.params.roomId)
   .then((room) => {
     if(String(room.creator) === String(req.user._id)){
@@ -100,7 +100,7 @@ roomsRouter.route('/:roomId')
   .catch(err => next(err))
 })
 
-.delete((req, res, next) => {
+.delete((req, res, next) => { // ALLOW: delete room
   RoomModel.findById(req.params.roomId)
   .then((room) => {
     if(String(room.creator) === String(req.user._id)){
@@ -141,7 +141,7 @@ roomsRouter.route('/:roomId/messages')
   .catch(err => next(err))
 }) */
 
-.post((req, res, next) => {
+.post((req, res, next) => { // ALLOW: add message
   const {roomId} = req.params;
   RoomModel.findById(roomId)
   .then(room => {
@@ -177,7 +177,7 @@ roomsRouter.route('/:roomId/messages')
   res.end('PUT operation not supported');
 })
 
-.delete((req, res, next) => {
+.delete((req, res, next) => { // NOT ALLOW
   const {roomId} = req.params;
   RoomModel.findById(roomId)
   .then(room => {
@@ -207,7 +207,7 @@ roomsRouter.route('/:roomId/messages')
 })
 
 roomsRouter.route('/:roomId/messages/:messageId')
-.get((req, res, next) => {      //why?
+.get((req, res, next) => { // NOT ALLOW
   const {roomId, messageId} = req.params;
   
   RoomModel.findById(roomId)
@@ -236,7 +236,7 @@ roomsRouter.route('/:roomId/messages/:messageId')
   res.end('POST operation not supported')
 })
 
-.put((req, res, next) => {
+.put((req, res, next) => { // ALLOW: update message
   const {roomId, messageId} = req.params;
   const {text} = req.body;
   RoomModel.findById(roomId)
@@ -273,7 +273,7 @@ roomsRouter.route('/:roomId/messages/:messageId')
   .catch(err => next(err))
 })
 
-.delete((req, res, next) => {
+.delete((req, res, next) => { // ALLOW: delete message
   const {roomId, messageId} = req.params;
 
   RoomModel.findById(roomId)
@@ -305,6 +305,28 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
+})
+
+roomsRouter.route('/:roomId/users')
+.post(async (req, res, next) => {
+  const {roomId} = req.params;
+
+  let room = await RoomModel.update({_id: roomId}, {$push: {users: req.body.userId}});
+  room = await RoomModel.findById(roomId);
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json(room.users);
+})
+
+roomsRouter.route('/:roomId/users/:userId')
+.delete(async (req, res, next) => {
+  const {roomId, userId} = req.params;
+
+  let room = await RoomModel.update({_id: roomId}, {$pullAll: {users: [userId]}})
+  room = await RoomModel.findById(roomId);
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json(room.users);
 })
 
 module.exports = roomsRouter;

@@ -96,10 +96,39 @@ describe('Rooms', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
-
+        console.log(res.body);
         done();
       })
   });
+
+  it('/POST rooms/:id/users', done => {
+    const currentPath = path + '/' + roomId + '/users';
+
+    chai.request(url)
+      .post(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        userId: '5da15ac9cf43cf2770c6a534'
+      })
+      .end((err, res) => {
+        console.log(res.body);
+
+        done();
+      })
+  })
+
+  it('/DELETE rooms/:id/users/:id', done => {
+    const currentPath = path + '/' + roomId + '/users/5da15ac9cf43cf2770c6a534';
+
+    chai.request(url)
+      .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .end((err, res) => {
+        console.log(res.body);
+
+        done();
+      })
+  })
 
   it('/PUT rooms/:id', done => {
     const currentPath = path + '/' + roomId;

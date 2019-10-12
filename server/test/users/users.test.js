@@ -35,7 +35,7 @@ describe('Users', () => {
       .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(1);
+        expect(res.body.length).to.be.equal(2);
 
         done();
       });
