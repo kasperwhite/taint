@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Dimensions, FlatList } from 'react-native';
-import { Input, Icon, Avatar } from 'react-native-elements';
+import { Input, Icon, Avatar, Button } from 'react-native-elements';
 
 class Room extends Component {
   constructor(props){
@@ -35,12 +35,17 @@ class Room extends Component {
       fontWeight: 'bold',
     },
     headerRight: (
-      <Icon
-        name='ellipsis-v'
-        type='font-awesome'
-        color='#fff'
-        onPress={() => console.log('Press!')}
-        containerStyle={{paddingRight: 20}}
+      <Button
+        icon={
+          <Icon
+            name='ellipsis-v'
+            type='font-awesome'
+            color='#fff'
+          />
+        }
+        containerStyle={{width: 50}}
+        onPress={() => console.log('Open Dialog')}
+        type='clear'
       />
     )
   };
@@ -95,14 +100,19 @@ class Room extends Component {
           <Input
           placeholder='Type message...'
           rightIcon={
-            <Icon
-              name='paper-plane'
-              type='font-awesome'
-              color='#193367'
+            <Button
+              icon={
+                <Icon
+                  name='paper-plane'
+                  type='font-awesome'
+                  color='#193367'
+                />
+              }
+              containerStyle={{width: 50}}
               onPress={this.sendMessage}
+              type='clear'
             />
           }
-          rightIconContainerStyle={{paddingHorizontal: 15}}
           inputContainerStyle={styles.messageInput}
           containerStyle={styles.messageCont}
           onChange={(data) => {
