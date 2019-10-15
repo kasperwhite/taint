@@ -89,8 +89,14 @@ class RoomList extends Component {
 
   addRoom = (name, time) => {
     let rooms = Object.assign([], this.state.rooms);
-    rooms.push({id: this.state.rooms.length, name, time, messages: [{ text: 'Hello' }]});
+    const roomId = this.state.rooms.length;
+    rooms.push({id: roomId, name, time, messages: [{ text: 'Hello' }]});
     this.setState({ rooms });
+    this.enterRoom(roomId, name);
+  }
+
+  enterRoom = (roomId, roomName) => {
+    this.props.navigation.navigate('Room', { roomId, roomName })
   }
 
   renderRoom = ({item, index}) => {
@@ -103,7 +109,7 @@ class RoomList extends Component {
         badge={{ value: item.messages.length, textStyle: { color: 'white' } }}
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
-        onPress={() => navigate('Room', { roomId: item.id, roomName: item.name })}
+        onPress={() => this.enterRoom(item.id, item.name)}
         onLongPress={() => console.log('Open Room dialog')}
       />
     )

@@ -16,23 +16,31 @@ class AddRoomOverlay extends Component {
     this.setState({roomName: '', timeValue: 1})
   }
 
+  handleSubmit = () => {
+    const {toggle, addRoom} = this.props;
+    toggle();
+    this.resetForm();
+    addRoom(this.state.roomName, this.state.timeValue)
+  }
+
   render(){
-    const {visible, toggle, addRoom} = this.props;
+    const {visible} = this.props;
     return(
       <Overlay
         isVisible={visible}
-        width={300}
-        height={300}
         onBackdropPress={() => {toggle(); this.resetForm()}}
         borderRadius={10}
-        style={{justifyContent: 'center'}}
+        height={300}
+        overlayStyle={styles.overlay}
       >
-        <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+        <View style={styles.form}>
           <View style={styles.formRow}>
             <Input
               value={this.state.roomName}
               onChangeText={(roomName) => this.setState({roomName})}
               placeholder='Room Name'
+              inputStyle={styles.input}
+              inputContainerStyle={styles.inputContainer}
             />
           </View>
           <View style={styles.formRow}>
@@ -49,8 +57,9 @@ class AddRoomOverlay extends Component {
           <View style={styles.formRow}>
             <Button 
               title='Add'
-              onPress={() => {toggle(); this.resetForm(); addRoom(this.state.roomName, this.state.timeValue)}}
+              onPress={this.handleSubmit}
               containerStyle={styles.submitButtonContainer}
+              buttonStyle={styles.submitButton}
             />
           </View>
         </View>
@@ -60,11 +69,28 @@ class AddRoomOverlay extends Component {
 }
 
 const styles = StyleSheet.create({
+  overlay: {
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  form: {
+    width: '80%'
+  },
   formRow: {
     marginVertical: 5
   },
+  input: {
+    
+  },
+  inputContainer: {
+    borderColor: '#193367',
+    width: '100%'
+  },
   slider: {
     
+  },
+  submitButton: {
+
   },
   submitButtonContainer: {
     
