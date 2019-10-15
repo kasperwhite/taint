@@ -41,6 +41,7 @@ class Room extends Component {
             name='ellipsis-v'
             type='font-awesome'
             color='#fff'
+            size={21}
           />
         }
         containerStyle={{width: 50, marginRight: 5}}
@@ -120,6 +121,7 @@ class Room extends Component {
             />
           }
           inputContainerStyle={styles.messageInput}
+          inputStyle={{fontSize: 20}}
           containerStyle={styles.messageCont}
           onChange={(data) => {
             if(data.nativeEvent.text !== ' ' ){
@@ -127,6 +129,7 @@ class Room extends Component {
             }
           }}
           value={this.state.message}
+          multiline
         />
       </View>
     </KeyboardAvoidingView>
@@ -165,10 +168,11 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     paddingLeft: 10,
     paddingTop: 3,
-    paddingBottom: 0
+    paddingBottom: 0,
+    maxHeight: 65
   },
   messageCont: {
-    marginTop: 'auto',
+    marginTop: 'auto'
   }
 })
 
