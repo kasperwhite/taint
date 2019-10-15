@@ -24,7 +24,7 @@ class AddRoomOverlay extends Component {
   }
 
   render(){
-    const {visible} = this.props;
+    const {toggle,visible} = this.props;
     return(
       <Overlay
         isVisible={visible}
