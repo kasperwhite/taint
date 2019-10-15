@@ -43,7 +43,7 @@ class Room extends Component {
             color='#fff'
           />
         }
-        containerStyle={{width: 50}}
+        containerStyle={{width: 50, marginRight: 5}}
         onPress={() => console.log('Open Dialog')}
         type='clear'
       />
@@ -53,10 +53,9 @@ class Room extends Component {
   sendMessage = () => {
     let {message} = this.state;
     if(message !== ' ' && message !== ''){
-      const roomId = this.props.navigation.getParam('roomId','');
-      let messages = this.state.messages;
-      message = {id: this.state.messages.length, text: message, sender: 'kasperwhite'};
-      messages.push(message);
+      //const roomId = this.props.navigation.getParam('roomId','');
+      let messages = Object.assign([], this.state.messages);
+      messages.push({id: this.state.messages.length, text: message, sender: 'kasperwhite'});
       this.setState({
         messages,
         message: ''
@@ -64,38 +63,45 @@ class Room extends Component {
     }
   }
 
+  renderMessage = ({item, index}) => {
+    return(
+      <View
+        key={item.id}
+        style={item.sender === 'kasper' ? styles.otherSendMessage : styles.mySendMessage}
+      >
+        <Avatar
+          rounded
+          containerStyle={{margin: 3}}
+          source={require("../../assets/cat.jpg")}
+        />
+        <View style={styles.sendMessageContent}>
+          <Text
+            style={{color: '#fff', fontWeight: 'bold'}}
+            onPress={() => console.log('Want to see sender?')}
+          >{item.sender}</Text>
+          <Text
+            style={{color: '#fff', paddingLeft: 2, paddingTop: 1}}
+            onPress={() => console.log('Want to edit?')}
+          >{item.text}</Text>
+        </View>
+      </View>
+    );
+  }
+
   render(){
     return(
       <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboard} keyboardVerticalOffset={90}>
         <View>
           <ScrollView
-            style={styles.scrollCont}
             ref={ref => this.scrollView = ref}
             onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
           >
-            <View style={{paddingVertical: 10, paddingHorizontal: 6}}>
-            {
-              this.state.messages.map((m) => (
-                <View key={m.id} style={m.sender === 'kasper' ? styles.otherSendMessage : styles.mySendMessage}>
-                  <Avatar
-                    rounded
-                    containerStyle={{margin: 3}}
-                    source={require("../../assets/cat.jpg")}
-                  />
-                  <View style={styles.sendMessageContent}>
-                    <Text
-                      style={{color: '#fff', fontWeight: 'bold'}}
-                      onPress={() => console.log('Want to see sender?')}
-                    >{m.sender}</Text>
-                    <Text
-                      style={{color: '#fff', paddingLeft: 2, paddingTop: 1}}
-                      onPress={() => console.log('Want to edit?')}
-                    >{m.text}</Text>
-                  </View>
-                </View>
-              ))
-            }
-            </View>
+            <FlatList
+              data={this.state.messages}
+              renderItem={this.renderMessage}
+              keyExtractor={item => item.id.toString()}
+              style={{paddingVertical: 10, paddingHorizontal: 6, backgroundColor: '#d6e0f5'}}
+            />
           </ScrollView>
           <Input
           placeholder='Type message...'
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
     
   },
   scrollCont: {
-    backgroundColor: '#d6e0f5'
+    
   },
   otherSendMessage: {
     alignSelf: 'flex-start',

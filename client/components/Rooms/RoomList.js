@@ -1,6 +1,42 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList } from 'react-native';
-import { ListItem, Badge } from 'react-native-elements';
+import { ListItem, Badge, ButtonGroup, Button, Icon } from 'react-native-elements';
+
+const SearchButton = () => {
+  return(
+    <Button
+      icon={
+        <Icon
+          name='search'
+          type='font-awesome'
+          color='#fff'
+          size={21}
+        />
+      }
+      containerStyle={{width: 50, marginRight: 5}}
+      onPress={() => console.log('Find Room')}
+      type='clear'
+    />
+  )
+}
+
+const AddButton = () => {
+  return(
+    <Button
+      icon={
+        <Icon
+          name='plus'
+          type='font-awesome'
+          color='#fff'
+          size={21}
+        />
+      }
+      containerStyle={{width: 50, marginRight: 5}}
+      onPress={() => console.log('Add Room')}
+      type='clear'
+    />
+  )
+}
 
 class RoomList extends Component {
   constructor(props){
@@ -26,6 +62,12 @@ class RoomList extends Component {
     headerTitleStyle: {
       fontWeight: 'bold',
     },
+    headerRight: (
+      <View style={{flexDirection: 'row'}}>
+        <SearchButton/>
+        <AddButton/>
+      </View>
+    )
   };
 
   render(){
