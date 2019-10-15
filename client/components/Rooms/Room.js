@@ -25,36 +25,37 @@ class Room extends Component {
     }
   }
 
-  static navigationOptions = {
-    title: 'Room',
-    headerStyle: {
-      backgroundColor: '#193367'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    headerRight: (
-      <Button
-        icon={
-          <Icon
-            name='ellipsis-v'
-            type='font-awesome'
-            color='#fff'
-            size={21}
-          />
-        }
-        containerStyle={{width: 50, marginRight: 5}}
-        onPress={() => console.log('Open Dialog')}
-        type='clear'
-      />
-    )
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('roomName'),
+      headerStyle: {
+        backgroundColor: '#193367'
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerRight: (
+        <Button
+          icon={
+            <Icon
+              name='ellipsis-v'
+              type='font-awesome'
+              color='#fff'
+              size={21}
+            />
+          }
+          containerStyle={{width: 50, marginRight: 5}}
+          onPress={() => console.log('Open Dialog')}
+          type='clear'
+        />
+      )
+    };
   };
 
   sendMessage = () => {
     let {message} = this.state;
     if(message !== ' ' && message !== ''){
-      //const roomId = this.props.navigation.getParam('roomId','');
       let messages = Object.assign([], this.state.messages);
       messages.push({id: this.state.messages.length, text: message, sender: 'kasperwhite'});
       this.setState({

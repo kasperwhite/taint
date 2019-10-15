@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, KeyboardAvoidingView, Modal } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay } from 'react-native-elements';
+import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
+
+import AddRoomOverlay from './AddRoomOverlay';
 
 const SearchButton = () => {
   return(
@@ -67,54 +69,59 @@ class RoomList extends Component {
       headerRight: (
         <View style={{flexDirection: 'row'}}>
           <SearchButton/>
-          <AddButton handlePress={navigation.getParam('toggleModal')}/>
+          <AddButton
+            handlePress={navigation.getParam('toggleModal')}
+          />
         </View>
       )
     };
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ toggleModal: this.toggleModal.bind(this) });
+    this.props.navigation.setParams({ 
+      toggleModal: this.toggleModal
+    });
   }
 
-  toggleModal() {
+  toggleModal = () => {
     this.setState({ isVisible: !this.state.isVisible });
   }
 
-  render(){
+  addRoom = (name) => {
+    let rooms = Object.assign([], this.state.rooms);
+    rooms.push({id: this.state.rooms.length, name, time: '10:00', messages: { text: 'Hello' }});
+    this.setState({ rooms });
+  }
+
+  renderRoom = ({item, index}) => {
     const { navigate } = this.props.navigation;
+    return(
+      <ListItem
+        key={index}
+        title={item.name}
+        subtitle={item.time}
+        bottomDivider
+        badge={{ value: 3, textStyle: { color: 'white' } }}
+        containerStyle={styles.roomCont}
+        titleStyle={styles.roomTitle}
+        onPress={() => navigate('Room', { roomId: item.id, roomName: item.name })}
+      />
+    )
+  }
 
-    const renderRoom = ({item, index}) => {
-      return(
-        <ListItem
-          key={index}
-          title={item.name}
-          subtitle={item.time}
-          bottomDivider
-          badge={{ value: 3, textStyle: { color: 'white' } }}
-          containerStyle={styles.roomCont}
-          titleStyle={styles.roomTitle}
-          onPress={() => navigate('Room', { roomId: item.id })}
-        />
-      )
-    }
-
+  render(){
     return(
       <ScrollView>
         <FlatList
           data={this.state.rooms}
-          renderItem={renderRoom}
+          renderItem={this.renderRoom}
           keyExtractor={i => i.id.toString()}
         />
-        <Overlay
-          isVisible={this.state.isVisible}
-          width={300}
-          height={300}
-          onBackdropPress={() => this.toggleModal()}
-          borderRadius={10}
-        >
-          <Text>Hello!</Text>
-        </Overlay>
+        <AddRoomOverlay
+          visible={this.state.isVisible}
+          toggle={this.toggleModal}
+          addRoom={this.addRoom}
+        />
       </ScrollView>
     )
   }
