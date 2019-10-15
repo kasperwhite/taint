@@ -46,11 +46,11 @@ class RoomList extends Component {
 
     this.state = {
       rooms: [
-        {id: 0, name: 'Room1', time: '10:00', messages: { text: 'Hello' }},
-        {id: 1, name: 'Room2', time: '10:00', messages: { text: 'Hello' }},
-        {id: 2, name: 'Room3', time: '10:00', messages: { text: 'Hello' }},
-        {id: 3, name: 'Room4', time: '10:00', messages: { text: 'Hello' }},
-        {id: 4, name: 'Room5', time: '10:00', messages: { text: 'Hello' }}
+        {id: 0, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 1, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 2, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
+        {id: 3, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 4, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
       ],
       isVisible: false
     }
@@ -87,9 +87,9 @@ class RoomList extends Component {
     this.setState({ isVisible: !this.state.isVisible });
   }
 
-  addRoom = (name) => {
+  addRoom = (name, time) => {
     let rooms = Object.assign([], this.state.rooms);
-    rooms.push({id: this.state.rooms.length, name, time: '10:00', messages: { text: 'Hello' }});
+    rooms.push({id: this.state.rooms.length, name, time, messages: [{ text: 'Hello' }]});
     this.setState({ rooms });
   }
 
@@ -99,12 +99,12 @@ class RoomList extends Component {
       <ListItem
         key={index}
         title={item.name}
-        subtitle={item.time}
         bottomDivider
-        badge={{ value: 3, textStyle: { color: 'white' } }}
+        badge={{ value: item.messages.length, textStyle: { color: 'white' } }}
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         onPress={() => navigate('Room', { roomId: item.id, roomName: item.name })}
+        onLongPress={() => console.log('Open Room dialog')}
       />
     )
   }
