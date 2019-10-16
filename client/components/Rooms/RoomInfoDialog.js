@@ -48,6 +48,8 @@ class RoomDialog extends Component {
     <ListItem
       title={item.username}
       leftAvatar={{ source: require('../../assets/cat.jpg')}}
+      onPress={() => console.log('Do you want to see user page?')}
+      onLongPress={() => console.log('Open dialog')}
     />
   )
 
@@ -61,7 +63,7 @@ class RoomDialog extends Component {
           keyExtractor={item => item.id.toString()}
           data={this.state.users}
           renderItem={this.renderUser}
-          ListHeaderComponent={<ListItem title='Users' bottomDivider/>}
+          ListHeaderComponent={<ListItem title='Users' bottomDivider rightTitle={`${this.state.users.length}`}/>}
         />
       </ScrollView>
     )

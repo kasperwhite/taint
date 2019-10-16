@@ -11,7 +11,7 @@ class Room extends Component {
       roomName: '',
       message: '',
       messages: [
-        {id: 0, sender: 'kasper', text: 'Hello!'},
+        {id: 0, sender: 'kasper', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
         {id: 1, sender: 'kasper', text: 'Hello!'},
         {id: 2, sender: 'kasper', text: 'Hello!'},
         {id: 3, sender: 'kasper', text: 'Hello!'},
@@ -88,13 +88,20 @@ class Room extends Component {
 
   renderMessage = ({item, index}) => {
     return(
-      <ListItem
-        title={item.sender}
-        subtitle={item.text}
-        leftElement={<Avatar size={40} rounded containerStyle={{margin: 0, padding: 0}} source={require("../../assets/cat.jpg")}/>}
-        containerStyle={styles.listItemCont}
-        contentContainerStyle={styles.listItemContentCont}
-      />
+      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message}>
+        <View style={styles.messageAvatar}>
+          <Avatar
+            size={40}
+            rounded
+            containerStyle={{margin: 0, padding: 0}}
+            source={require("../../assets/cat.jpg")}
+          />
+        </View>
+        <View style={styles.messageContent}>
+          <Text style={styles.messageSender}>{item.sender}</Text>
+          <Text style={styles.messageText}>{item.text}</Text>
+        </View>
+      </View>
     );
   }
 
@@ -110,7 +117,7 @@ class Room extends Component {
               data={this.state.messages}
               renderItem={this.renderMessage}
               keyExtractor={item => item.id.toString()}
-              style={styles.flatList}
+              contentContainerStyle={styles.flatList}
             />
           </ScrollView>
           <Input
@@ -131,7 +138,7 @@ class Room extends Component {
           }
           inputContainerStyle={styles.messageInput}
           inputStyle={{fontSize: 20}}
-          containerStyle={styles.messageCont}
+          containerStyle={styles.messageInputCont}
           onChangeText={(text) => this.setState({ message: text })}
           value={this.state.message}
           multiline
@@ -145,35 +152,52 @@ class Room extends Component {
 const styles = StyleSheet.create({
   main: {
     height: '100%',
-    flexDirection: 'column'
-  },
-  flatList: {
-    flexDirection: 'column-reverse',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    flexDirection: 'column',
     backgroundColor: '#e0e0eb'
   },
-  listItemCont: {
-    marginVertical: 5,
-    backgroundColor: 'grey',
-    paddingVertical: 10,
-    borderRadius: 10
-  },
-  listItemContentCont: {
+  flatList: {
     flexDirection: 'column',
-    alignSelf: 'flex-end',
-    margin: 0,
-    padding: 0
+    paddingHorizontal: 10,
+    paddingVertical: 10
+  },
+  message: {
+    flexDirection: 'row',
+    marginVertical: 5,
+    alignSelf: 'flex-start'
+  },
+  myMessage: {
+    flexDirection: 'row-reverse',
+    marginVertical: 5,
+    alignSelf: 'flex-end'
+  },
+  messageAvatar: {
+    margin: 5
+  },
+  messageContent: {
+    backgroundColor: '#193367',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 10,
+    maxWidth: 200
+  },
+  messageSender: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 3
+  },
+  messageText: {
+    color: '#fff'
   },
   messageInput: {
     borderColor: '#fff',
     paddingLeft: 10,
     paddingTop: 3,
     paddingBottom: 0,
-    maxHeight: 65
+    maxHeight: 65,
   },
-  messageCont: {
-    alignSelf: 'flex-end'
+  messageInputCont: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#fff'
   }
 })
 
