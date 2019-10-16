@@ -112,7 +112,11 @@ class RoomList extends Component {
         key={index}
         title={item.name}
         bottomDivider
-        badge={{ value: item.messages.length, textStyle: { color: 'white' } }}
+        rightElement={
+          <Badge
+            value={item.messages.length}
+            badgeStyle={{backgroundColor: '#193367', width: 20, height: 20, borderRadius: 20}}/>
+        }
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         onPress={() => this.enterRoom(item.id, item.name)}

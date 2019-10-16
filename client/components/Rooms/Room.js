@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Dimensions, FlatList } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList } from 'react-native';
 import { Input, Icon, Avatar, Button, ListItem } from 'react-native-elements';
 
 class Room extends Component {
@@ -41,7 +41,7 @@ class Room extends Component {
         <Button
           icon={
             <Icon
-              name='ellipsis-v'
+              name='info'
               type='font-awesome'
               color='#fff'
               size={21}
