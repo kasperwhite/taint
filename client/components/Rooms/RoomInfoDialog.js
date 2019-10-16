@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, ScrollView, FlatList } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Icon } from 'react-native-elements';
 
 class RoomDialog extends Component {
   constructor(props){
@@ -63,7 +63,14 @@ class RoomDialog extends Component {
           keyExtractor={item => item.id.toString()}
           data={this.state.users}
           renderItem={this.renderUser}
-          ListHeaderComponent={<ListItem title='Users' bottomDivider rightTitle={`${this.state.users.length}`}/>}
+          ListHeaderComponent={
+            <ListItem
+              title='Users'
+              titleStyle={{margin: 0, padding: 0}}
+              bottomDivider
+              rightTitle={`${this.state.users.length}`}
+            />
+          }
         />
       </ScrollView>
     )

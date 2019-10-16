@@ -77,6 +77,7 @@ class AddRoomOverlay extends Component {
               minimumValue={60}
               thumbTintColor='#193367'
               style={styles.slider}
+              trackStyle={styles.sliderTrack}
             />
           </View>
           <View style={styles.buttons}>
@@ -111,17 +112,22 @@ const styles = StyleSheet.create({
   slider: {
     
   },
+  sliderTrack: {
+    
+  },
   submitButton: {
     backgroundColor: '#193367'
   },
   submitButtonContainer: {
-    marginLeft: 10
+    width: 90,
+    margin: 5
   },
   cancelButton: {
     backgroundColor: 'red'
   },
   cancelButtonContainer: {
-
+    width: 90,
+    margin: 5
   },
   buttons: {
     flexDirection: 'row',
