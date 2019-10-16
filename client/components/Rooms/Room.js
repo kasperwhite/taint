@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Dimensions, FlatList } from 'react-native';
-import { Input, Icon, Avatar, Button } from 'react-native-elements';
+import { Input, Icon, Avatar, Button, ListItem } from 'react-native-elements';
 
 class Room extends Component {
   constructor(props){
     super(props)
 
     this.state = {
+      roomId: 1,
+      roomName: '',
       message: '',
       messages: [
         {id: 0, sender: 'kasper', text: 'Hello!'},
@@ -46,54 +48,60 @@ class Room extends Component {
             />
           }
           containerStyle={{width: 50, marginRight: 5}}
-          onPress={() => console.log('Open Dialog')}
+          onPress={navigation.getParam('openDialog')}
           type='clear'
         />
       )
     };
   };
 
+  componentWillMount(){
+    this.props.navigation.setParams({ 
+      openDialog: this.openDialog
+    });
+    const roomId = this.props.navigation.getParam('roomId');
+    const roomName = this.props.navigation.getParam('roomName');
+    this.setState({
+      roomId,
+      roomName
+    })
+  }
+
+  componentDidMount(){
+    // fetch messages
+  }
+
+  openDialog = () => {
+    const {roomId, roomName} = this.state;
+    this.props.navigation.navigate('RoomDialog', { roomId, roomName })
+  }
+
   sendMessage = () => {
     let {message} = this.state;
-    if(message !== ' ' && message !== ''){
-      let messages = Object.assign([], this.state.messages);
-      messages.push({id: this.state.messages.length, text: message, sender: 'kasperwhite'});
-      this.setState({
-        messages,
-        message: ''
-      })
-    }
+    let messages = Object.assign([], this.state.messages);
+    messages.push({id: this.state.messages.length, text: message, sender: 'kasperwhite'});
+    this.setState({
+      messages,
+      message: ''
+    })
   }
 
   renderMessage = ({item, index}) => {
     return(
-      <View
-        key={item.id}
-        style={item.sender === 'kasper' ? styles.otherSendMessage : styles.mySendMessage}
-      >
-        <Avatar
-          rounded
-          containerStyle={{margin: 3}}
-          source={require("../../assets/cat.jpg")}
-        />
-        <View style={styles.sendMessageContent}>
-          <Text
-            style={{color: '#fff', fontWeight: 'bold'}}
-            onPress={() => console.log('Want to see sender?')}
-          >{item.sender}</Text>
-          <Text
-            style={{color: '#fff', paddingLeft: 2, paddingTop: 1}}
-            onPress={() => console.log('Want to edit?')}
-          >{item.text}</Text>
-        </View>
-      </View>
+      <ListItem
+        title={item.sender}
+        subtitle={item.text}
+        leftElement={<Avatar size={40} rounded containerStyle={{margin: 0, padding: 0}} source={require("../../assets/cat.jpg")}/>}
+        containerStyle={styles.listItemCont}
+        contentContainerStyle={styles.listItemContentCont}
+      />
     );
   }
 
   render(){
     return(
-      <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboard} keyboardVerticalOffset={90}>
-        <View>
+      <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
+        <View style={styles.main}>
           <ScrollView
             ref={ref => this.scrollView = ref}
             onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
@@ -102,7 +110,7 @@ class Room extends Component {
               data={this.state.messages}
               renderItem={this.renderMessage}
               keyExtractor={item => item.id.toString()}
-              style={{paddingVertical: 10, paddingHorizontal: 6, backgroundColor: '#d6e0f5'}}
+              style={styles.flatList}
             />
           </ScrollView>
           <Input
@@ -124,11 +132,7 @@ class Room extends Component {
           inputContainerStyle={styles.messageInput}
           inputStyle={{fontSize: 20}}
           containerStyle={styles.messageCont}
-          onChange={(data) => {
-            if(data.nativeEvent.text !== ' ' ){
-              this.setState({ message: data.nativeEvent.text })
-            }
-          }}
+          onChangeText={(text) => this.setState({ message: text })}
           value={this.state.message}
           multiline
         />
@@ -139,31 +143,27 @@ class Room extends Component {
 }
 
 const styles = StyleSheet.create({
-  keyboard: {
-    
+  main: {
+    height: '100%',
+    flexDirection: 'column'
   },
-  scrollCont: {
-    
+  flatList: {
+    flexDirection: 'column-reverse',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: '#e0e0eb'
   },
-  otherSendMessage: {
-    alignSelf: 'flex-start',
-    flexDirection: "row",
-    alignItems: 'center',
-    marginVertical: 3
+  listItemCont: {
+    marginVertical: 5,
+    backgroundColor: 'grey',
+    paddingVertical: 10,
+    borderRadius: 10
   },
-  mySendMessage: {
+  listItemContentCont: {
+    flexDirection: 'column',
     alignSelf: 'flex-end',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    marginVertical: 3
-  },
-  sendMessageContent: {
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: '#193367',
-    color: 'white',
-    maxWidth: 250
+    margin: 0,
+    padding: 0
   },
   messageInput: {
     borderColor: '#fff',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     maxHeight: 65
   },
   messageCont: {
-    marginTop: 'auto'
+    alignSelf: 'flex-end'
   }
 })
 

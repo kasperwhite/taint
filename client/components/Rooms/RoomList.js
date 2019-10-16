@@ -79,18 +79,15 @@ class RoomList extends Component {
       headerRight: (
         <View style={{flexDirection: 'row'}}>
           <SearchButton/>
-          <AddButton
-            handlePress={navigation.getParam('toggleModal')}
-          />
+          <AddButton handlePress={navigation.getParam('toggleModal')}/>
         </View>
       )
     };
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ 
-      toggleModal: this.toggleModal
-    });
+    this.props.navigation.setParams({ toggleModal: this.toggleModal });
+    // fetch rooms
   }
 
   toggleModal = () => {
@@ -110,7 +107,6 @@ class RoomList extends Component {
   }
 
   renderRoom = ({item, index}) => {
-    const { navigate } = this.props.navigation;
     return(
       <ListItem
         key={index}
