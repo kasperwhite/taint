@@ -6,11 +6,13 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import RoomList from './Rooms/RoomList';
 import Room from './Rooms/Room';
+import RoomDialog from './Rooms/RoomDialog';
 
 const RoomNavigator = createAppContainer(createStackNavigator(
   {
     Rooms: RoomList,
-    Room: Room
+    Room: Room,
+    RoomDialog: RoomDialog
   },
   {
     initialRouteName: 'Rooms',

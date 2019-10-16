@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, FlatList, KeyboardAvoidingView, Modal } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 
 import AddRoomOverlay from './AddRoomOverlay';
@@ -50,7 +50,17 @@ class RoomList extends Component {
         {id: 1, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
         {id: 2, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
         {id: 3, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 4, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
+        {id: 4, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]},
+        {id: 5, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 6, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 7, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
+        {id: 8, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 9, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]},
+        {id: 10, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 11, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 12, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
+        {id: 13, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
+        {id: 14, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
       ],
       isVisible: false
     }
@@ -110,14 +120,13 @@ class RoomList extends Component {
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         onPress={() => this.enterRoom(item.id, item.name)}
-        onLongPress={() => console.log('Open Room dialog')}
       />
     )
   }
 
   render(){
     return(
-      <ScrollView>
+      <View>
         <FlatList
           data={this.state.rooms}
           renderItem={this.renderRoom}
@@ -128,7 +137,7 @@ class RoomList extends Component {
           toggle={this.toggleModal}
           addRoom={this.addRoom}
         />
-      </ScrollView>
+      </View>
     )
   }
 }

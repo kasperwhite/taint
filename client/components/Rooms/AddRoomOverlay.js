@@ -1,6 +1,29 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Overlay, Input, Button, Slider } from 'react-native-elements';
+import { Overlay, Input, Button, Slider, ButtonGroup } from 'react-native-elements';
+
+const AddButton = (props) => {
+  return(
+    <Button
+      title='Add'
+      disabled={props.disabled}
+      onPress={() => props.handleSubmit()}
+      containerStyle={styles.submitButtonContainer}
+      buttonStyle={styles.submitButton}
+    />
+  )
+}
+
+const CancelButton = (props) => {
+  return(
+    <Button
+      title='Cancel'
+      onPress={() => props.handleCancel()}
+      containerStyle={styles.cancelButtonContainer}
+      buttonStyle={styles.cancelButton}
+    />
+  )
+}
 
 class AddRoomOverlay extends Component {
   constructor(props){
@@ -8,12 +31,12 @@ class AddRoomOverlay extends Component {
 
     this.state = {
       roomName: '',
-      timeValue: 1
+      timeValue: 60
     }
   }
 
   resetForm = () => {
-    this.setState({roomName: '', timeValue: 1})
+    this.setState({roomName: '', timeValue: 60})
   }
 
   handleSubmit = () => {
@@ -30,15 +53,16 @@ class AddRoomOverlay extends Component {
         isVisible={visible}
         onBackdropPress={() => {toggle(); this.resetForm()}}
         borderRadius={10}
-        height={300}
+        height={250}
         overlayStyle={styles.overlay}
+        windowBackgroundColor='rgba(0,0,0,0.6)'
       >
         <View style={styles.form}>
           <View style={styles.formRow}>
             <Input
               value={this.state.roomName}
               onChangeText={(roomName) => this.setState({roomName})}
-              placeholder='Room Name'
+              placeholder='Name'
               inputStyle={styles.input}
               inputContainerStyle={styles.inputContainer}
             />
@@ -50,17 +74,14 @@ class AddRoomOverlay extends Component {
               onValueChange={timeValue => this.setState({ timeValue })}
               step={1}
               maximumValue={3600}
+              minimumValue={60}
               thumbTintColor='#193367'
               style={styles.slider}
             />
           </View>
-          <View style={styles.formRow}>
-            <Button 
-              title='Add'
-              onPress={this.handleSubmit}
-              containerStyle={styles.submitButtonContainer}
-              buttonStyle={styles.submitButton}
-            />
+          <View style={styles.buttons}>
+            <CancelButton handleCancel={this.props.toggle}/>
+            <AddButton handleSubmit={this.handleSubmit} disabled={this.state.roomName === ''}/>
           </View>
         </View>
       </Overlay>
@@ -71,16 +92,17 @@ class AddRoomOverlay extends Component {
 const styles = StyleSheet.create({
   overlay: {
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   form: {
     width: '80%'
   },
   formRow: {
-    marginVertical: 5
+    marginVertical: 10
   },
   input: {
-    
+    textAlign: 'center'
   },
   inputContainer: {
     borderColor: '#193367',
@@ -90,10 +112,20 @@ const styles = StyleSheet.create({
     
   },
   submitButton: {
-
+    backgroundColor: '#193367'
   },
   submitButtonContainer: {
-    
+    marginLeft: 10
+  },
+  cancelButton: {
+    backgroundColor: 'red'
+  },
+  cancelButtonContainer: {
+
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
 
