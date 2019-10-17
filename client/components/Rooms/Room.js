@@ -1,38 +1,33 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList } from 'react-native';
-import { Input, Icon, Avatar, Button, ListItem, Tooltip } from 'react-native-elements';
+import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList, TouchableOpacity } from 'react-native';
+import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 
-const PopoverContent = (props) => (
-  <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-around'}}>
-    <Button
-      icon={
-        <Icon
-          name='pencil'
-          type='font-awesome'
-          color='#fff'
-          size={15}
-        />
-      }
-      buttonStyle={{}}
-      containerStyle={{width: '49%', borderRadius: 10}}
-      onPress={() => props.editMessage(props.messageId)}
-      type='clear'
-    />
-    <Button
-      icon={
-        <Icon
-          name='trash'
-          type='font-awesome'
-          color='#fff'
-          size={15}
-        />
-      }
-      buttonStyle={{}}
-      containerStyle={{width: '49%', borderRadius: 10}}
-      onPress={() => props.deleteMessage(props.messageId)}
-      type='clear'
-    />
-  </View>
+const MessageOverlay = (props) => (
+  <Overlay
+    isVisible={props.isVisible}
+    onBackdropPress={props.toggleOverlay}
+    borderRadius={20}
+    height={110}
+    windowBackgroundColor='rgba(0,0,0,0.6)'
+    overlayStyle={{}}
+  >
+    <View style={{flexDirection: 'column', justifyContent: 'space-around', width: '100%', height: '100%'}}>
+      <Button
+        title='Edit'
+        titleStyle={{color: '#193367'}}
+        type='clear'
+        buttonStyle={{paddingVertical: 10}}
+        onPress={() => props.editMessage(props.messageId)}
+      />
+      <Button
+        title='Delete'
+        titleStyle={{color: '#193367'}}
+        type='clear'
+        buttonStyle={{paddingVertical: 10}}
+        onPress={() => props.deleteMessage(props.messageId)}
+      />
+    </View>
+  </Overlay>
 )
 
 class Room extends Component {
@@ -43,6 +38,8 @@ class Room extends Component {
       roomId: 1,
       roomName: '',
       message: '',
+      isVisible: false,
+      selectedMessageId: 0,
       messages: [
         {id: 0, sender: 'kasper', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
         {id: 1, sender: 'kasper', text: 'Hello!'},
@@ -56,8 +53,7 @@ class Room extends Component {
         {id: 9, sender: 'kasper', text: 'Hello!'},
         {id: 10, sender: 'kasper', text: 'Hello!'},
         {id: 11, sender: 'kasper', text: 'Hello!'}
-      ],
-      tooltipVis: true
+      ]
     }
   }
 
@@ -128,6 +124,15 @@ class Room extends Component {
     console.log('Delete Message', id)
   }
 
+  toggleOverlay = () => {
+    this.setState({isVisible: !this.state.isVisible});
+  }
+
+  selectMessage = (id) => {
+    this.setState({selectedMessageId: id});
+    this.toggleOverlay();
+  }
+
   renderMessage = ({item, index}) => {
     return(
       <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message}>
@@ -139,21 +144,14 @@ class Room extends Component {
             source={require("../../assets/cat.jpg")}
           />
         </View>
-        <Tooltip
-          popover={ 
-            <PopoverContent
-              editMessage={this.editMessage}
-              deleteMessage={this.deleteMessage}
-              messageId={item.id}
-            /> 
-          }
-          overlayColor='rgba(0,0,0,0.4)'
+        <TouchableOpacity
+          style={styles.messageContent}
+          onPress={() => this.selectMessage(item.id)}
+          activeOpacity={0.9}
         >
-          <View style={styles.messageContent}>
-            <Text style={styles.messageSender}>{item.sender}</Text>
-            <Text style={styles.messageText}>{item.text}</Text>
-          </View>
-        </Tooltip>
+          <Text style={styles.messageSender}>{item.sender}</Text>
+          <Text style={styles.messageText}>{item.text}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -162,6 +160,13 @@ class Room extends Component {
     return(
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
         <View style={styles.main}>
+          <MessageOverlay
+            isVisible={this.state.isVisible}
+            toggleOverlay={this.toggleOverlay}
+            messageId={this.state.selectedMessageId}
+            editMessage={this.editMessage}
+            deleteMessage={this.deleteMessage}
+          />
           <ScrollView
             ref={ref => this.scrollView = ref}
             onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}

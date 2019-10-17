@@ -52,7 +52,7 @@ class AddRoomOverlay extends Component {
       <Overlay
         isVisible={visible}
         onBackdropPress={() => {toggle(); this.resetForm()}}
-        borderRadius={10}
+        borderRadius={30}
         height={250}
         overlayStyle={styles.overlay}
         windowBackgroundColor='rgba(0,0,0,0.6)'

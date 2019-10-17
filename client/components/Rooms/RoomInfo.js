@@ -8,7 +8,7 @@ const DeleteRoomButton = (props) => {
       title='Delete Room'
       onPress={() => props.deleteRoom()}
       buttonStyle={{backgroundColor: '#b30000'}}
-      containerStyle={{marginTop: 30}}
+      containerStyle={{marginVertical: 20}}
     />
   )
 }

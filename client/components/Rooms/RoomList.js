@@ -68,7 +68,7 @@ class RoomList extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: 'Rooms',
+      headerTitle: 'Taint',
       headerStyle: {
         backgroundColor: '#193367',
       },
