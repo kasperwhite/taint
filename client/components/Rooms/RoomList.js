@@ -78,7 +78,7 @@ class RoomList extends Component {
       },
       headerRight: (
         <View style={{flexDirection: 'row'}}>
-          <SearchButton/>
+          {/* <SearchButton/> */}
           <AddButton handlePress={navigation.getParam('toggleModal')}/>
         </View>
       )

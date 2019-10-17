@@ -1,6 +1,39 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList } from 'react-native';
-import { Input, Icon, Avatar, Button, ListItem } from 'react-native-elements';
+import { Input, Icon, Avatar, Button, ListItem, Tooltip } from 'react-native-elements';
+
+const PopoverContent = (props) => (
+  <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-around'}}>
+    <Button
+      icon={
+        <Icon
+          name='pencil'
+          type='font-awesome'
+          color='#fff'
+          size={15}
+        />
+      }
+      buttonStyle={{}}
+      containerStyle={{width: '49%', borderRadius: 10}}
+      onPress={() => props.editMessage(props.messageId)}
+      type='clear'
+    />
+    <Button
+      icon={
+        <Icon
+          name='trash'
+          type='font-awesome'
+          color='#fff'
+          size={15}
+        />
+      }
+      buttonStyle={{}}
+      containerStyle={{width: '49%', borderRadius: 10}}
+      onPress={() => props.deleteMessage(props.messageId)}
+      type='clear'
+    />
+  </View>
+)
 
 class Room extends Component {
   constructor(props){
@@ -23,7 +56,8 @@ class Room extends Component {
         {id: 9, sender: 'kasper', text: 'Hello!'},
         {id: 10, sender: 'kasper', text: 'Hello!'},
         {id: 11, sender: 'kasper', text: 'Hello!'}
-      ]
+      ],
+      tooltipVis: true
     }
   }
 
@@ -48,7 +82,7 @@ class Room extends Component {
             />
           }
           containerStyle={{width: 50, marginRight: 5}}
-          onPress={navigation.getParam('openDialog')}
+          onPress={navigation.getParam('openInfo')}
           type='clear'
         />
       )
@@ -57,7 +91,7 @@ class Room extends Component {
 
   componentWillMount(){
     this.props.navigation.setParams({ 
-      openDialog: this.openDialog
+      openInfo: this.openInfo
     });
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
@@ -71,9 +105,9 @@ class Room extends Component {
     // fetch messages
   }
 
-  openDialog = () => {
+  openInfo = () => {
     const {roomId, roomName} = this.state;
-    this.props.navigation.navigate('RoomDialog', { roomId, roomName })
+    this.props.navigation.navigate('RoomInfo', { roomId, roomName })
   }
 
   sendMessage = () => {
@@ -84,6 +118,14 @@ class Room extends Component {
       messages,
       message: ''
     })
+  }
+
+  editMessage = (id) => {
+    console.log('Edit Message', id)
+  }
+
+  deleteMessage = (id) => {
+    console.log('Delete Message', id)
   }
 
   renderMessage = ({item, index}) => {
@@ -97,10 +139,21 @@ class Room extends Component {
             source={require("../../assets/cat.jpg")}
           />
         </View>
-        <View style={styles.messageContent}>
-          <Text style={styles.messageSender}>{item.sender}</Text>
-          <Text style={styles.messageText}>{item.text}</Text>
-        </View>
+        <Tooltip
+          popover={ 
+            <PopoverContent
+              editMessage={this.editMessage}
+              deleteMessage={this.deleteMessage}
+              messageId={item.id}
+            /> 
+          }
+          overlayColor='rgba(0,0,0,0.4)'
+        >
+          <View style={styles.messageContent}>
+            <Text style={styles.messageSender}>{item.sender}</Text>
+            <Text style={styles.messageText}>{item.text}</Text>
+          </View>
+        </Tooltip>
       </View>
     );
   }
