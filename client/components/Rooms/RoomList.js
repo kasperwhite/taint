@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 
 import AddRoomOverlay from './AddRoomOverlay';
@@ -62,7 +62,8 @@ class RoomList extends Component {
         {id: 13, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
         {id: 14, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
       ],
-      isVisible: false
+      isVisible: false,
+      isLoading: false
     }
   };
 
@@ -125,20 +126,28 @@ class RoomList extends Component {
   }
 
   render(){
-    return(
-      <View>
-        <FlatList
-          data={this.state.rooms}
-          renderItem={this.renderRoom}
-          keyExtractor={i => i.id.toString()}
-        />
-        <AddRoomOverlay
-          visible={this.state.isVisible}
-          toggle={this.toggleModal}
-          addRoom={this.addRoom}
-        />
-      </View>
-    )
+    if(this.state.isLoading){
+      return(
+        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
+          <ActivityIndicator color="#193367" size='large'/>
+        </View>
+      )
+    } else {
+      return(
+        <View>
+          <FlatList
+            data={this.state.rooms}
+            renderItem={this.renderRoom}
+            keyExtractor={i => i.id.toString()}
+          />
+          <AddRoomOverlay
+            visible={this.state.isVisible}
+            toggle={this.toggleModal}
+            addRoom={this.addRoom}
+          />
+        </View>
+      )
+    }
   }
 }
 

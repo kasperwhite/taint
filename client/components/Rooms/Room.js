@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 
 const MessageOverlay = (props) => (
@@ -39,6 +39,7 @@ class Room extends Component {
       roomName: '',
       message: '',
       isVisible: false,
+      isLoading: false,
       selectedMessageId: 0,
       messages: [
         {id: 0, sender: 'kasper', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
@@ -157,6 +158,13 @@ class Room extends Component {
   }
 
   render(){
+    if(this.state.isLoading){
+      return(
+        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
+          <ActivityIndicator color="#193367" size='large'/>
+        </View>
+      )
+    } else {
     return(
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
         <View style={styles.main}>
@@ -179,31 +187,32 @@ class Room extends Component {
             />
           </ScrollView>
           <Input
-          placeholder='Type message...'
-          rightIcon={
-            <Button
-              icon={
-                <Icon
-                  name='paper-plane'
-                  type='font-awesome'
-                  color='#193367'
-                />
-              }
-              containerStyle={{width: 50}}
-              onPress={this.sendMessage}
-              type='clear'
-            />
-          }
-          inputContainerStyle={styles.messageInput}
-          inputStyle={{fontSize: 20}}
-          containerStyle={styles.messageInputCont}
-          onChangeText={(text) => this.setState({ message: text })}
-          value={this.state.message}
-          multiline
-        />
-      </View>
-    </KeyboardAvoidingView>
+            placeholder='Type message...'
+            rightIcon={
+              <Button
+                icon={
+                  <Icon
+                    name='paper-plane'
+                    type='font-awesome'
+                    color='#193367'
+                  />
+                }
+                containerStyle={{width: 50}}
+                onPress={this.sendMessage}
+                type='clear'
+              />
+            }
+            inputContainerStyle={styles.messageInput}
+            inputStyle={{fontSize: 20}}
+            containerStyle={styles.messageInputCont}
+            onChangeText={(text) => this.setState({ message: text })}
+            value={this.state.message}
+            multiline
+          />
+        </View>
+      </KeyboardAvoidingView>
     )
+    }
   }
 }
 
