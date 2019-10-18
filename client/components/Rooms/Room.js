@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView,
+  FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 
 const MessageOverlay = (props) => (

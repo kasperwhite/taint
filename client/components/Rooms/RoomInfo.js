@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, ScrollView, FlatList, View } from 'react-native';
+import { Text, ScrollView, FlatList, View, Alert } from 'react-native';
 import { ListItem, Icon, Tooltip, ButtonGroup, Button } from 'react-native-elements';
 
 const DeleteRoomButton = (props) => {
@@ -117,6 +117,14 @@ class RoomInfo extends Component {
 
   deleteUser = (id) => {
     console.log('Delete User', id)
+    Alert.alert(
+      'Delete User',
+      'Are you sure you want to delete this user?',
+      [
+        { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
+        { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
+      ]
+    )
   }
 
   openUserPage = (id) => {

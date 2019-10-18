@@ -69,9 +69,10 @@ class RoomList extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: 'Taint',
+      headerTitle: 'Rooms',
       headerStyle: {
         backgroundColor: '#193367',
+        alignContent: 'center'
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
@@ -82,6 +83,21 @@ class RoomList extends Component {
           {/* <SearchButton/> */}
           <AddButton handlePress={navigation.getParam('toggleModal')}/>
         </View>
+      ),
+      headerLeft: (
+        <Button
+          icon={
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='#fff'
+              size={21}
+            />
+          }
+          containerStyle={{marginLeft: 5}}
+          onPress={navigation.openDrawer}
+          type='clear'
+        />
       )
     };
   };
