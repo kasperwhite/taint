@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Text } from 'react-native';
+import { Text, AsyncStorage } from 'react-native';
+import { Button } from 'react-native-elements';
 
 class SignIn extends Component {
   constructor(props){
@@ -23,9 +24,14 @@ class SignIn extends Component {
     };
   };
 
+  signIn = async () => {
+    await AsyncStorage.setItem('userToken', '1234-5678')
+    this.props.navigation.navigate('AuthLoading');
+  }
+
   render(){
     return(
-      <Text>SignIn</Text>
+      <Button title='Enter' onPress={this.signIn}/>
     )
   }
 }

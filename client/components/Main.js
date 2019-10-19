@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, Platform } from 'react-native';
-import { Avatar, ListItem, Icon } from 'react-native-elements';
+import { View, Text, Platform, AsyncStorage } from 'react-native';
+import { Avatar, ListItem, Icon, Button } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
@@ -17,33 +17,60 @@ import RoomInfo from './Rooms/RoomInfo';
 
 import Settings from './Settings/Settings';
 
-const DrawerContent = (props) => (
-  <View>
-    <ListItem
-      leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
-      title='KASPERWHITE'
-      titleStyle={{fontWeight: 'bold', color: '#fff'}}
-      containerStyle={{
-        height: 130,
-        backgroundColor: '#214183',
-        paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
-      }}
-    />
-    <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
-  </View>
-)
+const DrawerContent = (props) => {
+
+  const signOut = async () => {
+    await AsyncStorage.removeItem('userToken');
+    props.navigation.navigate('AuthLoading');
+  }
+
+  return(
+    <View>
+      <ListItem
+        leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
+        title='KASPERWHITE'
+        titleStyle={{fontWeight: 'bold', color: '#fff'}}
+        containerStyle={{
+          height: 130,
+          backgroundColor: '#214183',
+          paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
+        }}
+        rightElement={
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              onPress={() => console.log('User Profile')}
+              type='clear'
+              icon={<Icon name='user' type='font-awesome' color='#fff' size={20}/>}
+            />
+            <Button
+              onPress={signOut}
+              type='clear'
+              icon={<Icon name='sign-out' type='font-awesome' color='#fff' size={20}/>}
+            />
+          </View>
+        }
+      />
+      <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
+    </View>
+  )
+}
 
 const RoomNavigator = createStackNavigator(
   {
     Rooms: RoomList,
     Room: Room,
     RoomInfo: RoomInfo
+  },
+  {
+    initialRouteName: 'Rooms'
   }
 )
 
 const SettingsNavigator = createStackNavigator(
   {
     Settings: Settings
+  }, {
+    initialRouteName: 'Settings'
   }
 )
 
@@ -51,6 +78,9 @@ const AuthNavigator = createStackNavigator(
   {
     SignIn: SignIn,
     Registration: Registration
+  },
+  {
+    initialRouteName: 'SignIn'
   }
 )
 
@@ -91,7 +121,7 @@ const SwitchNavigator = createAppContainer(createAnimatedSwitchNavigator(
     transition: (
       <Transition.Together>
         <Transition.Out
-          type='fade'
+          type='slide-bottom'
           durationMs={200}
           interpolation="easeIn"
         />
