@@ -111,7 +111,9 @@ describe('Rooms', () => {
         userId: '5da15ac9cf43cf2770c6a534'
       })
       .end((err, res) => {
-        console.log(res.body);
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(2);
 
         done();
       })
@@ -124,7 +126,9 @@ describe('Rooms', () => {
       .delete(currentPath)
       .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
-        console.log(res.body);
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(1);
 
         done();
       })

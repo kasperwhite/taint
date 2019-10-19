@@ -6,7 +6,10 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 })
-userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(passportLocalMongoose, {
+  limitAttempts: true,
+  maxAttempts: 5 // forsecure
+});
 
 const User = mongoose.model('User', userSchema);
 

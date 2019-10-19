@@ -8,21 +8,27 @@ const UserModel = require('../models/user');
 authRouter.use(bodyParser.json());
 
 authRouter.post('/signup', (req, res, next) => {
-  UserModel.register(new UserModel({username: req.body.username, publicKey: req.body.publicKey}),
-    req.body.password, (err, user) => {
-    if(err) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.json({err: err});
-    }
-    else {
-      passport.authenticate('local')(req, res, () => {
-        res.statusCode = 200;
+  if(req.body.username.length > 15){
+    err = new Error('Username validation error')
+    err.status = 409;
+    return next(err);
+  } else {
+    UserModel.register(new UserModel({username: req.body.username}),
+      req.body.password, (err, user) => {
+      if(err) {
+        res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
-        res.json({success: true});
-      });
-    }
-  });
+        res.json({err: err});
+      }
+      else {
+        passport.authenticate('local')(req, res, () => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json({success: true});
+        });
+      }
+    });
+  }
 });
 
 authRouter.post('/login', passport.authenticate('local'), (req, res) => {

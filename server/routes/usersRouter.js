@@ -66,7 +66,7 @@ usersRouter.route('/:userId')
   res.end('POST operation not supported')
 })
 .put((req, res, next) => {
-  const avKeys = ['username'];
+  const avKeys = ['username']; // forsecure
   filterKeys(req.body, avKeys);
   UserModel.findByIdAndUpdate(req.params.userId, {$set: req.body}, {new: true})
     .then((user) => {

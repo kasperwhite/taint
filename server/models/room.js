@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  hash: {
+  hash: { // forsecure
     type: String,
     required: true
   }
