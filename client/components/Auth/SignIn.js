@@ -9,7 +9,8 @@ class SignIn extends Component {
     this.state = {
       username: '',
       password: '',
-      isValid: false
+      isValid: false,
+      passwordIsVisible: false
     }
   }
 
@@ -34,23 +35,41 @@ class SignIn extends Component {
             />
           }
           containerStyle={{width: 50, marginRight: 5}}
-          onPress={() => navigation.navigate('Registration')}
+          onPress={navigation.getParam('openReg')}
           type='clear'
         />
       )
     };
   };
 
+  componentDidMount() {
+    this.props.navigation.setParams({ openReg: this.openReg });
+  }
+
+  openReg = () => {
+    this.props.navigation.navigate('Registration');
+    this.resetForm();
+  }
+
   signIn = async () => {
     await AsyncStorage.setItem('userToken', '1234-5678')
     this.props.navigation.navigate('AuthLoading');
+  }
+
+  resetForm = () => {
+    this.setState({
+      username: '',
+      password: '',
+      isValid: false,
+      passwordIsVisible: false
+    })
   }
 
   render(){
     return(
       <View style={styles.view}>
         <View style={styles.inputBlock}>
-          <Input 
+          <Input
             placeholder='Username'
             leftIcon={
               <Icon
@@ -63,6 +82,8 @@ class SignIn extends Component {
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
             onChangeText={(username) => this.setState({username})}
+            containerStyle={{marginBottom: 5}}
+            maxLength={20}
           />
           <Input 
             placeholder='Password'
@@ -75,8 +96,24 @@ class SignIn extends Component {
               />
             }
             leftIconContainerStyle={{marginRight: 7}}
+            rightIcon={
+              <Button
+                type='clear'
+                icon={
+                  <Icon
+                    name={this.state.passwordIsVisible ? 'eye' : 'eye-slash'}
+                    type='font-awesome'
+                    color='#193367'
+                    size={20}
+                  />
+                }
+                onPress={() => this.setState({passwordIsVisible: !this.state.passwordIsVisible})}
+              />
+            }
             value={this.state.password}
             onChangeText={(password) => this.setState({password})}
+            secureTextEntry={!this.state.passwordIsVisible}
+            containerStyle={{marginBottom: 5}}
           />
         </View>
         <Button
