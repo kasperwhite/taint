@@ -38,11 +38,6 @@ const DrawerContent = (props) => {
         rightElement={
           <View style={{flexDirection: 'row'}}>
             <Button
-              onPress={() => console.log('User Profile')}
-              type='clear'
-              icon={<Icon name='user' type='font-awesome' color='#fff' size={20}/>}
-            />
-            <Button
               onPress={signOut}
               type='clear'
               icon={<Icon name='sign-out' type='font-awesome' color='#fff' size={20}/>}

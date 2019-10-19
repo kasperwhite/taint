@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 class Registration extends Component {
   constructor(props){
@@ -9,6 +9,8 @@ class Registration extends Component {
 
     }
   }
+
+  /*  data without space  */
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -25,7 +27,9 @@ class Registration extends Component {
 
   render(){
     return(
-      <Text>Registration</Text>
+      <View>
+        <Text>Registration</Text>
+      </View>
     )
   }
 }

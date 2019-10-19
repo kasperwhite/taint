@@ -127,10 +127,6 @@ class RoomInfo extends Component {
     )
   }
 
-  openUserPage = (id) => {
-    console.log('Open User Page', id)
-  }
-
   renderUser = ({ item }) => (
     <ListItem
       title={item.username}
@@ -138,7 +134,6 @@ class RoomInfo extends Component {
       leftAvatar={{ source: require('../../assets/cat.jpg')}}
       rightElement={
         <View style={{flexDirection: 'row'}}>
-          <OpenUserPageButton openUserPage={this.openUserPage} userId={item.id}/>
           <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
         </View>
       }
