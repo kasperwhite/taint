@@ -8,7 +8,7 @@ import { Transition } from 'react-native-reanimated';
 import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
 
 import AuthLoading from './Auth/AuthLoading';
-import Registration from './Auth/Registration';
+import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
 
 import RoomList from './Rooms/RoomList';
@@ -72,7 +72,7 @@ const SettingsNavigator = createStackNavigator(
 const AuthNavigator = createStackNavigator(
   {
     SignIn: SignIn,
-    Registration: Registration
+    SignUp: SignUp
   },
   {
     initialRouteName: 'SignIn'

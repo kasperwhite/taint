@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 
-class Registration extends Component {
+class SignUp extends Component {
   constructor(props){
     super(props)
 
@@ -18,7 +18,7 @@ class Registration extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Registration',
+      title: 'Sign Up',
       headerStyle: {
         backgroundColor: '#193367'
       },
@@ -49,14 +49,14 @@ class Registration extends Component {
         <View style={styles.inputBlock}>
           <Input 
             placeholder='Username'
-            leftIcon={
+            /* leftIcon={
               <Icon
                 name='user'
                 type='font-awesome'
                 color='#193367'
                 size={20}
               />
-            }
+            } */
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
             onChangeText={(username) => this.setState({username})}
@@ -65,14 +65,14 @@ class Registration extends Component {
           />
           <Input 
             placeholder='Password'
-            leftIcon={
+            /* leftIcon={
               <Icon
                 name='lock'
                 type='font-awesome'
                 color='#193367'
                 size={20}
               />
-            }
+            } */
             leftIconContainerStyle={{marginRight: 7}}
             rightIcon={
               <Button
@@ -95,14 +95,14 @@ class Registration extends Component {
           />
           <Input 
             placeholder='Repeat Password'
-            leftIcon={
+            /* leftIcon={
               <Icon
                 name='lock'
                 type='font-awesome'
                 color='#193367'
                 size={20}
               />
-            }
+            } */
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.repeatedPassword}
             onChangeText={(repeatedPassword) => this.setState({repeatedPassword})}
@@ -115,18 +115,17 @@ class Registration extends Component {
           />
         </View>
         <Button
-          title='Complete'
-          icon={
+          title='Sign Up'
+          /* icon={
             <Icon
-              name='sign-in'
+              name='check'
               type='font-awesome'
               color='#fff'
               size={20}
             />
-          }
+          } */
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#193367'}}
-          titleStyle={{marginLeft: 10}}
+          buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
           disabled={
             !Boolean(
             this.state.username.trim()
@@ -153,4 +152,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Registration;
+export default SignUp;

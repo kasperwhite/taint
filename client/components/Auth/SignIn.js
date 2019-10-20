@@ -47,7 +47,7 @@ class SignIn extends Component {
   }
 
   openReg = () => {
-    this.props.navigation.navigate('Registration');
+    this.props.navigation.navigate('SignUp');
     this.resetForm();
   }
 
@@ -118,17 +118,16 @@ class SignIn extends Component {
         </View>
         <Button
           title='Sign In'
-          icon={
+          /* icon={
             <Icon
               name='sign-in'
               type='font-awesome'
               color='#fff'
               size={20}
             />
-          }
+          } */
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#193367'}}
-          titleStyle={{marginLeft: 10}}
+          buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
           disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
           onPress={this.signIn}
         />
