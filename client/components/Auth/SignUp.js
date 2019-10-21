@@ -34,14 +34,18 @@ class SignUp extends Component {
       username: '',
       password: '',
       repeatedPassword: '',
-      passwordIsVisible: false
+      passwordIsVisible: false,
+      isValid: false
     })
   }
 
-  completeReg = () => {
+  signUp = () => {
     //some message
+    const {username, password} = this.state;
+    const user = { username, password };
+    console.log(user);
     this.props.navigation.navigate('SignIn');
-  }
+  } 
 
   render(){
     return(
@@ -49,30 +53,14 @@ class SignUp extends Component {
         <View style={styles.inputBlock}>
           <Input 
             placeholder='Username'
-            /* leftIcon={
-              <Icon
-                name='user'
-                type='font-awesome'
-                color='#193367'
-                size={20}
-              />
-            } */
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
-            onChangeText={(username) => this.setState({username})}
+            onChangeText={(u) => {this.setState({username: u.replace(/\s/g,'')})}}
             containerStyle={{marginBottom: 5}}
             maxLength={20}
           />
           <Input 
             placeholder='Password'
-            /* leftIcon={
-              <Icon
-                name='lock'
-                type='font-awesome'
-                color='#193367'
-                size={20}
-              />
-            } */
             leftIconContainerStyle={{marginRight: 7}}
             rightIcon={
               <Button
@@ -89,23 +77,20 @@ class SignUp extends Component {
               />
             }
             value={this.state.password}
-            onChangeText={(password) => this.setState({password})}
+            onChangeText={(p) => {this.setState({password: p.replace(/\s/g,'')})}}
+            errorMessage={
+              this.state.password.length < 12 && this.state.password
+              ? 'Password must be longer' : ''
+            }
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
           />
           <Input 
             placeholder='Repeat Password'
-            /* leftIcon={
-              <Icon
-                name='lock'
-                type='font-awesome'
-                color='#193367'
-                size={20}
-              />
-            } */
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.repeatedPassword}
-            onChangeText={(repeatedPassword) => this.setState({repeatedPassword})}
+            onChangeText={(r) => this.setState({repeatedPassword: r.replace(/\s/g,'')})}
+            onChange={this.handleChange}
             errorMessage={
               this.state.password !== this.state.repeatedPassword && this.state.repeatedPassword
               ? 'Passwords are different' : ''
@@ -116,24 +101,15 @@ class SignUp extends Component {
         </View>
         <Button
           title='Sign Up'
-          /* icon={
-            <Icon
-              name='check'
-              type='font-awesome'
-              color='#fff'
-              size={20}
-            />
-          } */
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
           buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
           disabled={
-            !Boolean(
-            this.state.username.trim()
-            && this.state.password.trim()
-            && this.state.password.trim() === this.state.repeatedPassword.trim()
-            )
+            !Boolean(this.state.username
+            && this.state.password
+            && this.state.password.length >= 12
+            && this.state.password === this.state.repeatedPassword)
           }
-          onPress={this.completeReg}
+          onPress={this.signUp}
         />
       </View>
     )

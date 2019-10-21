@@ -111,7 +111,7 @@ class Room extends Component {
   sendMessage = () => {
     let {message} = this.state;
     let messages = Object.assign([], this.state.messages);
-    messages.push({id: this.state.messages.length, text: message, sender: 'kasperwhite'});
+    messages.push({id: this.state.messages.length, text: message.trim(), sender: 'kasperwhite'});
     this.setState({
       messages,
       message: ''
@@ -201,6 +201,8 @@ class Room extends Component {
                 containerStyle={{width: 50}}
                 onPress={this.sendMessage}
                 type='clear'
+                disabled={!this.state.message.trim()}
+                disabledStyle={{opacity: 0.6}}
               />
             }
             inputContainerStyle={styles.messageInput}

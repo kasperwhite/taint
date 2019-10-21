@@ -43,7 +43,7 @@ class AddRoomOverlay extends Component {
     const {toggle, addRoom} = this.props;
     toggle();
     this.resetForm();
-    addRoom(this.state.roomName, this.state.timeValue)
+    addRoom(this.state.roomName.trim(), this.state.timeValue)
   }
 
   render(){

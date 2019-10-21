@@ -52,7 +52,10 @@ class SignIn extends Component {
   }
 
   signIn = async () => {
-    await AsyncStorage.setItem('userToken', '1234-5678')
+    const {username, password} = this.state;
+    const user = { username,password };
+    console.log(user);
+    await AsyncStorage.setItem('userToken', '1234-5678');
     this.props.navigation.navigate('AuthLoading');
   }
 
@@ -81,7 +84,7 @@ class SignIn extends Component {
             }
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
-            onChangeText={(username) => this.setState({username})}
+            onChangeText={(username) => this.setState({username: username.replace(/\s/g,'')})}
             containerStyle={{marginBottom: 5}}
             maxLength={20}
           />
@@ -111,7 +114,7 @@ class SignIn extends Component {
               />
             }
             value={this.state.password}
-            onChangeText={(password) => this.setState({password})}
+            onChangeText={(password) => this.setState({password: password.replace(/\s/g,'')})}
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
           />
