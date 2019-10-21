@@ -108,20 +108,19 @@ class Room extends Component {
     this.props.navigation.navigate('RoomInfo', { roomId, roomName })
   }
 
+  // SEND MESSAGE OPERATION
   sendMessage = () => {
     let {message} = this.state;
-    let messages = Object.assign([], this.state.messages);
-    messages.push({id: this.state.messages.length, text: message.trim(), sender: 'kasperwhite'});
-    this.setState({
-      messages,
-      message: ''
-    })
+    console.log('Send Message', message);
+    this.setState({message: ''})
   }
 
+  // EDIT MESSAGE OPERATION
   editMessage = (id) => {
     console.log('Edit Message', id)
   }
 
+  // DELETE MESSAGE OPERATION
   deleteMessage = (id) => {
     console.log('Delete Message', id)
   }

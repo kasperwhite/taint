@@ -111,12 +111,9 @@ class RoomList extends Component {
     this.setState({ isVisible: !this.state.isVisible });
   }
 
+  // ADD ROOM OPERATION
   addRoom = (name, time) => {
-    let rooms = Object.assign([], this.state.rooms);
-    const roomId = this.state.rooms.length;
-    rooms.push({id: roomId, name, time, messages: [{ text: 'Hello' }]});
-    this.setState({ rooms });
-    this.enterRoom(roomId, name);
+    console.log('Add Room', name, time);
   }
 
   enterRoom = (roomId, roomName) => {

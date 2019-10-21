@@ -55,6 +55,7 @@ class SignIn extends Component {
     const {username, password} = this.state;
     const user = { username,password };
     console.log(user);
+    
     await AsyncStorage.setItem('userToken', '1234-5678');
     this.props.navigation.navigate('AuthLoading');
   }
@@ -121,14 +122,6 @@ class SignIn extends Component {
         </View>
         <Button
           title='Sign In'
-          /* icon={
-            <Icon
-              name='sign-in'
-              type='font-awesome'
-              color='#fff'
-              size={20}
-            />
-          } */
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
           buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
           disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}

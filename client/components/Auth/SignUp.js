@@ -14,8 +14,6 @@ class SignUp extends Component {
     }
   }
 
-  /*  data without space  */
-
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Sign Up',
@@ -40,10 +38,10 @@ class SignUp extends Component {
   }
 
   signUp = () => {
-    //some message
     const {username, password} = this.state;
     const user = { username, password };
     console.log(user);
+    
     this.props.navigation.navigate('SignIn');
   } 
 
@@ -56,6 +54,10 @@ class SignUp extends Component {
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
             onChangeText={(u) => {this.setState({username: u.replace(/\s/g,'')})}}
+            errorMessage={
+              this.state.username.length < 4 && this.state.username
+              ? 'Username must be longer' : ''
+            }
             containerStyle={{marginBottom: 5}}
             maxLength={20}
           />
@@ -107,6 +109,7 @@ class SignUp extends Component {
             !Boolean(this.state.username
             && this.state.password
             && this.state.password.length >= 12
+            && this.state.username.length >= 4
             && this.state.password === this.state.repeatedPassword)
           }
           onPress={this.signUp}

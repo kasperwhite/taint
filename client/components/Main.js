@@ -15,6 +15,8 @@ import RoomList from './Rooms/RoomList';
 import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
 
+import Contacts from './Contacts/Contacts';
+
 import Settings from './Settings/Settings';
 
 const DrawerContent = (props) => {
@@ -61,6 +63,15 @@ const RoomNavigator = createStackNavigator(
   }
 )
 
+const ContactsNavigator = createStackNavigator(
+  {
+    Contacts: Contacts
+  },
+  {
+    initialRouteName: 'Contacts'
+  }
+)
+
 const SettingsNavigator = createStackNavigator(
   {
     Settings: Settings
@@ -88,6 +99,16 @@ const MainNavigator = createDrawerNavigator({
       drawerIcon: ({tintColor}) => (
         <Icon name='comments' type='font-awesome' color='#fff' size={23}/>
       )     
+    }
+  },
+  Contacts: {
+    screen: ContactsNavigator,
+    navigationOptions: {
+      title: 'Contacts',
+      drawerLabel: 'Contacts',
+      drawerIcon: ({tintColor}) => (
+        <Icon name='address-book' type='font-awesome' color='#fff' size={23}/>
+      )
     }
   },
   Settings: {

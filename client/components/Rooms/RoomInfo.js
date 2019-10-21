@@ -72,6 +72,7 @@ class RoomInfo extends Component {
     this.state = {
       roomId: 1,
       roomName: '',
+      roomType: '',
       roomKey: '',
       roomTime: 2981,
       users: [
@@ -99,18 +100,22 @@ class RoomInfo extends Component {
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
-    const roomKey = '1234-7618-234'
+    const roomKey = '1234-7618-234';
+    const roomType = 'Private';
     this.setState({
       roomId,
       roomName,
-      roomKey
+      roomKey,
+      roomType
     })
   }
 
+  // DELETE ROOM OPERATION
   deleteRoom = () => {
     console.log('Delete Room', this.state.roomId)
   }
 
+  // ADD USER OPERATION
   addUser = () => {
     console.log('Add User')
   }
@@ -144,6 +149,7 @@ class RoomInfo extends Component {
     return(
       <ScrollView>
         <ListItem title='Name' rightTitle={this.state.roomName}/>
+        <ListItem title='Type' rightTitle={this.state.roomType}/>
         <ListItem title='Key' rightTitle={this.state.roomKey}/>
         <ListItem title='Time' rightTitle={`${Math.floor(this.state.roomTime/60)}m`}/>
         <ListItem title='Users' rightTitle={`${this.state.users.length}`} bottomDivider/>
