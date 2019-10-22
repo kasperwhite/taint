@@ -43,20 +43,7 @@ class Room extends Component {
       isVisible: false,
       isLoading: false,
       selectedMessageId: 0,
-      messages: [
-        {id: 0, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
-        {id: 1, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 2, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 3, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 4, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 5, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 6, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 7, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 8, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 9, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 10, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
-        {id: 11, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'}
-      ]
+      messages: []
     }
   }
 
@@ -94,9 +81,21 @@ class Room extends Component {
     });
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
+    let messages = [];
+    for(let i = 0; i <= 20; i++){
+      const message = {
+        id: i,
+        sender: 'kasper',
+        createdAt: '2019-10-22T02:39:58.638Z',
+        updatedAt: '2019-10-22T02:39:58.638Z',
+        text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
+      };
+      messages.push(message);
+    }
     this.setState({
       roomId,
-      roomName
+      roomName,
+      messages
     })
   }
 
