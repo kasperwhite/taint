@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView,
   FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
+import moment from 'moment';
 
 const MessageOverlay = (props) => (
   <Overlay
@@ -43,18 +44,18 @@ class Room extends Component {
       isLoading: false,
       selectedMessageId: 0,
       messages: [
-        {id: 0, sender: 'kasper', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
-        {id: 1, sender: 'kasper', text: 'Hello!'},
-        {id: 2, sender: 'kasper', text: 'Hello!'},
-        {id: 3, sender: 'kasper', text: 'Hello!'},
-        {id: 4, sender: 'kasper', text: 'Hello!'},
-        {id: 5, sender: 'kasper', text: 'Hello!'},
-        {id: 6, sender: 'kasper', text: 'Hello!'},
-        {id: 7, sender: 'kasper', text: 'Hello!'},
-        {id: 8, sender: 'kasper', text: 'Hello!'},
-        {id: 9, sender: 'kasper', text: 'Hello!'},
-        {id: 10, sender: 'kasper', text: 'Hello!'},
-        {id: 11, sender: 'kasper', text: 'Hello!'}
+        {id: 0, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!'},
+        {id: 1, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 2, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 3, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 4, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 5, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 6, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 7, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 8, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 9, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 10, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'},
+        {id: 11, sender: 'kasper', createdAt: '2019-10-22T02:39:58.638Z', updatedAt: '2019-10-22T02:39:58.638Z', text: 'Hello!'}
       ]
     }
   }
@@ -153,6 +154,7 @@ class Room extends Component {
         >
           <Text style={styles.messageSender}>{item.sender}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
+          <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -257,6 +259,11 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: '#fff'
+  },
+  messageTime: {
+    alignSelf: 'flex-end',
+    color: '#fff',
+    fontSize: 10
   },
   messageInput: {
     borderColor: '#fff',
