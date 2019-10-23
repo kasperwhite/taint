@@ -86,4 +86,26 @@ usersRouter.route('/:userId')
   .catch((err) => next(err))
 })
 
+usersRouter.route('/:userId/contacts')
+.post(async (req, res, next) => {
+  const {userId} = req.params;
+  let user = await UserModel.update({_id: userId}, {$push: {contacts: req.body.contactId}});
+
+  user = await UserModel.findById(userId).populate('contacts');
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json(user.contacts);
+})
+
+usersRouter.route('/:userId/contacts/:contactId')
+.delete(async (req, res, next) => {
+  const {userId, contactId} = req.params;
+
+  let user = await UserModel.update({_id: userId}, {$pullAll: {contacts: [contactId]}})
+  user = await UserModel.findById(userId).populate('contacts');
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json(user.contacts);
+})
+
 module.exports = usersRouter;

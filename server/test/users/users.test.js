@@ -13,9 +13,11 @@ describe('Users', () => {
   const path = '/users';
 
   let userId;
+  let contactId;
   let token;
 
   before((done) => {
+    contactId = '5daffd15fb402a2a7c2bb113';
     chai.request(url)
       .post('/auth/login')
       .send({
@@ -35,7 +37,7 @@ describe('Users', () => {
       .set('Authorization', `bearer ${token}`)
       .end((err, res) => {
         expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(1);
+        expect(res.body.length).to.be.equal(2);
 
         done();
       });
@@ -95,6 +97,39 @@ describe('Users', () => {
       })
   })
 
+  it('/POST users/:id/contacts', done => {
+    const currentPath = path + '/' + userId + '/contacts';
+
+    chai.request(url)
+      .post(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        contactId: '5daffd15fb402a2a7c2bb113' 
+      })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(1);
+
+        done()
+      })
+  })
+
+  it('/DELETE users/:id/contacts/:id', done => {
+    const currentPath = path + '/' + userId + '/contacts/' + contactId;
+
+    chai.request(url)
+      .delete(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(0);
+
+        done()
+      })
+  })
+
   it('/DELETE users/:id', done => {
     const currentPath = path + '/' + userId;
 
@@ -110,7 +145,7 @@ describe('Users', () => {
       })
   })
 
-  it('/DELETE users', done => {
+  /* it('/DELETE users', done => {
     chai.request(url)
       .delete(path)
       .set('Authorization', `bearer ${token}`)
@@ -120,6 +155,6 @@ describe('Users', () => {
 
         done();
       });
-  });
+  }); */
 
 });

@@ -178,7 +178,8 @@ describe('Rooms', () => {
       .set('Authorization', `bearer ${token}`)
       .send({
         text: 'TestTestTest',
-        sender: userId
+        sender: userId,
+        hash: '123'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);

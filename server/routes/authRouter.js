@@ -8,7 +8,7 @@ const UserModel = require('../models/user');
 authRouter.use(bodyParser.json());
 
 authRouter.post('/signup', (req, res, next) => {
-  if(req.body.username.length > 15){
+  if(req.body.username.length > 20){
     err = new Error('Username validation error')
     err.status = 409;
     return next(err);
