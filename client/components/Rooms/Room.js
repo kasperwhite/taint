@@ -11,19 +11,27 @@ const MessageOverlay = (props) => (
     borderRadius={20}
     height={110}
     windowBackgroundColor='rgba(0,0,0,0.6)'
-    overlayStyle={{}}
+    overlayStyle={{backgroundColor: '#222222'}}
   >
-    <View style={{flexDirection: 'column', justifyContent: 'space-around', width: '100%', height: '100%'}}>
+    <View
+      style={{
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#222222'
+      }}
+    >
       <Button
         title='Edit'
-        titleStyle={{color: '#193367'}}
+        titleStyle={{color: '#09C709'}}
         type='clear'
         buttonStyle={{paddingVertical: 10}}
         onPress={() => props.editMessage(props.messageId)}
       />
       <Button
         title='Delete'
-        titleStyle={{color: '#193367'}}
+        titleStyle={{color: '#09C709'}}
         type='clear'
         buttonStyle={{paddingVertical: 10}}
         onPress={() => props.deleteMessage(props.messageId)}
@@ -51,9 +59,9 @@ class Room extends Component {
     return {
       title: navigation.getParam('roomName'),
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -63,7 +71,7 @@ class Room extends Component {
             <Icon
               name='info'
               type='font-awesome'
-              color='#fff'
+              color='#09C709'
               size={21}
             />
           }
@@ -119,11 +127,13 @@ class Room extends Component {
   }
 
   editMessage = (id) => {
-    console.log('Edit Message', id)
+    console.log('Edit Message', id);
+    this.toggleOverlay();
   }
 
   deleteMessage = (id) => {
-    console.log('Delete Message', id)
+    console.log('Delete Message', id);
+    this.toggleOverlay();
   }
 
   toggleOverlay = () => {
@@ -138,14 +148,18 @@ class Room extends Component {
   renderMessage = ({item, index}) => {
     return(
       <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message}>
-        <View style={styles.messageAvatar}>
-          <Avatar
-            size={40}
-            rounded
-            containerStyle={{margin: 0, padding: 0}}
-            source={require("../../assets/cat.jpg")}
-          />
-        </View>
+        {
+          item.sender !== 'kasperwhite'
+          ? <View style={styles.messageAvatar}>
+              <Avatar
+                size={35}
+                rounded
+                containerStyle={{margin: 0, padding: 0}}
+                source={require("../../assets/cat.jpg")}
+              />
+            </View>
+          : null
+        }
         <TouchableOpacity
           style={styles.messageContent}
           onPress={() => this.selectMessage(item.id)}

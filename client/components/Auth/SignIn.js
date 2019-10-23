@@ -18,9 +18,9 @@ class SignIn extends Component {
     return {
       title: 'Sign In',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -30,7 +30,7 @@ class SignIn extends Component {
             <Icon
               name='user-plus'
               type='font-awesome'
-              color='#fff'
+              color='#09C709'
               size={21}
             />
           }

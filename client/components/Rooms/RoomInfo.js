@@ -87,9 +87,9 @@ class RoomInfo extends Component {
     return {
       title: 'Information',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       }

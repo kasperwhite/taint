@@ -20,9 +20,9 @@ class SignUp extends Component {
     return {
       title: 'Sign Up',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       }

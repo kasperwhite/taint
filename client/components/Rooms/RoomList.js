@@ -29,7 +29,7 @@ const AddButton = (props) => {
         <Icon
           name='plus'
           type='font-awesome'
-          color='#fff'
+          color='#09C709'
           size={21}
         />
       }
@@ -71,10 +71,10 @@ class RoomList extends Component {
     return {
       headerTitle: 'Rooms',
       headerStyle: {
-        backgroundColor: '#193367',
+        backgroundColor: '#222222',
         alignContent: 'center'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -90,7 +90,7 @@ class RoomList extends Component {
             <Icon
               name='bars'
               type='font-awesome'
-              color='#fff'
+              color='#09C709'
               size={21}
             />
           }

@@ -22,13 +22,20 @@ class AuthLoading extends Component {
 
   render(){
     return(
-      <View style={{height: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#193367'}}>
+      <View
+        style={{
+          height: '100%',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#151516'
+        }}>
         <Text
           h1
-          h1Style={{color: '#fff', fontWeight: 'bold'}}
+          h1Style={{color: '#09C709', fontWeight: 'bold'}}
           style={{marginBottom: 15}}
         >Taint</Text>
-        <ActivityIndicator color='#fff' size='large'/>
+        <ActivityIndicator color='#09C709' size='large'/>
       </View>
     )
   }
