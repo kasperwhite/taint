@@ -97,6 +97,21 @@ describe('Users', () => {
       })
   })
 
+  it('/GET users/:id/contacts', done => {
+    const currentPath = path + '/' + userId + '/contacts';
+
+    chai.request(url)
+      .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(0);
+
+        done()
+      })
+  })
+
   it('/POST users/:id/contacts', done => {
     const currentPath = path + '/' + userId + '/contacts';
 

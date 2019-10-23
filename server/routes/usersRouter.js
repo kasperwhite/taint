@@ -87,6 +87,13 @@ usersRouter.route('/:userId')
 })
 
 usersRouter.route('/:userId/contacts')
+.get(async (req, res, next) => {
+  const currentUser = await UserModel.findById(req.params.userId);
+
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json(currentUser.contacts);
+})
 .post(async (req, res, next) => {
   const {userId} = req.params;
   let user = await UserModel.update({_id: userId}, {$push: {contacts: req.body.contactId}});
