@@ -14,6 +14,7 @@ import SignIn from './Auth/SignIn';
 import RoomList from './Rooms/RoomList';
 import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
+import SelectUsers from './Rooms/SelectUsers';
 
 import Contacts from './Contacts/Contacts';
 
@@ -56,7 +57,8 @@ const RoomNavigator = createStackNavigator(
   {
     Rooms: RoomList,
     Room: Room,
-    RoomInfo: RoomInfo
+    RoomInfo: RoomInfo,
+    SelectUsers: SelectUsers
   },
   {
     initialRouteName: 'Rooms'

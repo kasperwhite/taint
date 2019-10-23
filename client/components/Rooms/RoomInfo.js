@@ -117,7 +117,8 @@ class RoomInfo extends Component {
 
   // ADD USER OPERATION
   addUser = () => {
-    console.log('Add User')
+    console.log('Add User');
+    this.props.navigation.navigate('SelectUsers');
   }
 
   deleteUser = (id) => {
