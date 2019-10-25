@@ -84,13 +84,17 @@ class Room extends Component {
   };
 
   componentWillMount(){
+    
+  }
+
+  componentDidMount(){
     this.props.navigation.setParams({ 
       openInfo: this.openInfo
     });
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
     let messages = [];
-    for(let i = 0; i <= 20; i++){
+    for(let i = 0; i <= 10; i++){
       const message = {
         id: i,
         sender: 'kasper',
@@ -105,10 +109,6 @@ class Room extends Component {
       roomName,
       messages
     })
-  }
-
-  componentDidMount(){
-    // fetch messages
   }
 
   openInfo = () => {
@@ -177,7 +177,7 @@ class Room extends Component {
     if(this.state.isLoading){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-          <ActivityIndicator color="#193367" size='large'/>
+          <ActivityIndicator color="#09C709" size='large'/>
         </View>
       )
     } else {
@@ -202,31 +202,31 @@ class Room extends Component {
               contentContainerStyle={styles.flatList}
             />
           </ScrollView>
-          <Input
-            placeholder='Type message...'
-            rightIcon={
-              <Button
-                icon={
-                  <Icon
-                    name='paper-plane'
-                    type='font-awesome'
-                    color='#193367'
-                  />
-                }
-                containerStyle={{width: 50}}
-                onPress={this.sendMessage}
-                type='clear'
-                disabled={!this.state.message.trim()}
-                disabledStyle={{opacity: 0.6}}
-              />
-            }
-            inputContainerStyle={styles.messageInput}
-            inputStyle={{fontSize: 20}}
-            containerStyle={styles.messageInputCont}
-            onChangeText={(text) => this.setState({ message: text })}
-            value={this.state.message}
-            multiline
-          />
+          <View style={styles.messageInputCont}>
+            <Input
+              placeholder='Type message...'
+              placeholderTextColor='#737373'
+              inputContainerStyle={styles.messageInput}
+              inputStyle={{fontSize: 20, borderColor: '#222222'}}
+              onChangeText={(text) => this.setState({ message: text })}
+              value={this.state.message}
+              multiline
+            />
+            <Button
+              icon={
+                <Icon
+                  name='paper-plane'
+                  type='font-awesome'
+                  color='#167B14'
+                />
+              }
+              onPress={this.sendMessage}
+              type='clear'
+              disabled={!this.state.message.trim()}
+              disabledStyle={{opacity: 0.6}}
+              containerStyle={{flexDirection: 'column', justifyContent: 'center'}}
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
     )
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   main: {
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: '#e0e0eb'
+    backgroundColor: '#151516'
   },
   flatList: {
     flexDirection: 'column',
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   messageContent: {
-    backgroundColor: '#193367',
+    backgroundColor: '#22593B',
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
@@ -280,14 +280,20 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     borderColor: '#fff',
-    paddingLeft: 10,
-    paddingTop: 3,
-    paddingBottom: 0,
+    paddingHorizontal: 15,
     maxHeight: 65,
+    backgroundColor: '#B4B1B1',
+    borderRadius: 20,
   },
   messageInputCont: {
+    paddingRight: 10,
+    paddingLeft: 35,
+    paddingVertical: 5,
     alignSelf: 'flex-end',
-    backgroundColor: '#fff'
+    backgroundColor: '#222222',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignContent: 'center'
   }
 })
 

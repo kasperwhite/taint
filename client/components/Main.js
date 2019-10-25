@@ -12,6 +12,7 @@ import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
 
 import RoomList from './Rooms/RoomList';
+import RoomCreate from './Rooms/RoomCreate';
 import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
 
@@ -53,6 +54,7 @@ const DrawerContent = (props) => {
 const RoomNavigator = createStackNavigator(
   {
     Rooms: RoomList,
+    RoomCreate: RoomCreate,
     Room: Room,
     RoomInfo: RoomInfo
   },

@@ -29,7 +29,8 @@ class AuthLoading extends Component {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#151516'
-        }}>
+        }}
+      >
         <Text
           h1
           h1Style={{color: '#09C709', fontWeight: 'bold'}}

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 
-import AddRoomOverlay from './AddRoomOverlay';
-
 const SearchButton = () => {
   return(
     <Button
@@ -34,7 +32,7 @@ const AddButton = (props) => {
         />
       }
       containerStyle={{width: 50, marginRight: 5}}
-      onPress={props.handlePress}
+      onPress={() => props.handlePress('RoomCreate')}
       type='clear'
     />
   )
@@ -62,7 +60,6 @@ class RoomList extends Component {
         {id: 13, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
         {id: 14, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
       ],
-      isVisible: false,
       isLoading: false
     }
   };
@@ -80,8 +77,7 @@ class RoomList extends Component {
       },
       headerRight: (
         <View style={{flexDirection: 'row'}}>
-          {/* <SearchButton/> */}
-          <AddButton handlePress={navigation.getParam('toggleModal')}/>
+          <AddButton handlePress={navigation.navigate}/>
         </View>
       ),
       headerLeft: (
@@ -101,15 +97,6 @@ class RoomList extends Component {
       )
     };
   };
-
-  componentDidMount() {
-    this.props.navigation.setParams({ toggleModal: this.toggleModal });
-    // fetch rooms
-  }
-
-  toggleModal = () => {
-    this.setState({ isVisible: !this.state.isVisible });
-  }
 
   addRoom = (name, time) => {
     let rooms = Object.assign([], this.state.rooms);
@@ -132,7 +119,15 @@ class RoomList extends Component {
         rightElement={
           <Badge
             value={item.messages.length}
-            badgeStyle={{backgroundColor: '#193367', width: 20, height: 20, borderRadius: 20}}/>
+            badgeStyle={{
+              backgroundColor: '#167B14',
+              width: 20,
+              height: 20,
+              borderRadius: 20,
+              borderColor: '#151516'
+            }}
+            textStyle={{color: '#151516'}}
+          />
         }
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
@@ -145,7 +140,7 @@ class RoomList extends Component {
     if(this.state.isLoading){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-          <ActivityIndicator color="#193367" size='large'/>
+          <ActivityIndicator color="#09C709" size='large'/>
         </View>
       )
     } else {
@@ -155,11 +150,6 @@ class RoomList extends Component {
             data={this.state.rooms}
             renderItem={this.renderRoom}
             keyExtractor={i => i.id.toString()}
-          />
-          <AddRoomOverlay
-            visible={this.state.isVisible}
-            toggle={this.toggleModal}
-            addRoom={this.addRoom}
           />
         </View>
       )
@@ -172,11 +162,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     height: 65,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    backgroundColor: '#151516'
   },
   roomTitle: {
     fontSize: 17,
-    marginBottom: 3
+    marginBottom: 3,
+    color: '#fff'
   },
   roomBadgeText: {
     color: 'white',

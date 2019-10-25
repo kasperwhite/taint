@@ -78,7 +78,7 @@ class SignIn extends Component {
               <Icon
                 name='user'
                 type='font-awesome'
-                color='#193367'
+                color='#167B14'
                 size={20}
               />
             }
@@ -86,6 +86,7 @@ class SignIn extends Component {
             value={this.state.username}
             onChangeText={(username) => this.setState({username: username.replace(/\s/g,'')})}
             containerStyle={{marginBottom: 5}}
+            inputStyle={{color: '#fff'}}
             maxLength={20}
           />
           <Input 
@@ -94,7 +95,7 @@ class SignIn extends Component {
               <Icon
                 name='lock'
                 type='font-awesome'
-                color='#193367'
+                color='#167B14'
                 size={20}
               />
             }
@@ -106,7 +107,7 @@ class SignIn extends Component {
                   <Icon
                     name={this.state.passwordIsVisible ? 'eye' : 'eye-slash'}
                     type='font-awesome'
-                    color='#193367'
+                    color='#167B14'
                     size={20}
                   />
                 }
@@ -117,22 +118,17 @@ class SignIn extends Component {
             onChangeText={(password) => this.setState({password: password.replace(/\s/g,'')})}
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
+            inputStyle={{color: '#fff'}}
           />
         </View>
         <Button
           title='Sign In'
-          /* icon={
-            <Icon
-              name='sign-in'
-              type='font-awesome'
-              color='#fff'
-              size={20}
-            />
-          } */
+          titleStyle={{color: '#151516'}}
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
+          buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
           disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
           onPress={this.signIn}
+          disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
         />
       </View>
     )
@@ -141,10 +137,12 @@ class SignIn extends Component {
 
 const styles = StyleSheet.create({
   view: {
+    height: '100%',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingVertical: 15,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    backgroundColor: '#151516'
   },
   inputBlock: {
     marginBottom: 20
