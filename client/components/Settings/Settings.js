@@ -15,10 +15,10 @@ class Settings extends Component {
     return {
       title: 'Settings',
       headerStyle: {
-        backgroundColor: '#193367',
+        backgroundColor: '#222222',
         alignContent: 'center'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -28,11 +28,11 @@ class Settings extends Component {
             <Icon
               name='bars'
               type='font-awesome'
-              color='#fff'
+              color='#09C709'
               size={21}
             />
           }
-          containerStyle={{marginLeft: 5}}
+          containerStyle={{marginLeft: 10}}
           onPress={navigation.openDrawer}
           type='clear'
         />

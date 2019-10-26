@@ -18,9 +18,9 @@ class SignUp extends Component {
     return {
       title: 'Sign Up',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       }
@@ -59,6 +59,7 @@ class SignUp extends Component {
               ? 'Username must be longer' : ''
             }
             containerStyle={{marginBottom: 5}}
+            inputStyle={{color: '#fff'}}
             maxLength={20}
           />
           <Input 
@@ -71,7 +72,7 @@ class SignUp extends Component {
                   <Icon
                     name={this.state.passwordIsVisible ? 'eye' : 'eye-slash'}
                     type='font-awesome'
-                    color='#193367'
+                    color='#167B14'
                     size={20}
                   />
                 }
@@ -86,8 +87,10 @@ class SignUp extends Component {
             }
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
+            inputStyle={{color: '#fff'}}
           />
-          <Input 
+          <Input
+            inputStyle={{color: '#fff'}}
             placeholder='Repeat Password'
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.repeatedPassword}
@@ -103,8 +106,9 @@ class SignUp extends Component {
         </View>
         <Button
           title='Sign Up'
+          titleStyle={{color: '#151516'}}
           containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#193367', paddingHorizontal: 10}}
+          buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
           disabled={
             !Boolean(this.state.username
             && this.state.password
@@ -113,6 +117,7 @@ class SignUp extends Component {
             && this.state.password === this.state.repeatedPassword)
           }
           onPress={this.signUp}
+          disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
         />
       </View>
     )
@@ -121,10 +126,12 @@ class SignUp extends Component {
 
 const styles = StyleSheet.create({
   view: {
+    height: '100%',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingVertical: 15,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    backgroundColor: '#151516'
   },
   inputBlock: {
     marginBottom: 20

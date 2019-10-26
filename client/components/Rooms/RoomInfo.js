@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import { Text, ScrollView, FlatList, View, Alert } from 'react-native';
+import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-native';
 import { ListItem, Icon, Tooltip, ButtonGroup, Button } from 'react-native-elements';
 
 const DeleteRoomButton = (props) => {
   return(
     <Button
       title='Delete Room'
+      titleStyle={{color: '#151516'}}
       onPress={() => props.deleteRoom()}
-      buttonStyle={{backgroundColor: '#b30000'}}
+      buttonStyle={{backgroundColor: '#167B14'}}
       containerStyle={{marginVertical: 20}}
     />
   )
@@ -20,11 +21,11 @@ const AddUserButton = (props) => {
         <Icon
           name='plus'
           type='font-awesome'
-          color='#fff'
+          color='#151516'
           size={15}
         />
       }
-      containerStyle={{borderRadius: 30, backgroundColor: '#193367', width: 30, height: 30}}
+      containerStyle={{borderRadius: 30, backgroundColor: '#167B14', width: 30, height: 30}}
       onPress={props.addUser}
       type='clear'
     />
@@ -37,7 +38,7 @@ const DeleteUserButton = (props) => (
       <Icon
         name='minus-circle'
         type='font-awesome'
-        color='#b30000'
+        color='#167B14'
         size={15}
       />
     }
@@ -88,9 +89,9 @@ class RoomInfo extends Component {
     return {
       title: 'Information',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       }
@@ -137,6 +138,8 @@ class RoomInfo extends Component {
     <ListItem
       title={item.username}
       bottomDivider
+      containerStyle={styles.infoListItemCont}
+      titleStyle={styles.infoListItemTitle}
       leftAvatar={{ source: require('../../assets/cat.jpg')}}
       rightElement={
         <View style={{flexDirection: 'row'}}>
@@ -148,12 +151,40 @@ class RoomInfo extends Component {
 
   render(){
     return(
-      <ScrollView>
-        <ListItem title='Name' rightTitle={this.state.roomName}/>
-        <ListItem title='Type' rightTitle={this.state.roomType}/>
-        <ListItem title='Key' rightTitle={this.state.roomKey}/>
-        <ListItem title='Time' rightTitle={`${Math.floor(this.state.roomTime/60)}m`}/>
-        <ListItem title='Users' rightTitle={`${this.state.users.length}`} bottomDivider/>
+      <ScrollView
+        style={{
+          backgroundColor: '#151516'
+        }}
+      >
+        <ListItem
+          title='Name'
+          rightTitle={this.state.roomName}
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
+        />
+        <ListItem
+          title='Key'
+          rightTitle={this.state.roomKey}
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
+        />
+        <ListItem
+          title='Time'
+          rightTitle={`${Math.floor(this.state.roomTime/60)}m`}
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
+        />
+        <ListItem
+          title='Users'
+          rightTitle={`${this.state.users.length}`}
+          bottomDivider
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
+        />
         <FlatList
           keyExtractor={item => item.id.toString()}
           data={this.state.users}
@@ -161,7 +192,7 @@ class RoomInfo extends Component {
           ListHeaderComponent={
             <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
               <AddUserButton addUser={this.addUser}/>
-              <Text style={{marginLeft: 10}}>Add user</Text>
+              <Text style={{marginLeft: 10, color: '#fff'}}>Add user</Text>
             </View>
           }
           ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}}
@@ -173,5 +204,17 @@ class RoomInfo extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  infoListItemCont: {
+    backgroundColor: '#151516'
+  },
+  infoListItemTitle: {
+    color: '#fff'
+  },
+  infoListItemRigthTitle: {
+    color: '#fff'
+  }
+})
 
 export default RoomInfo;

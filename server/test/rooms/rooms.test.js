@@ -44,7 +44,7 @@ describe('Rooms', () => {
       });
   });
 
-  it('/POST rooms (private)', done => {
+  /* it('/POST rooms (private)', done => {
     chai.request(url)
       .post(path)
       .set('Authorization', `bearer ${token}`)
@@ -60,26 +60,27 @@ describe('Rooms', () => {
         expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
 
-        roomId = res.body._id;
+        
 
         done();
       })
-  });
+  }); */
 
-  it('/POST rooms (public)', done => {
+  it('/POST rooms', done => {
     chai.request(url)
       .post(path)
       .set('Authorization', `bearer ${token}`)
       .send({
         name: 'TestRoom',
-        users: [],
-        type: 'public'
+        users: []
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('object');
         expect(res.body).to.include.all.keys('_id', 'name', 'creator', 'messages');
         expect(res.body.users.length).to.be.equal(1);
+
+        roomId = res.body._id;
 
         done();
       })

@@ -12,6 +12,7 @@ import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
 
 import RoomList from './Rooms/RoomList';
+import RoomCreate from './Rooms/RoomCreate';
 import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
 import SelectUsers from './Rooms/SelectUsers';
@@ -32,10 +33,10 @@ const DrawerContent = (props) => {
       <ListItem
         leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
         title='KASPERWHITE'
-        titleStyle={{fontWeight: 'bold', color: '#fff'}}
+        titleStyle={{fontWeight: 'bold', color: '#09C709'}}
         containerStyle={{
           height: 130,
-          backgroundColor: '#214183',
+          backgroundColor: '#222222',
           paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
         }}
         rightElement={
@@ -43,12 +44,12 @@ const DrawerContent = (props) => {
             <Button
               onPress={signOut}
               type='clear'
-              icon={<Icon name='sign-out' type='font-awesome' color='#fff' size={20}/>}
+              icon={<Icon name='sign-out' type='font-awesome' color='#09C709' size={20}/>}
             />
           </View>
         }
       />
-      <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
+      <DrawerNavigatorItems {...props} labelStyle={{color: '#09C709'}}/>
     </View>
   )
 }
@@ -56,6 +57,7 @@ const DrawerContent = (props) => {
 const RoomNavigator = createStackNavigator(
   {
     Rooms: RoomList,
+    RoomCreate: RoomCreate,
     Room: Room,
     RoomInfo: RoomInfo,
     SelectUsers: SelectUsers
@@ -125,7 +127,7 @@ const MainNavigator = createDrawerNavigator({
   }
 }, {
   initialRouteName: 'Rooms',
-  drawerBackgroundColor: '#193367',
+  drawerBackgroundColor: '#151516',
   contentComponent: DrawerContent
 })
 
