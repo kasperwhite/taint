@@ -90,7 +90,7 @@ class RoomList extends Component {
               size={21}
             />
           }
-          containerStyle={{marginLeft: 5}}
+          containerStyle={{marginLeft: 10}}
           onPress={navigation.openDrawer}
           type='clear'
         />
