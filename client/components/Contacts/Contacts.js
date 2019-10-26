@@ -9,7 +9,7 @@ const ContactPanel = (props) => (
         <Icon
           name='user-times'
           type='font-awesome'
-          color='#193367'
+          color='#167B14'
           size={17}
         />
       }
@@ -27,7 +27,7 @@ const AddContactButton = (props) => (
       <Icon
         name='user-plus'
         type='font-awesome'
-        color='#193367'
+        color='#167B14'
         size={17}
       />
     }
@@ -36,8 +36,7 @@ const AddContactButton = (props) => (
       padding: 0,
       flexDirection: 'column',
       justifyContent: 'center',
-      alignContent: 'center',
-      width: '14%'
+      alignContent: 'center'
     }}
     onPress={() => props.addContact()}
     type='clear'
@@ -77,9 +76,9 @@ class Contacts extends Component {
     return {
       title: 'Contacts',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold'
       },
@@ -89,11 +88,11 @@ class Contacts extends Component {
             <Icon
               name='bars'
               type='font-awesome'
-              color='#fff'
+              color='#09C709'
               size={21}
             />
           }
-          containerStyle={{marginLeft: 5}}
+          containerStyle={{marginLeft: 10}}
           onPress={navigation.openDrawer}
           type='clear'
         />
@@ -148,33 +147,24 @@ class Contacts extends Component {
             userId={item.id}
           />
         }
+        containerStyle={{backgroundColor: '#151516'}}
+        titleStyle={{
+          fontSize: 17,
+          color: '#fff'
+        }}
       />
     )
   }
 
   render(){
     return(
-      <View style={{height: '100%', flexDirection: 'column'}}>
+      <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
         <View style={styles.searchCont}>
           <Input
             value={this.state.search}
             placeholder='Find...'
-            /* rightIcon={
-              this.state.isCancelVis
-              ? <Button
-                icon={
-                  <Icon
-                    name='times'
-                    type='font-awesome'
-                    color='#193367'
-                    size={17}
-                  />
-                }
-                type='clear'
-                onPress={this.clearSearchField}
-              /> : null
-            } */
-            containerStyle={{width: '85%', borderWidth: 1, borderColor: 'red', borderRadius: 10}}
+            placeholderTextColor='#737373'
+            containerStyle={{width: '82%', borderBottomWidth: 1, borderBottomColor: '#fff'}}
             inputStyle={styles.searchInput}
             inputContainerStyle={styles.searchInputCont}
             onChangeText={(t) => this.updateSearch(t.replace(/\s/g,''))}
@@ -187,7 +177,10 @@ class Contacts extends Component {
           data={this.state.fContacts}
           renderItem={this.renderContact}
           keyExtractor={i => i.id.toString()}
-          contentContainerStyle={{paddingBottom: 20, marginVertical: 0}}
+          contentContainerStyle={{
+            paddingBottom: 20,
+            marginVertical: 0
+          }}
         />
       </ScrollView>
       </View>
@@ -198,13 +191,16 @@ class Contacts extends Component {
 const styles = StyleSheet.create({
   searchCont: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignContent: 'center',
-    padding: 5,
-    backgroundColor: 'grey'
+    paddingTop: 5,
+    paddingHorizontal: 5,
+    paddingBottom: 10,
+    backgroundColor: '#222222'
   },
   searchInput: {
-    padding: 5
+    padding: 5,
+    color: '#fff'
   },
   searchInputCont: {
     borderBottomWidth: 0

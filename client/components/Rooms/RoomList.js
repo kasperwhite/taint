@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
   },
   roomTitle: {
     fontSize: 17,
-    marginBottom: 3,
     color: '#fff'
   },
   roomBadgeText: {

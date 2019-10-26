@@ -33,7 +33,7 @@ const DrawerContent = (props) => {
       <ListItem
         leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
         title='KASPERWHITE'
-        titleStyle={{fontWeight: 'bold', color: '#09C709'}}
+        titleStyle={{fontWeight: 'bold', color: '#fff'}}
         containerStyle={{
           height: 130,
           backgroundColor: '#222222',
@@ -49,7 +49,7 @@ const DrawerContent = (props) => {
           </View>
         }
       />
-      <DrawerNavigatorItems {...props} labelStyle={{color: '#09C709'}}/>
+      <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
     </View>
   )
 }
@@ -101,7 +101,7 @@ const MainNavigator = createDrawerNavigator({
       title: 'Rooms',
       drawerLabel: 'Rooms',
       drawerIcon: ({tintColor}) => (
-        <Icon name='comments' type='font-awesome' color='#fff' size={23}/>
+        <Icon name='comments' type='font-awesome' color='#167B14' size={23}/>
       )     
     }
   },
@@ -111,7 +111,7 @@ const MainNavigator = createDrawerNavigator({
       title: 'Contacts',
       drawerLabel: 'Contacts',
       drawerIcon: ({tintColor}) => (
-        <Icon name='address-book' type='font-awesome' color='#fff' size={23}/>
+        <Icon name='address-book' type='font-awesome' color='#167B14' size={23}/>
       )
     }
   },
@@ -121,7 +121,7 @@ const MainNavigator = createDrawerNavigator({
       title: 'Settings',
       drawerLabel: 'Settings',
       drawerIcon: ({tintColor}) => (
-        <Icon name='cog' type='font-awesome' color='#fff' size={23}/>
+        <Icon name='cog' type='font-awesome' color='#167B14' size={23}/>
       )
     }
   }
