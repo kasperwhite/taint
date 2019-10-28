@@ -98,10 +98,6 @@ class RoomList extends Component {
     };
   };
 
-  addRoom = (name, time) => {
-    console.log('Add Room', name, time);
-  }
-
   enterRoom = (roomId, roomName) => {
     this.props.navigation.navigate('Room', { roomId, roomName })
   }

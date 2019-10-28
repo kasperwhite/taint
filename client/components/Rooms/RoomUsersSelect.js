@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
 import { ListItem, CheckBox } from 'react-native-elements';
 
-class SelectUsers extends Component {
+class RoomUsersSelect extends Component {
   constructor(props){
     super(props);
 
@@ -14,7 +14,8 @@ class SelectUsers extends Component {
         {id: 3, username: 'kaper'},
         {id: 4, username: 'kaper'},
       ],
-      checked: false
+      checked: false,
+      selectedUserId: ''
     }
   }
 
@@ -22,26 +23,40 @@ class SelectUsers extends Component {
     return {
       title: 'Select Users',
       headerStyle: {
-        backgroundColor: '#193367'
+        backgroundColor: '#222222',
+        alignContent: 'center'
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
       }
     };
   };
 
+  selectUser = (id) => {
+    this.setState({selectedUserId: id})
+  }
+
   renderContact = ({ item }) => (
     <ListItem
       title={item.username}
       bottomDivider
       leftAvatar={{ source: require('../../assets/cat.jpg')}}
+      containerStyle={{backgroundColor: '#151516'}}
+      titleStyle={{color: '#fff'}}
+      onPress={() => this.selectUser(item.id)}
     />
   )
 
   render(){
     return(
-      <View>
+      <View
+        style={{
+          height: '100%',
+          flexDirection: 'column',
+          backgroundColor: '#151516'
+        }}
+      >
         <FlatList
           keyExtractor={item => item.id.toString()}
           data={this.state.contacts}
@@ -52,4 +67,4 @@ class SelectUsers extends Component {
   }
 }
 
-export default SelectUsers;
+export default RoomUsersSelect;

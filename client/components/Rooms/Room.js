@@ -119,7 +119,7 @@ class Room extends Component {
   // SEND MESSAGE OPERATION
   sendMessage = () => {
     let {message} = this.state;
-    console.log('Send Message', message);
+    console.log('Send Message', message.trim());
     this.setState({message: ''})
   }
 
@@ -207,7 +207,7 @@ class Room extends Component {
               placeholderTextColor='#737373'
               inputContainerStyle={styles.messageInput}
               inputStyle={{fontSize: 20, borderColor: '#222222'}}
-              onChangeText={(text) => this.setState({ message: text.trim() })}
+              onChangeText={(text) => this.setState({ message: text })}
               value={this.state.message}
               multiline
             />

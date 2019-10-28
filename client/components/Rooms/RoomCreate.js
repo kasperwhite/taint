@@ -21,7 +21,7 @@ class RoomCreate extends Component {
 
     this.state = {
       roomName: '',
-      timeValue: 60
+      timeValue: 1
     }
   }
 
@@ -39,10 +39,14 @@ class RoomCreate extends Component {
   };
 
   resetForm = () => {
-    this.setState({roomName: '', timeValue: 60})
+    this.setState({roomName: '', timeValue: 1})
   }
 
   handleSubmit = () => {
+    console.log({
+      time: this.state.timeValue*3600,
+      name: this.state.roomName
+    })
     this.resetForm();
   }
 
@@ -57,13 +61,15 @@ class RoomCreate extends Component {
           inputContainerStyle={styles.inputContainer}
         />
         <View style={{marginVertical: 15, paddingHorizontal: 15}}>
-          <Text style={{textAlign:'left', color: '#fff'}}>Time: {Math.floor(this.state.timeValue / 60)}m</Text>
+          <Text
+            style={{textAlign:'left', color: '#fff'}}
+          >Time: {this.state.timeValue}h</Text>
           <Slider
             value={this.state.timeValue}
             onValueChange={timeValue => this.setState({ timeValue })}
             step={1}
-            maximumValue={3600}
-            minimumValue={60}
+            maximumValue={12}
+            minimumValue={1}
             thumbTintColor='#167B14'
             style={styles.slider}
             trackStyle={styles.sliderTrack}

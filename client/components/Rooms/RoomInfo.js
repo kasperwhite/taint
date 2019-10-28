@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-native';
-import { ListItem, Icon, Tooltip, ButtonGroup, Button } from 'react-native-elements';
+import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-native-elements';
 
 const DeleteRoomButton = (props) => {
   return(
@@ -76,6 +76,7 @@ class RoomInfo extends Component {
       roomType: '',
       roomKey: '',
       roomTime: 2981,
+      roomCreator: '0',
       users: [
         {id: 0, username: 'kasper'},
         {id: 1, username: 'kasperw'},
@@ -119,7 +120,7 @@ class RoomInfo extends Component {
   // ADD USER OPERATION
   addUser = () => {
     console.log('Add User');
-    this.props.navigation.navigate('SelectUsers');
+    this.props.navigation.navigate('RoomUsersSelect');
   }
 
   deleteUser = (id) => {
@@ -134,20 +135,31 @@ class RoomInfo extends Component {
     )
   }
 
-  renderUser = ({ item }) => (
-    <ListItem
-      title={item.username}
-      bottomDivider
-      containerStyle={styles.infoListItemCont}
-      titleStyle={styles.infoListItemTitle}
-      leftAvatar={{ source: require('../../assets/cat.jpg')}}
-      rightElement={
-        <View style={{flexDirection: 'row'}}>
-          <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
-        </View>
-      }
-    />
-  )
+  renderUser = ({ item }) => {
+    const title = item.id == this.state.roomCreator
+      ? <Text style={{color: '#fff', fontSize: 17}}>{item.username} <Text style={{color: 'grey', fontSize: 13}}>(creator)</Text></Text>
+      : <Text style={{color: '#fff', fontSize: 17}}>{item.username}</Text>
+    return(
+      <ListItem
+        title={title}
+        bottomDivider
+        containerStyle={styles.infoListItemCont}
+        titleStyle={styles.infoListItemTitle}
+        leftElement={
+          <Avatar
+            rounded
+            size='small'
+            source={require('../../assets/cat.jpg')}
+          />
+        }
+        rightElement={
+          <View style={{flexDirection: 'row'}}>
+            <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
+          </View>
+        }
+      />
+    )
+  }
 
   render(){
     return(
@@ -180,7 +192,6 @@ class RoomInfo extends Component {
         <ListItem
           title='Users'
           rightTitle={`${this.state.users.length}`}
-          bottomDivider
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
@@ -189,13 +200,13 @@ class RoomInfo extends Component {
           keyExtractor={item => item.id.toString()}
           data={this.state.users}
           renderItem={this.renderUser}
-          ListHeaderComponent={
+          /* ListHeaderComponent={
             <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
               <AddUserButton addUser={this.addUser}/>
               <Text style={{marginLeft: 10, color: '#fff'}}>Add user</Text>
             </View>
           }
-          ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}}
+          ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}} */
         />
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <DeleteRoomButton deleteRoom={this.deleteRoom}/>
@@ -213,7 +224,7 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   infoListItemRigthTitle: {
-    color: '#fff'
+    color: 'grey'
   }
 })
 
