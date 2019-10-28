@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
-import { ListItem, CheckBox } from 'react-native-elements';
+import { ListItem, CheckBox, Button, Icon } from 'react-native-elements';
 
 class RoomUsersSelect extends Component {
   constructor(props){
@@ -14,8 +14,7 @@ class RoomUsersSelect extends Component {
         {id: 3, username: 'kaper'},
         {id: 4, username: 'kaper'},
       ],
-      checked: false,
-      selectedUserId: ''
+      contactsForSelect: []
     }
   }
 
@@ -29,12 +28,47 @@ class RoomUsersSelect extends Component {
       headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
-      }
+      },
+      headerRight: (
+        <Button
+          icon={
+            <Icon
+              name='check'
+              type='font-awesome'
+              color='#09C709'
+              size={21}
+            />
+          }
+          containerStyle={{width: 50, marginRight: 5}}
+          onPress={navigation.getParam('handleSubmit')}
+          type='clear'
+        />
+      )
     };
   };
 
-  selectUser = (id) => {
-    this.setState({selectedUserId: id})
+  componentDidMount(){
+    this.props.navigation.setParams({ 
+      handleSubmit: this.handleSubmit
+    });
+    const {contacts} = this.state;
+    const contactsForSelect = contacts.map((c) => {
+      return { id: c.id, username: c.username, checked: false }
+    })
+    this.setState({ contactsForSelect });
+  }
+
+  toggleCheckbox = (id) => {
+    const changedContact = this.state.contactsForSelect.find((c) => c.id === id);
+    changedContact.checked = !changedContact.checked;
+    const contactsForSelect = Object.assign([], this.state.contactsForSelect, changedContact);
+    this.setState({ contactsForSelect });
+  }
+
+  handleSubmit = () => {
+    const selectedUsers = this.state.contactsForSelect.filter(el => el.checked);
+    this.props.navigation.getParam('handleUsersSelect')(selectedUsers);
+    this.props.navigation.goBack();
   }
 
   renderContact = ({ item }) => (
@@ -44,7 +78,15 @@ class RoomUsersSelect extends Component {
       leftAvatar={{ source: require('../../assets/cat.jpg')}}
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
-      onPress={() => this.selectUser(item.id)}
+      rightElement={
+        <CheckBox
+          key={item.id}
+          containerStyle={{margin: 0}}
+          size={18}
+          checked={this.state.contactsForSelect.find(el => el.id === item.id).checked}
+          onPress={() => this.toggleCheckbox(item.id)}
+        />
+      }
     />
   )
 
@@ -59,7 +101,7 @@ class RoomUsersSelect extends Component {
       >
         <FlatList
           keyExtractor={item => item.id.toString()}
-          data={this.state.contacts}
+          data={this.state.contactsForSelect}
           renderItem={this.renderContact}
         />
       </View>
