@@ -139,9 +139,11 @@ class Room extends Component {
     this.setState({isVisible: !this.state.isVisible});
   }
 
-  selectMessage = (id) => {
-    this.setState({selectedMessageId: id});
-    this.toggleOverlay();
+  selectMessage = (item) => {
+    if(item.sender === 'kasperwhite'){
+      this.setState({selectedMessageId: item.id});
+      this.toggleOverlay();
+    }
   }
 
   renderMessage = ({item, index}) => {
@@ -151,7 +153,7 @@ class Room extends Component {
           item.sender !== 'kasperwhite'
           ? <View style={styles.messageAvatar}>
               <Avatar
-                size={35}
+                size='small'
                 rounded
                 containerStyle={{margin: 0, padding: 0}}
                 source={require("../../assets/cat.jpg")}
@@ -161,7 +163,7 @@ class Room extends Component {
         }
         <TouchableOpacity
           style={styles.messageContent}
-          onPress={() => this.selectMessage(item.id)}
+          onPress={() => this.selectMessage(item)}
           activeOpacity={0.9}
         >
           <Text style={styles.messageSender}>{item.sender}</Text>

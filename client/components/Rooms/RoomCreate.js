@@ -38,6 +38,13 @@ class RoomCreate extends Component {
     super(props);
 
     this.state = {
+      contacts: [
+        {id: 0, username: 'kaper'},
+        {id: 1, username: 'kaper'},
+        {id: 2, username: 'kaper'},
+        {id: 3, username: 'kaper'},
+        {id: 4, username: 'kaper'},
+      ],
       roomName: '',
       timeValue: 1,
       roomUsers: [
@@ -74,12 +81,19 @@ class RoomCreate extends Component {
 
   addUser = () => {
     this.props.navigation.navigate('RoomUsersSelect', { 
-      handleUsersSelect: this.handleUsersSelect 
+      handleUsersSelect: this.handleUsersSelect,
+      contacts: this.state.contacts
     });
   }
 
+  deleteUser = (id) => {
+    const roomUsers = Object.assign([], this.state.roomUsers);
+    roomUsers.splice(roomUsers.indexOf(roomUsers.find(el => el.id == id)), 1);
+    this.setState({ roomUsers });
+  }
+
   handleUsersSelect = (users) => {
-    this.setState({ roomUsers: users })
+    this.setState({ roomUsers: users}) // delete checked field
   }
 
   renderUser = ({ item }) => (
@@ -89,6 +103,22 @@ class RoomCreate extends Component {
       leftAvatar={{ source: require('../../assets/cat.jpg'), size: 'small' }}
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
+      rightElement={
+        <Button
+          icon={
+            <Icon
+              name='minus-circle'
+              type='font-awesome'
+              color='#167B14'
+              size={15}
+            />
+          }
+          buttonStyle={{marginHorizontal: 3}}
+          containerStyle={{padding: 0}}
+          onPress={() => this.deleteUser(item.id)}
+          type='clear'
+        />
+      }
     />
   )
 
@@ -126,7 +156,7 @@ class RoomCreate extends Component {
           ListHeaderComponent={
               <ListItem
                 title='Users'
-                containerStyle={{backgroundColor: '#151516', paddingVertical: 5, paddingHorizontal: 10}}
+                containerStyle={{backgroundColor: '#151516', padding: 10}}
                 titleStyle={{color: '#fff'}}
                 bottomDivider
                 rightElement={

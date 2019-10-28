@@ -71,17 +71,28 @@ class RoomInfo extends Component {
     super(props);
 
     this.state = {
+      contacts: [
+        {id: 0, username: 'kaper'},
+        {id: 1, username: 'kaper'},
+        {id: 2, username: 'kaper'},
+        {id: 3, username: 'kaper'},
+        {id: 4, username: 'kaper'},
+        {id: 5, username: 'MORANA'},
+        {id: 6, username: 'nastya'}
+      ],
       roomId: 1,
       roomName: '',
       roomType: '',
       roomKey: '',
       roomTime: 2981,
       roomCreator: '0',
-      users: [
-        {id: 0, username: 'kasper'},
-        {id: 1, username: 'kasperw'},
-        {id: 2, username: 'kasperwe'},
-        {id: 3, username: 'kasperwer'},
+      roomUsers: [
+        {id: 0, username: 'kaper'},
+        {id: 1, username: 'kaper'},
+        {id: 2, username: 'kaper'},
+        {id: 3, username: 'kaper'},
+        {id: 4, username: 'kaper'},
+        {id: 5, username: 'MORANA'}
       ]
     }
   }
@@ -114,20 +125,33 @@ class RoomInfo extends Component {
 
   // DELETE ROOM OPERATION
   deleteRoom = () => {
-    console.log('Delete Room', this.state.roomId)
+    Alert.alert(
+      'Delete Room',
+      `Are you sure you want to delete ${this.state.roomId} room?`,
+      [
+        { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
+        { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
+      ]
+    )
   }
 
   // ADD USER OPERATION
   addUser = () => {
-    console.log('Add User');
-    this.props.navigation.navigate('RoomUsersSelect');
+    const {contacts, roomUsers} = this.state;
+    this.props.navigation.navigate('RoomUsersSelect', {
+      handleUsersSelect: this.handleUsersSelect,
+      contacts: contacts.filter(c => !roomUsers.find(u => u.id == c.id))
+    });
+  }
+
+  handleUsersSelect = (users) => {
+    console.log(users.map(u => u.id));
   }
 
   deleteUser = (id) => {
-    console.log('Delete User', id)
     Alert.alert(
       'Delete User',
-      'Are you sure you want to delete this user?',
+      `Are you sure you want to delete ${id} user?`,
       [
         { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
         { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
@@ -191,22 +215,22 @@ class RoomInfo extends Component {
         />
         <ListItem
           title='Users'
-          rightTitle={`${this.state.users.length}`}
+          rightTitle={`${this.state.roomUsers.length}`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <FlatList
           keyExtractor={item => item.id.toString()}
-          data={this.state.users}
+          data={this.state.roomUsers}
           renderItem={this.renderUser}
-          /* ListHeaderComponent={
+          ListHeaderComponent={
             <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
               <AddUserButton addUser={this.addUser}/>
               <Text style={{marginLeft: 10, color: '#fff'}}>Add user</Text>
             </View>
           }
-          ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}} */
+          ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}}
         />
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <DeleteRoomButton deleteRoom={this.deleteRoom}/>

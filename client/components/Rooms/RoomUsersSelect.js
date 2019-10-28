@@ -7,13 +7,6 @@ class RoomUsersSelect extends Component {
     super(props);
 
     this.state = {
-      contacts: [
-        {id: 0, username: 'kaper'},
-        {id: 1, username: 'kaper'},
-        {id: 2, username: 'kaper'},
-        {id: 3, username: 'kaper'},
-        {id: 4, username: 'kaper'},
-      ],
       contactsForSelect: []
     }
   }
@@ -51,7 +44,7 @@ class RoomUsersSelect extends Component {
     this.props.navigation.setParams({ 
       handleSubmit: this.handleSubmit
     });
-    const {contacts} = this.state;
+    const contacts = this.props.navigation.getParam('contacts');
     const contactsForSelect = contacts.map((c) => {
       return { id: c.id, username: c.username, checked: false }
     })
