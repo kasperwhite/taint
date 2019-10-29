@@ -9,7 +9,7 @@ const MessageOverlay = (props) => (
     isVisible={props.isVisible}
     onBackdropPress={props.toggleOverlay}
     borderRadius={20}
-    height={110}
+    height={60}
     windowBackgroundColor='rgba(0,0,0,0.6)'
     overlayStyle={{backgroundColor: '#222222'}}
   >
@@ -19,16 +19,17 @@ const MessageOverlay = (props) => (
         justifyContent: 'space-around',
         width: '100%',
         height: '100%',
-        backgroundColor: '#222222'
+        backgroundColor: '#222222',
+        
       }}
     >
-      <Button
+      {/* <Button
         title='Edit'
         titleStyle={{color: '#09C709'}}
         type='clear'
         buttonStyle={{paddingVertical: 10}}
         onPress={() => props.editMessage(props.messageId)}
-      />
+      /> */}
       <Button
         title='Delete'
         titleStyle={{color: '#09C709'}}
@@ -95,13 +96,24 @@ class Room extends Component {
     const roomName = this.props.navigation.getParam('roomName');
     let messages = [];
     for(let i = 0; i <= 10; i++){
-      const message = {
-        id: i,
-        sender: 'kasper',
-        createdAt: '2019-10-22T02:39:58.638Z',
-        updatedAt: '2019-10-22T02:39:58.638Z',
-        text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
-      };
+      let message;
+      if(i % 2 == 0){
+        message = {
+          id: i,
+          sender: 'kasper',
+          createdAt: '2019-10-22T02:39:58.638Z',
+          updatedAt: '2019-10-22T02:39:58.638Z',
+          text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
+        };
+      } else {
+        message = {
+          id: i,
+          sender: 'kasperwhite',
+          createdAt: '2019-10-22T02:39:58.638Z',
+          updatedAt: '2019-10-22T02:39:58.638Z',
+          text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
+        };
+      }
       messages.push(message);
     }
     this.setState({
@@ -148,19 +160,7 @@ class Room extends Component {
 
   renderMessage = ({item, index}) => {
     return(
-      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message}>
-        {
-          item.sender !== 'kasperwhite'
-          ? <View style={styles.messageAvatar}>
-              <Avatar
-                size='small'
-                rounded
-                containerStyle={{margin: 0, padding: 0}}
-                source={require("../../assets/cat.jpg")}
-              />
-            </View>
-          : null
-        }
+      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item.id}>
         <TouchableOpacity
           style={styles.messageContent}
           onPress={() => this.selectMessage(item)}
@@ -192,17 +192,15 @@ class Room extends Component {
             editMessage={this.editMessage}
             deleteMessage={this.deleteMessage}
           />
-          <ScrollView
+          <FlatList
+            data={this.state.messages}
+            renderItem={this.renderMessage}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.flatList}
             ref={ref => this.scrollView = ref}
             onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
-          >
-            <FlatList
-              data={this.state.messages}
-              renderItem={this.renderMessage}
-              keyExtractor={item => item.id.toString()}
-              contentContainerStyle={styles.flatList}
-            />
-          </ScrollView>
+            removeClippedSubviews={true}
+          />
           <View style={styles.messageInputCont}>
             <Input
               placeholder='Type message...'
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     flexDirection: 'column',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     paddingVertical: 10
   },
   message: {
@@ -268,11 +266,13 @@ const styles = StyleSheet.create({
   },
   messageSender: {
     color: '#fff',
+    fontSize: 13,
     fontWeight: 'bold',
-    marginBottom: 3
+    marginBottom: 5
   },
   messageText: {
-    color: '#fff'
+    color: '#fff',
+    fontSize: 16
   },
   messageTime: {
     alignSelf: 'flex-end',
