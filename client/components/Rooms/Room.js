@@ -23,13 +23,13 @@ const MessageOverlay = (props) => (
         
       }}
     >
-      {/* <Button
+      <Button
         title='Edit'
         titleStyle={{color: '#09C709'}}
         type='clear'
         buttonStyle={{paddingVertical: 10}}
         onPress={() => props.editMessage(props.messageId)}
-      /> */}
+      />
       <Button
         title='Delete'
         titleStyle={{color: '#09C709'}}
@@ -85,13 +85,6 @@ class Room extends Component {
   };
 
   componentWillMount(){
-    
-  }
-
-  componentDidMount(){
-    this.props.navigation.setParams({ 
-      openInfo: this.openInfo
-    });
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
     let messages = [];
@@ -121,6 +114,12 @@ class Room extends Component {
       roomName,
       messages
     })
+  }
+
+  componentDidMount(){
+    this.props.navigation.setParams({ 
+      openInfo: this.openInfo
+    });
   }
 
   openInfo = () => {
@@ -161,15 +160,11 @@ class Room extends Component {
   renderMessage = ({item, index}) => {
     return(
       <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item.id}>
-        <TouchableOpacity
-          style={styles.messageContent}
-          onPress={() => this.selectMessage(item)}
-          activeOpacity={0.9}
-        >
+        <View style={styles.messageContent}>
           <Text style={styles.messageSender}>{item.sender}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
-        </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -185,13 +180,6 @@ class Room extends Component {
     return(
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
         <View style={styles.main}>
-          <MessageOverlay
-            isVisible={this.state.isVisible}
-            toggleOverlay={this.toggleOverlay}
-            messageId={this.state.selectedMessageId}
-            editMessage={this.editMessage}
-            deleteMessage={this.deleteMessage}
-          />
           <FlatList
             data={this.state.messages}
             renderItem={this.renderMessage}
