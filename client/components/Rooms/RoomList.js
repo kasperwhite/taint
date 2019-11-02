@@ -2,24 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 
-const SearchButton = () => {
-  return(
-    <Button
-      icon={
-        <Icon
-          name='search'
-          type='font-awesome'
-          color='#fff'
-          size={21}
-        />
-      }
-      containerStyle={{width: 50, marginRight: 5}}
-      onPress={() => console.log('Find Room')}
-      type='clear'
-    />
-  )
-}
-
 const AddButton = (props) => {
   return(
     <Button

@@ -32,36 +32,6 @@ const ControlPanel = (props) => (
   </View>
 )
 
-const DeleteRoomButton = (props) => {
-  return(
-    <Button
-      title='Delete Room'
-      titleStyle={{color: '#151516'}}
-      onPress={() => props.deleteRoom()}
-      buttonStyle={{backgroundColor: '#167B14'}}
-      containerStyle={{marginVertical: 20}}
-    />
-  )
-}
-
-const AddUserButton = (props) => {
-  return(
-    <Button
-      icon={
-        <Icon
-          name='plus'
-          type='font-awesome'
-          color='#151516'
-          size={15}
-        />
-      }
-      containerStyle={{borderRadius: 30, backgroundColor: '#167B14', width: 30, height: 30}}
-      onPress={props.addUser}
-      type='clear'
-    />
-  )
-}
-
 const DeleteUserButton = (props) => (
   <Button
     icon={
@@ -75,23 +45,6 @@ const DeleteUserButton = (props) => (
     buttonStyle={{marginHorizontal: 3}}
     containerStyle={{padding: 0}}
     onPress={() => props.deleteUser(props.userId)}
-    type='clear'
-  />
-)
-
-const OpenUserPageButton = (props) => (
-  <Button
-    icon={
-      <Icon
-        name='user'
-        type='font-awesome'
-        color='#193367'
-        size={15}
-      />
-    }
-    buttonStyle={{marginHorizontal: 3}}
-    containerStyle={{padding: 0}}
-    onPress={() => props.openUserPage(props.userId)}
     type='clear'
   />
 )

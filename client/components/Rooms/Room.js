@@ -4,43 +4,6 @@ import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView,
 import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 import moment from 'moment';
 
-const MessageOverlay = (props) => (
-  <Overlay
-    isVisible={props.isVisible}
-    onBackdropPress={props.toggleOverlay}
-    borderRadius={20}
-    height={60}
-    windowBackgroundColor='rgba(0,0,0,0.6)'
-    overlayStyle={{backgroundColor: '#222222'}}
-  >
-    <View
-      style={{
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#222222',
-        
-      }}
-    >
-      <Button
-        title='Edit'
-        titleStyle={{color: '#09C709'}}
-        type='clear'
-        buttonStyle={{paddingVertical: 10}}
-        onPress={() => props.editMessage(props.messageId)}
-      />
-      <Button
-        title='Delete'
-        titleStyle={{color: '#09C709'}}
-        type='clear'
-        buttonStyle={{paddingVertical: 10}}
-        onPress={() => props.deleteMessage(props.messageId)}
-      />
-    </View>
-  </Overlay>
-)
-
 class Room extends Component {
   constructor(props){
     super(props)
@@ -49,7 +12,6 @@ class Room extends Component {
       roomId: 1,
       roomName: '',
       message: '',
-      isVisible: false,
       isLoading: false,
       selectedMessageId: 0,
       messages: []
@@ -132,22 +94,6 @@ class Room extends Component {
     let {message} = this.state;
     console.log('Send Message', message.trim());
     this.setState({message: ''})
-  }
-
-  // EDIT MESSAGE OPERATION
-  editMessage = (id) => {
-    console.log('Edit Message', id);
-    this.toggleOverlay();
-  }
-
-  // DELETE MESSAGE OPERATION
-  deleteMessage = (id) => {
-    console.log('Delete Message', id);
-    this.toggleOverlay();
-  }
-
-  toggleOverlay = () => {
-    this.setState({isVisible: !this.state.isVisible});
   }
 
   selectMessage = (item) => {

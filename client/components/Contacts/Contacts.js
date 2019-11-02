@@ -114,14 +114,6 @@ class Contacts extends Component {
     console.log('Delete', id);
   }
 
-  clearSearchField = () => {
-    this.setState({
-      search: '',
-      isCancelVis: false,
-      fContacts: this.state.contacts
-    })
-  }
-
   updateSearch = search => {
     if(!search){
       this.setState({fContacts: this.state.contacts, isCancelVis: false});
