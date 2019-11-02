@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 const AddUserButton = (props) => {
   return(
@@ -25,7 +26,7 @@ const AddButton = (props) => {
     <Button
       title='Create'
       disabled={props.disabled}
-      onPress={() => props.handleSubmit()}
+      onPress={props.handleSubmit}
       containerStyle={styles.submitButtonContainer}
       buttonStyle={styles.submitButton}
       disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
@@ -47,9 +48,7 @@ class RoomCreate extends Component {
       ],
       roomName: '',
       timeValue: 1,
-      roomUsers: [
-
-      ]
+      roomUsers: []
     }
   }
 
@@ -71,11 +70,14 @@ class RoomCreate extends Component {
   }
 
   handleSubmit = () => {
-    console.log({
-      time: this.state.timeValue*3600,
-      name: this.state.roomName,
-      roomUsers: this.state.roomUsers.map(el => { return el.id })
-    })
+    const { timeValue, roomName, roomUsers } = this.state;
+    this.props.roomListStore.addRoom({
+      id: 0,
+      time: timeValue*3600,
+      name: roomName,
+      users: roomUsers.map(el => { return el.id }),
+      messages: []
+    });
     this.resetForm();
   }
 
@@ -207,4 +209,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RoomCreate;
+export default inject('roomListStore')(observer(RoomCreate));

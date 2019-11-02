@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView,
   FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 import moment from 'moment';
+import { observer, inject } from 'mobx-react';
 
 const MessageOverlay = (props) => (
   <Overlay
@@ -298,4 +299,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Room;
+export default inject('roomListStore')(observer(Room));

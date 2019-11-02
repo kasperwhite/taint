@@ -6,20 +6,20 @@ import { createStackNavigator } from 'react-navigation-stack';
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
 import { Transition } from 'react-native-reanimated';
 import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
+import { Provider } from 'mobx-react'
 
 import AuthLoading from './Auth/AuthLoading';
 import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
-
 import RoomList from './Rooms/RoomList';
 import RoomCreate from './Rooms/RoomCreate';
 import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
 import RoomUsersSelect from './Rooms/RoomUsersSelect';
-
 import Contacts from './Contacts/Contacts';
-
 import Settings from './Settings/Settings';
+
+import roomListStore from '../mobx/RoomListStore';
 
 const DrawerContent = (props) => {
 
@@ -102,7 +102,7 @@ const MainNavigator = createDrawerNavigator({
       drawerLabel: 'Rooms',
       drawerIcon: ({tintColor}) => (
         <Icon name='comments' type='font-awesome' color='#167B14' size={23}/>
-      )     
+      )
     }
   },
   Contacts: {
@@ -159,7 +159,13 @@ class Main extends Component{
   }
 
   render(){
-    return(<SwitchNavigator/>)
+    return(
+      <Provider
+        roomListStore={roomListStore}
+      >
+        <SwitchNavigator/>
+      </Provider>
+    )
   }
 }
 

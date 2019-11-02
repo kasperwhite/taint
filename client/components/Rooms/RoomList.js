@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 const SearchButton = () => {
   return(
@@ -43,23 +44,7 @@ class RoomList extends Component {
     super(props)
 
     this.state = {
-      rooms: [
-        {id: 0, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 1, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 2, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
-        {id: 3, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 4, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]},
-        {id: 5, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 6, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 7, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
-        {id: 8, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 9, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]},
-        {id: 10, name: 'Room1', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 11, name: 'Room2', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 12, name: 'Room3', time: 2798, messages: [{ text: 'Hello' }]},
-        {id: 13, name: 'Room4', time: 2798, messages: [{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' },{ text: 'Hello' }]},
-        {id: 14, name: 'Room5', time: 2798, messages: [{ text: 'Hello' }]}
-      ],
+      rooms: [],
       isLoading: false
     }
   };
@@ -98,6 +83,12 @@ class RoomList extends Component {
     };
   };
 
+  componentDidMount(){
+    this.setState({
+      rooms: this.props.roomListStore.rooms
+    })
+  }
+
   enterRoom = (roomId, roomName) => {
     this.props.navigation.navigate('Room', { roomId, roomName })
   }
@@ -129,19 +120,20 @@ class RoomList extends Component {
   }
 
   render(){
-    if(this.state.isLoading){
+    if(!this.state.rooms.length){
       return(
-        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-          <ActivityIndicator color="#09C709" size='large'/>
+        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
+          <Text style={{color: 'grey', fontSize: 20}}>Create a room!</Text>
         </View>
       )
     } else {
       return(
-        <View>
+        <View style={{backgroundColor: '#151516', height: '100%'}}>
           <FlatList
             data={this.state.rooms}
             renderItem={this.renderRoom}
             keyExtractor={i => i.id.toString()}
+            contentContainerStyle={{backgroundColor: '#151516', flexDirection: 'column-reverse'}}
           />
         </View>
       )
@@ -170,4 +162,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RoomList;
+export default inject('roomListStore')(observer(RoomList));

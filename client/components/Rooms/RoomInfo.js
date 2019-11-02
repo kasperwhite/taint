@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-native';
 import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 const DeleteRoomButton = (props) => {
   return(
@@ -252,4 +253,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RoomInfo;
+export default inject('roomListStore')(observer(RoomInfo));
