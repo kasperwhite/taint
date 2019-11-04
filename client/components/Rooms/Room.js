@@ -5,6 +5,8 @@ import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
 import moment from 'moment';
 import { observer, inject } from 'mobx-react';
 
+import Loading from '../Shared/Loading';
+
 const MessageOverlay = (props) => (
   <Overlay
     isVisible={props.isVisible}
@@ -193,15 +195,19 @@ class Room extends Component {
             editMessage={this.editMessage}
             deleteMessage={this.deleteMessage}
           />
-          <FlatList
-            data={this.state.messages}
-            renderItem={this.renderMessage}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={styles.flatList}
-            ref={ref => this.scrollView = ref}
-            onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
-            removeClippedSubviews={true}
-          />
+          {
+            !this.props.appStore.isLoading
+            ? <FlatList
+              data={this.state.messages}
+              renderItem={this.renderMessage}
+              keyExtractor={item => item.id.toString()}
+              contentContainerStyle={styles.flatList}
+              ref={ref => this.scrollView = ref}
+              onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
+              removeClippedSubviews={true}
+            />
+            : <Loading/>
+          }
           <View style={styles.messageInputCont}>
             <Input
               placeholder='Type message...'

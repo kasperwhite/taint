@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('apptore')(observer(RoomCreate));
+export default inject('appStore')(observer(RoomCreate));

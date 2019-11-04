@@ -20,6 +20,7 @@ import Contacts from './Contacts/Contacts';
 import Settings from './Settings/Settings';
 
 import appStore from '../mobx/AppStore';
+import authStore from '../mobx/AuthStore';
 
 const DrawerContent = (props) => {
 
@@ -161,6 +162,7 @@ class Main extends Component{
   render(){
     return(
       <Provider
+        authStore={authStore}
         appStore={appStore}
       >
         <SwitchNavigator/>

@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import { View, FlatList, ScrollView, StyleSheet } from 'react-native';
 import { ListItem, Avatar, Icon, Button, SearchBar, Input } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 const ContactPanel = (props) => (
   <View style={{flexDirection: 'row'}}>
@@ -207,4 +208,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Contacts;
+export default inject('appStore')(observer(Contacts));

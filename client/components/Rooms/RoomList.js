@@ -3,6 +3,8 @@ import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
+import Loading from '../Shared/Loading';
+
 const SearchButton = () => {
   return(
     <Button
@@ -120,8 +122,9 @@ class RoomList extends Component {
   }
 
   render(){
-    console.log(this.props.appStore)
-    if(!this.state.rooms.length){
+    if(this.props.appStore.isLoading){
+      return( <Loading/> )
+    } else if(!this.state.rooms.length){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
           <Text style={{color: 'grey', fontSize: 20}}>Create a room!</Text>
