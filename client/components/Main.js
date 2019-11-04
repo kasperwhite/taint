@@ -19,7 +19,7 @@ import RoomUsersSelect from './Rooms/RoomUsersSelect';
 import Contacts from './Contacts/Contacts';
 import Settings from './Settings/Settings';
 
-import roomListStore from '../mobx/RoomListStore';
+import appStore from '../mobx/AppStore';
 
 const DrawerContent = (props) => {
 
@@ -161,7 +161,7 @@ class Main extends Component{
   render(){
     return(
       <Provider
-        roomListStore={roomListStore}
+        appStore={appStore}
       >
         <SwitchNavigator/>
       </Provider>

@@ -71,7 +71,7 @@ class RoomCreate extends Component {
 
   handleSubmit = () => {
     const { timeValue, roomName, roomUsers } = this.state;
-    this.props.roomListStore.addRoom({
+    this.props.appStore.addRoom({
       id: 0,
       time: timeValue*3600,
       name: roomName,
@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomListStore')(observer(RoomCreate));
+export default inject('apptore')(observer(RoomCreate));

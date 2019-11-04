@@ -1,6 +1,6 @@
 import { observable, action } from "mobx";
 
-class RoomListStore {
+class ObservableAppStore {
   @observable rooms = [];
 
   constructor(){ }
@@ -12,5 +12,5 @@ class RoomListStore {
 
 }
 
-const roomListStore = new RoomListStore();
-export default roomListStore;
+const appStore = new ObservableAppStore();
+export default appStore;

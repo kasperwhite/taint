@@ -299,4 +299,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomListStore')(observer(Room));
+export default inject('appStore')(observer(Room));

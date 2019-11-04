@@ -85,7 +85,7 @@ class RoomList extends Component {
 
   componentDidMount(){
     this.setState({
-      rooms: this.props.roomListStore.rooms
+      rooms: this.props.appStore.rooms
     })
   }
 
@@ -120,6 +120,7 @@ class RoomList extends Component {
   }
 
   render(){
+    console.log(this.props.appStore)
     if(!this.state.rooms.length){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
@@ -162,4 +163,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomListStore')(observer(RoomList));
+export default inject('appStore')(observer(RoomList));
