@@ -1,12 +1,7 @@
 import React,{Component} from 'react';
-<<<<<<< HEAD
-import { View, FlatList, ScrollView, StyleSheet } from 'react-native';
-import { ListItem, Avatar, Icon, Button, SearchBar, Input } from 'react-native-elements';
-import { observer, inject } from 'mobx-react';
-=======
 import { View, FlatList } from 'react-native';
 import { ListItem, Icon, Button } from 'react-native-elements';
->>>>>>> develop
+import { observer, inject } from 'mobx-react';
 
 const DeleteContactButton = (props) => (
   <Button
@@ -149,24 +144,5 @@ class Contacts extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  searchCont: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    paddingTop: 5,
-    paddingHorizontal: 5,
-    paddingBottom: 10,
-    backgroundColor: '#222222'
-  },
-  searchInput: {
-    padding: 5,
-    color: '#fff'
-  },
-  searchInputCont: {
-    borderBottomWidth: 0
-  }
-})
 
 export default inject('contactStore')(observer(Contacts));

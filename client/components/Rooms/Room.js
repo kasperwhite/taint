@@ -16,7 +16,6 @@ class Room extends Component {
       roomName: '',
       message: '',
       isLoading: false,
-      selectedMessageId: 0,
       messages: []
     }
   }
@@ -99,13 +98,6 @@ class Room extends Component {
     this.setState({message: ''});
   }
 
-  selectMessage = (item) => {
-    if(item.sender === 'kasperwhite'){
-      this.setState({selectedMessageId: item.id});
-      this.toggleOverlay();
-    }
-  }
-
   renderMessage = ({item, index}) => {
     return(
       <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item.id}>
@@ -120,11 +112,7 @@ class Room extends Component {
 
   render(){
     if(this.state.isLoading){
-      return(
-        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-          <ActivityIndicator color="#09C709" size='large'/>
-        </View>
-      )
+      return( <Loading/> )
     } else {
     return(
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
@@ -234,4 +222,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomMessageStore')(observer(Room));
+export default inject('roomStore', 'roomMessageStore')(observer(Room));

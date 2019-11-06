@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 class ContactAddition extends Component {
   constructor(props){
@@ -97,4 +98,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ContactAddition;
+export default inject('contactStore')(observer(ContactAddition));

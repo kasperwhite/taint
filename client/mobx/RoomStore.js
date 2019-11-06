@@ -17,7 +17,7 @@ class ObservableRoomStore {
   }
 
   @action.bound getRoom(id) {
-
+    return this.rooms.find(r => r.id == id);
   }
 
   @action.bound deleteRoom(id) {

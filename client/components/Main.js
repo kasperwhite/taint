@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, AsyncStorage } from 'react-native';
-import { Avatar, ListItem, Icon, Button } from 'react-native-elements';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
+import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
 import { Transition } from 'react-native-reanimated';
-import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
-import { Provider } from 'mobx-react'
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { Provider } from 'mobx-react';
+
+import DrawerContent from './Drawer';
 
 import AuthLoading from './Auth/AuthLoading';
 import SignUp from './Auth/SignUp';
@@ -28,38 +29,6 @@ import roomUserStore from '../mobx/RoomUserStore';
 import contactStore from '../mobx/ContactStore';
 import settingsStore from '../mobx/SettingsStore';
 
-const DrawerContent = (props) => {
-
-  const signOut = async () => {
-    await AsyncStorage.removeItem('userToken');
-    props.navigation.navigate('AuthLoading');
-  }
-
-  return(
-    <View>
-      <ListItem
-        leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
-        title='KASPERWHITE'
-        titleStyle={{fontWeight: 'bold', color: '#fff'}}
-        containerStyle={{
-          height: 130,
-          backgroundColor: '#222222',
-          paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
-        }}
-        rightElement={
-          <View style={{flexDirection: 'row'}}>
-            <Button
-              onPress={signOut}
-              type='clear'
-              icon={<Icon name='sign-out' type='font-awesome' color='#09C709' size={20}/>}
-            />
-          </View>
-        }
-      />
-      <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
-    </View>
-  )
-}
 
 const RoomNavigator = createStackNavigator(
   {
