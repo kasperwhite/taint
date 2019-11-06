@@ -50,7 +50,7 @@ class Room extends Component {
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
     let messages = [];
-    for(let i = 0; i <= 10; i++){
+    for(let i = 0; i <= 50; i++){
       let message;
       if(i % 2 == 0){
         message = {
@@ -74,7 +74,7 @@ class Room extends Component {
     this.setState({
       roomId,
       roomName,
-      messages
+      messages: messages.reverse()
     })
   }
 
@@ -93,7 +93,7 @@ class Room extends Component {
   sendMessage = () => {
     let {message} = this.state;
     console.log('Send Message', message.trim());
-    this.setState({message: ''})
+    this.setState({message: ''});
   }
 
   selectMessage = (item) => {
@@ -127,12 +127,11 @@ class Room extends Component {
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
         <View style={styles.main}>
           <FlatList
+            inverted
             data={this.state.messages}
             renderItem={this.renderMessage}
             keyExtractor={item => item.id.toString()}
             contentContainerStyle={styles.flatList}
-            ref={ref => this.scrollView = ref}
-            onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
             removeClippedSubviews={true}
           />
           <View style={styles.messageInputCont}>

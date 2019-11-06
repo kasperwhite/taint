@@ -1,24 +1,22 @@
 import React,{Component} from 'react';
-import { View, FlatList, ScrollView, StyleSheet } from 'react-native';
-import { ListItem, Avatar, Icon, Button, SearchBar, Input } from 'react-native-elements';
+import { View, FlatList } from 'react-native';
+import { ListItem, Icon, Button } from 'react-native-elements';
 
-const ContactPanel = (props) => (
-  <View style={{flexDirection: 'row'}}>
-    <Button
-      icon={
-        <Icon
-          name='user-times'
-          type='font-awesome'
-          color='#167B14'
-          size={17}
-        />
-      }
-      buttonStyle={{marginHorizontal: 3}}
-      containerStyle={{padding: 0}}
-      onPress={() => props.deleteContact(props.userId)}
-      type='clear'
-    />
-  </View>
+const DeleteContactButton = (props) => (
+  <Button
+    icon={
+      <Icon
+        name='user-times'
+        type='font-awesome'
+        color='#167B14'
+        size={17}
+      />
+    }
+    buttonStyle={{marginHorizontal: 3}}
+    containerStyle={{padding: 0}}
+    onPress={() => props.deleteContact(props.userId)}
+    type='clear'
+  />
 )
 
 const AddContactButton = (props) => (
@@ -31,17 +29,9 @@ const AddContactButton = (props) => (
         size={17}
       />
     }
-    buttonStyle={{marginHorizontal: 3}}
-    containerStyle={{
-      padding: 0,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignContent: 'center'
-    }}
-    onPress={() => props.addContact()}
+    containerStyle={{width: 50, marginRight: 5}}
+    onPress={props.addContact}
     type='clear'
-    disabled={!props.search}
-    disabledStyle={{opacity: 0.6}}
   />
 )
 
@@ -64,11 +54,7 @@ class Contacts extends Component {
         {id: 10, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
         {id: 11, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
         {id: 12, username: 'Popovich!!!!!!!!!', avatar: require('../../assets/cat.jpg')},
-      ],
-      fContacts: [],
-      search: '',
-      isLoading: false,
-      isCancelVis: false
+      ]
     }
   }
 
@@ -96,36 +82,28 @@ class Contacts extends Component {
           onPress={navigation.openDrawer}
           type='clear'
         />
+      ),
+      headerRight: (
+        <AddContactButton addContact={navigation.getParam('addContact')}/>
       )
     };
   }
 
   componentDidMount(){
-    this.setState({fContacts: this.state.contacts});
+    this.props.navigation.setParams({ 
+      addContact: this.addContact
+    });
   }
 
   // ADD CONTACT OPERATION
   addContact = () => {
-    console.log('Add Contact', this.state.search);
+    this.props.navigation.navigate('ContactAddition');
   }
 
   // DELETE CONTACT OPERATION
   deleteContact = (id) => {
     console.log('Delete', id);
   }
-
-  updateSearch = search => {
-    if(!search){
-      this.setState({fContacts: this.state.contacts, isCancelVis: false});
-    } else {
-      const contacts = this.state.contacts;
-      this.setState({
-        fContacts: contacts.filter(el => el.username.includes(search)),
-        isCancelVis: true
-      })
-    }
-    this.setState({ search });
-  };
 
   renderContact = ({item, index}) => {
     return(
@@ -134,7 +112,7 @@ class Contacts extends Component {
         leftAvatar={{source: item.avatar}}
         bottomDivider
         rightElement={
-          <ContactPanel
+          <DeleteContactButton
             deleteContact={this.deleteContact}
             userId={item.id}
           />
@@ -151,52 +129,19 @@ class Contacts extends Component {
   render(){
     return(
       <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
-        <View style={styles.searchCont}>
-          <Input
-            value={this.state.search}
-            placeholder='Find...'
-            placeholderTextColor='#737373'
-            containerStyle={{width: '82%', borderBottomWidth: 1, borderBottomColor: '#fff'}}
-            inputStyle={styles.searchInput}
-            inputContainerStyle={styles.searchInputCont}
-            onChangeText={(t) => this.updateSearch(t.replace(/\s/g,''))}
-            maxLength={20}
-          />
-          <AddContactButton addContact={this.addContact} search={this.state.search}/>
-        </View>
-      <ScrollView>
         <FlatList
-          data={this.state.fContacts}
+          data={this.state.contacts}
           renderItem={this.renderContact}
           keyExtractor={i => i.id.toString()}
           contentContainerStyle={{
             paddingBottom: 20,
             marginVertical: 0
           }}
+          removeClippedSubviews={true}
         />
-      </ScrollView>
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  searchCont: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    paddingTop: 5,
-    paddingHorizontal: 5,
-    paddingBottom: 10,
-    backgroundColor: '#222222'
-  },
-  searchInput: {
-    padding: 5,
-    color: '#fff'
-  },
-  searchInputCont: {
-    borderBottomWidth: 0
-  }
-})
 
 export default Contacts;
