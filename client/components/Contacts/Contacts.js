@@ -40,23 +40,7 @@ class Contacts extends Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      contacts: [
-        {id: 0, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 1, username: 'Yaroslav', avatar: require('../../assets/cat.jpg')},
-        {id: 2, username: 'Vladimir', avatar: require('../../assets/cat.jpg')},
-        {id: 3, username: 'Amina', avatar: require('../../assets/cat.jpg')},
-        {id: 4, username: 'Ded', avatar: require('../../assets/cat.jpg')},
-        {id: 5, username: 'Denis', avatar: require('../../assets/cat.jpg')},
-        {id: 6, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 7, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 8, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 9, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 10, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 11, username: 'Popovich', avatar: require('../../assets/cat.jpg')},
-        {id: 12, username: 'Popovich!!!!!!!!!', avatar: require('../../assets/cat.jpg')},
-      ]
-    }
+    this.state = { }
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -131,7 +115,7 @@ class Contacts extends Component {
     return(
       <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
         <FlatList
-          data={this.state.contacts}
+          data={this.props.contactStore.contacts}
           renderItem={this.renderContact}
           keyExtractor={i => i.id.toString()}
           contentContainerStyle={{

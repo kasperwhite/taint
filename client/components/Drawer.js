@@ -2,8 +2,9 @@ import React from 'react';
 import { AsyncStorage, View, Platform } from 'react-native';
 import { ListItem, Avatar, Button, Icon } from 'react-native-elements';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
+import { observer, inject } from 'mobx-react';
 
-export default DrawerContent = (props) => {
+export default inject('authStore')(observer(DrawerContent = (props) => {
 
   const signOut = async () => {
     await AsyncStorage.removeItem('userToken');
@@ -34,4 +35,4 @@ export default DrawerContent = (props) => {
       <DrawerNavigatorItems {...props} labelStyle={{color: '#fff'}}/>
     </View>
   )
-}
+}))

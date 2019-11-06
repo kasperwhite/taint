@@ -12,11 +12,8 @@ class Room extends Component {
     super(props)
 
     this.state = {
-      roomId: 1,
-      roomName: '',
-      message: '',
-      isLoading: false,
-      messages: []
+      room: {},
+      message: ''
     }
   }
 
@@ -81,14 +78,17 @@ class Room extends Component {
   }
 
   componentDidMount(){
-    this.props.navigation.setParams({ 
-      openInfo: this.openInfo
-    });
+    this.props.navigation.setParams({ openInfo: this.openInfo });
+
+    const roomId = this.props.navigation.getParam('roomId');
+    const room = this.props.roomStore.getRoom(roomId);
+    this.props.roomMessageStore.getRoomMessages(roomId);
+    this.setState({ room });
   }
 
   openInfo = () => {
-    const {roomId, roomName} = this.state;
-    this.props.navigation.navigate('RoomInfo', { roomId, roomName })
+    const {roomId, room} = this.state;
+    this.props.navigation.navigate('RoomInfo', { roomId, roomName: room.name })
   }
 
   // SEND MESSAGE OPERATION
@@ -111,48 +111,48 @@ class Room extends Component {
   }
 
   render(){
-    if(this.state.isLoading){
+    if(this.props.roomMessageStore.messagesIsLoading){
       return( <Loading/> )
     } else {
-    return(
-      <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
-        <View style={styles.main}>
-          <FlatList
-            inverted
-            data={this.state.messages}
-            renderItem={this.renderMessage}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={styles.flatList}
-            removeClippedSubviews={true}
-          />
-          <View style={styles.messageInputCont}>
-            <Input
-              placeholder='Type message...'
-              placeholderTextColor='#737373'
-              inputContainerStyle={styles.messageInput}
-              inputStyle={{fontSize: 20, borderColor: '#222222'}}
-              onChangeText={(text) => this.setState({ message: text })}
-              value={this.state.message}
-              multiline
+      return(
+        <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
+          <View style={styles.main}>
+            <FlatList
+              inverted
+              data={this.props.roomMessageStore.roomMessages}
+              renderItem={this.renderMessage}
+              keyExtractor={item => item.id.toString()}
+              contentContainerStyle={styles.flatList}
+              removeClippedSubviews={true}
             />
-            <Button
-              icon={
-                <Icon
-                  name='paper-plane'
-                  type='font-awesome'
-                  color='#167B14'
-                />
-              }
-              onPress={this.sendMessage}
-              type='clear'
-              disabled={!this.state.message.trim()}
-              disabledStyle={{opacity: 0.6}}
-              containerStyle={{flexDirection: 'column', justifyContent: 'center'}}
-            />
+            <View style={styles.messageInputCont}>
+              <Input
+                placeholder='Type message...'
+                placeholderTextColor='#737373'
+                inputContainerStyle={styles.messageInput}
+                inputStyle={{fontSize: 20, borderColor: '#222222'}}
+                onChangeText={(text) => this.setState({ message: text })}
+                value={this.state.message}
+                multiline
+              />
+              <Button
+                icon={
+                  <Icon
+                    name='paper-plane'
+                    type='font-awesome'
+                    color='#167B14'
+                  />
+                }
+                onPress={this.sendMessage}
+                type='clear'
+                disabled={!this.state.message.trim()}
+                disabledStyle={{opacity: 0.6}}
+                containerStyle={{flexDirection: 'column', justifyContent: 'center'}}
+              />
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    )
+        </KeyboardAvoidingView>
+      )
     }
   }
 }
@@ -161,7 +161,9 @@ const styles = StyleSheet.create({
   main: {
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: '#151516'
+    backgroundColor: '#151516',
+    /* justifyContent: 'center',
+    alignItems: 'center' */
   },
   flatList: {
     flexDirection: 'column',

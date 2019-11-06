@@ -2,7 +2,7 @@ import { observable, action } from "mobx";
 
 class ObservableRoomMessageStore {
   @observable roomMessages = [];
-  @observable isLoading = false;
+  @observable messagesIsLoading = false;
 
   constructor(){ }
   

@@ -98,7 +98,7 @@ class RoomList extends Component {
     } else if(!this.state.rooms.length){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
-          <Text style={{color: 'grey', fontSize: 20}}>Create a room!</Text>
+          <Text style={{color: 'grey', fontSize: 20}}>Room list is empty</Text>
         </View>
       )
     } else {

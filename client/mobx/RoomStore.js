@@ -1,7 +1,9 @@
 import { observable, action } from "mobx";
 
 class ObservableRoomStore {
-  @observable rooms = [];
+  @observable rooms = [
+    {id: 0, name: 'Test', messages: []}
+  ];
   @observable isLoading = false;
 
   constructor(){ }
