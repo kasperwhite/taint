@@ -3,35 +3,35 @@ import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-nativ
 import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
-const DeleteRoomButton = (props) => {
-  return(
-    <Button
-      title='Delete Room'
-      titleStyle={{color: '#151516'}}
-      onPress={() => props.deleteRoom()}
-      buttonStyle={{backgroundColor: '#167B14'}}
-      containerStyle={{marginVertical: 20}}
-    />
-  )
-}
-
-const AddUserButton = (props) => {
-  return(
+const ControlPanel = (props) => (
+  <View style={{flexDirection: 'row', marginRight: 15}}>
     <Button
       icon={
         <Icon
-          name='plus'
+          name='user-plus'
           type='font-awesome'
-          color='#151516'
-          size={15}
+          color='#09C709'
+          size={18}
         />
       }
-      containerStyle={{borderRadius: 30, backgroundColor: '#167B14', width: 30, height: 30}}
+      containerStyle={{marginRight: 5}}
       onPress={props.addUser}
       type='clear'
     />
-  )
-}
+    <Button
+      icon={
+        <Icon
+          name='trash'
+          type='font-awesome'
+          color='#09C709'
+          size={18}
+        />
+      }
+      onPress={props.deleteRoom}
+      type='clear'
+    />
+  </View>
+)
 
 const DeleteUserButton = (props) => (
   <Button
@@ -46,23 +46,6 @@ const DeleteUserButton = (props) => (
     buttonStyle={{marginHorizontal: 3}}
     containerStyle={{padding: 0}}
     onPress={() => props.deleteUser(props.userId)}
-    type='clear'
-  />
-)
-
-const OpenUserPageButton = (props) => (
-  <Button
-    icon={
-      <Icon
-        name='user'
-        type='font-awesome'
-        color='#193367'
-        size={15}
-      />
-    }
-    buttonStyle={{marginHorizontal: 3}}
-    containerStyle={{padding: 0}}
-    onPress={() => props.openUserPage(props.userId)}
     type='clear'
   />
 )
@@ -107,7 +90,13 @@ class RoomInfo extends Component {
       headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
-      }
+      },
+      headerRight: (
+        <ControlPanel
+          addUser={navigation.getParam('addUser')}
+          deleteRoom={navigation.getParam('deleteRoom')}
+        />
+      )
     };
   };
 
@@ -122,6 +111,13 @@ class RoomInfo extends Component {
       roomKey,
       roomType
     })
+  }
+
+  componentDidMount(){
+    this.props.navigation.setParams({ 
+      addUser: this.addUser,
+      deleteRoom: this.deleteRoom
+    });
   }
 
   // DELETE ROOM OPERATION
@@ -161,12 +157,9 @@ class RoomInfo extends Component {
   }
 
   renderUser = ({ item }) => {
-    const title = item.id == this.state.roomCreator
-      ? <Text style={{color: '#fff', fontSize: 17}}>{item.username} <Text style={{color: 'grey', fontSize: 13}}>(creator)</Text></Text>
-      : <Text style={{color: '#fff', fontSize: 17}}>{item.username}</Text>
     return(
       <ListItem
-        title={title}
+        title={item.username}
         bottomDivider
         containerStyle={styles.infoListItemCont}
         titleStyle={styles.infoListItemTitle}
@@ -178,9 +171,7 @@ class RoomInfo extends Component {
           />
         }
         rightElement={
-          <View style={{flexDirection: 'row'}}>
-            <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
-          </View>
+          <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
         }
       />
     )
@@ -225,17 +216,7 @@ class RoomInfo extends Component {
           keyExtractor={item => item.id.toString()}
           data={this.state.roomUsers}
           renderItem={this.renderUser}
-          ListHeaderComponent={
-            <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-              <AddUserButton addUser={this.addUser}/>
-              <Text style={{marginLeft: 10, color: '#fff'}}>Add user</Text>
-            </View>
-          }
-          ListHeaderComponentStyle={{marginVertical: 10, marginHorizontal: 20}}
         />
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <DeleteRoomButton deleteRoom={this.deleteRoom}/>
-        </View>
       </ScrollView>
     )
   }

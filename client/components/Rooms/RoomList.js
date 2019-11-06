@@ -5,24 +5,6 @@ import { observer, inject } from 'mobx-react';
 
 import Loading from '../Shared/Loading';
 
-const SearchButton = () => {
-  return(
-    <Button
-      icon={
-        <Icon
-          name='search'
-          type='font-awesome'
-          color='#fff'
-          size={21}
-        />
-      }
-      containerStyle={{width: 50, marginRight: 5}}
-      onPress={() => console.log('Find Room')}
-      type='clear'
-    />
-  )
-}
-
 const AddButton = (props) => {
   return(
     <Button
@@ -101,21 +83,10 @@ class RoomList extends Component {
         key={index}
         title={item.name}
         bottomDivider
-        rightElement={
-          <Badge
-            value={item.messages.length}
-            badgeStyle={{
-              backgroundColor: '#167B14',
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              borderColor: '#151516'
-            }}
-            textStyle={{color: '#151516'}}
-          />
-        }
+        rightTitle='Up to 9:22pm'
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
+        rightTitleStyle={{fontSize: 12, color: 'grey'}}
         onPress={() => this.enterRoom(item.id, item.name)}
       />
     )

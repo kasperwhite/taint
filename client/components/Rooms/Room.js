@@ -7,43 +7,6 @@ import { observer, inject } from 'mobx-react';
 
 import Loading from '../Shared/Loading';
 
-const MessageOverlay = (props) => (
-  <Overlay
-    isVisible={props.isVisible}
-    onBackdropPress={props.toggleOverlay}
-    borderRadius={20}
-    height={60}
-    windowBackgroundColor='rgba(0,0,0,0.6)'
-    overlayStyle={{backgroundColor: '#222222'}}
-  >
-    <View
-      style={{
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#222222',
-        
-      }}
-    >
-      {/* <Button
-        title='Edit'
-        titleStyle={{color: '#09C709'}}
-        type='clear'
-        buttonStyle={{paddingVertical: 10}}
-        onPress={() => props.editMessage(props.messageId)}
-      /> */}
-      <Button
-        title='Delete'
-        titleStyle={{color: '#09C709'}}
-        type='clear'
-        buttonStyle={{paddingVertical: 10}}
-        onPress={() => props.deleteMessage(props.messageId)}
-      />
-    </View>
-  </Overlay>
-)
-
 class Room extends Component {
   constructor(props){
     super(props)
@@ -52,7 +15,6 @@ class Room extends Component {
       roomId: 1,
       roomName: '',
       message: '',
-      isVisible: false,
       isLoading: false,
       selectedMessageId: 0,
       messages: []
@@ -88,17 +50,10 @@ class Room extends Component {
   };
 
   componentWillMount(){
-    
-  }
-
-  componentDidMount(){
-    this.props.navigation.setParams({ 
-      openInfo: this.openInfo
-    });
     const roomId = this.props.navigation.getParam('roomId');
     const roomName = this.props.navigation.getParam('roomName');
     let messages = [];
-    for(let i = 0; i <= 10; i++){
+    for(let i = 0; i <= 50; i++){
       let message;
       if(i % 2 == 0){
         message = {
@@ -122,8 +77,14 @@ class Room extends Component {
     this.setState({
       roomId,
       roomName,
-      messages
+      messages: messages.reverse()
     })
+  }
+
+  componentDidMount(){
+    this.props.navigation.setParams({ 
+      openInfo: this.openInfo
+    });
   }
 
   openInfo = () => {
@@ -135,23 +96,7 @@ class Room extends Component {
   sendMessage = () => {
     let {message} = this.state;
     console.log('Send Message', message.trim());
-    this.setState({message: ''})
-  }
-
-  // EDIT MESSAGE OPERATION
-  editMessage = (id) => {
-    console.log('Edit Message', id);
-    this.toggleOverlay();
-  }
-
-  // DELETE MESSAGE OPERATION
-  deleteMessage = (id) => {
-    console.log('Delete Message', id);
-    this.toggleOverlay();
-  }
-
-  toggleOverlay = () => {
-    this.setState({isVisible: !this.state.isVisible});
+    this.setState({message: ''});
   }
 
   selectMessage = (item) => {
@@ -164,15 +109,11 @@ class Room extends Component {
   renderMessage = ({item, index}) => {
     return(
       <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item.id}>
-        <TouchableOpacity
-          style={styles.messageContent}
-          onPress={() => this.selectMessage(item)}
-          activeOpacity={0.9}
-        >
+        <View style={styles.messageContent}>
           <Text style={styles.messageSender}>{item.sender}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
-        </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -188,26 +129,14 @@ class Room extends Component {
     return(
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
         <View style={styles.main}>
-          <MessageOverlay
-            isVisible={this.state.isVisible}
-            toggleOverlay={this.toggleOverlay}
-            messageId={this.state.selectedMessageId}
-            editMessage={this.editMessage}
-            deleteMessage={this.deleteMessage}
+          <FlatList
+            inverted
+            data={this.state.messages}
+            renderItem={this.renderMessage}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.flatList}
+            removeClippedSubviews={true}
           />
-          {
-            !this.props.roomMessageStore.isLoading
-            ? <FlatList
-              data={this.state.messages}
-              renderItem={this.renderMessage}
-              keyExtractor={item => item.id.toString()}
-              contentContainerStyle={styles.flatList}
-              ref={ref => this.scrollView = ref}
-              onContentSizeChange={()=>{this.scrollView.scrollToEnd({animated: true})}}
-              removeClippedSubviews={true}
-            />
-            : <Loading/>
-          }
           <View style={styles.messageInputCont}>
             <Input
               placeholder='Type message...'

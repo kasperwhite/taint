@@ -17,6 +17,8 @@ import Room from './Rooms/Room';
 import RoomInfo from './Rooms/RoomInfo';
 import RoomUsersSelect from './Rooms/RoomUsersSelect';
 import Contacts from './Contacts/Contacts';
+import ContactAddition from './Contacts/ContactAddition';
+
 import Settings from './Settings/Settings';
 
 import authStore from '../mobx/AuthStore';
@@ -74,7 +76,8 @@ const RoomNavigator = createStackNavigator(
 
 const ContactsNavigator = createStackNavigator(
   {
-    Contacts: Contacts
+    Contacts: Contacts,
+    ContactAddition: ContactAddition
   },
   {
     initialRouteName: 'Contacts'
