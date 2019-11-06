@@ -87,7 +87,7 @@ class RoomList extends Component {
 
   componentDidMount(){
     this.setState({
-      rooms: this.props.appStore.rooms
+      rooms: this.props.roomStore.rooms
     })
   }
 
@@ -122,7 +122,7 @@ class RoomList extends Component {
   }
 
   render(){
-    if(this.props.appStore.isLoading){
+    if(this.props.roomStore.isLoading){
       return( <Loading/> )
     } else if(!this.state.rooms.length){
       return(
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('appStore')(observer(RoomList));
+export default inject('roomStore')(observer(RoomList));

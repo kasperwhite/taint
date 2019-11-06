@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, AsyncStorage, View, StyleSheet } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 class SignIn extends Component {
   constructor(props){
@@ -150,4 +151,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SignIn;
+export default inject('authStore')(observer(SignIn));

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 class SignUp extends Component {
   constructor(props){
@@ -138,4 +139,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SignUp;
+export default inject('authStore')(observer(SignUp));

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 class Settings extends Component {
   constructor(props){
@@ -47,4 +48,4 @@ class Settings extends Component {
   }
 }
 
-export default Settings;
+export default inject('settingsStore')(observer(Settings));

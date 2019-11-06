@@ -19,8 +19,12 @@ import RoomUsersSelect from './Rooms/RoomUsersSelect';
 import Contacts from './Contacts/Contacts';
 import Settings from './Settings/Settings';
 
-import appStore from '../mobx/AppStore';
 import authStore from '../mobx/AuthStore';
+import roomStore from '../mobx/RoomStore';
+import roomMessageStore from '../mobx/RoomMessageStore';
+import roomUserStore from '../mobx/RoomUserStore';
+import contactStore from '../mobx/ContactStore';
+import settingsStore from '../mobx/SettingsStore';
 
 const DrawerContent = (props) => {
 
@@ -163,7 +167,11 @@ class Main extends Component{
     return(
       <Provider
         authStore={authStore}
-        appStore={appStore}
+        roomStore={roomStore}
+        roomMessageStore={roomMessageStore}
+        roomUserStore={roomUserStore}
+        contactStore={contactStore}
+        settingsStore={settingsStore}
       >
         <SwitchNavigator/>
       </Provider>

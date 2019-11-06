@@ -208,4 +208,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('appStore')(observer(Contacts));
+export default inject('contactStore')(observer(Contacts));

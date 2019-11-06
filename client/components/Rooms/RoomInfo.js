@@ -253,4 +253,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('appStore')(observer(RoomInfo));
+export default inject('roomStore', 'contactStore')(observer(RoomInfo));

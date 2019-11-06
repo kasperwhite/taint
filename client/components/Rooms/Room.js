@@ -196,7 +196,7 @@ class Room extends Component {
             deleteMessage={this.deleteMessage}
           />
           {
-            !this.props.appStore.isLoading
+            !this.props.roomMessageStore.isLoading
             ? <FlatList
               data={this.state.messages}
               renderItem={this.renderMessage}
@@ -305,4 +305,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('appStore')(observer(Room));
+export default inject('roomMessageStore')(observer(Room));
