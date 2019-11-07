@@ -7,7 +7,7 @@ import { observer, inject } from 'mobx-react';
 export default inject('authStore')(observer(DrawerContent = (props) => {
 
   const signOut = async () => {
-    await AsyncStorage.removeItem('userToken');
+    await props.authStore.signOut();
     props.navigation.navigate('AuthLoading');
   }
 

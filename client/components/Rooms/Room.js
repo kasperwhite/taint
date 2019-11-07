@@ -47,48 +47,21 @@ class Room extends Component {
 
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
-    const roomName = this.props.navigation.getParam('roomName');
-    let messages = [];
-    for(let i = 0; i <= 50; i++){
-      let message;
-      if(i % 2 == 0){
-        message = {
-          id: i,
-          sender: 'kasper',
-          createdAt: '2019-10-22T02:39:58.638Z',
-          updatedAt: '2019-10-22T02:39:58.638Z',
-          text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
-        };
-      } else {
-        message = {
-          id: i,
-          sender: 'kasperwhite',
-          createdAt: '2019-10-22T02:39:58.638Z',
-          updatedAt: '2019-10-22T02:39:58.638Z',
-          text: 'Hello!Hello!Hello!Hello!Hello!Hello!'
-        };
-      }
-      messages.push(message);
-    }
-    this.setState({
-      roomId,
-      roomName,
-      messages: messages.reverse()
-    })
-  }
-
-  componentDidMount(){
-    this.props.navigation.setParams({ openInfo: this.openInfo });
-
-    const roomId = this.props.navigation.getParam('roomId');
     const room = this.props.roomStore.getRoom(roomId);
-    this.props.roomMessageStore.getRoomMessages(roomId);
+    this.props.navigation.setParams({
+      openInfo: this.openInfo,
+      roomName: room.name
+    });
     this.setState({ room });
   }
 
+  componentDidMount(){
+    this.props.roomMessageStore.getRoomMessages(this.state.room.id);
+  }
+
   openInfo = () => {
-    const {roomId, room} = this.state;
-    this.props.navigation.navigate('RoomInfo', { roomId, roomName: room.name })
+    const { room } = this.state;
+    this.props.navigation.navigate('RoomInfo', { roomId: room._id })
   }
 
   // SEND MESSAGE OPERATION
@@ -100,9 +73,9 @@ class Room extends Component {
 
   renderMessage = ({item, index}) => {
     return(
-      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item.id}>
+      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item._id}>
         <View style={styles.messageContent}>
-          <Text style={styles.messageSender}>{item.sender}</Text>
+          <Text style={styles.messageSender}>{item.sender.username}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
         </View>
@@ -121,7 +94,7 @@ class Room extends Component {
               inverted
               data={this.props.roomMessageStore.roomMessages}
               renderItem={this.renderMessage}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatList}
               removeClippedSubviews={true}
             />
@@ -161,9 +134,7 @@ const styles = StyleSheet.create({
   main: {
     height: '100%',
     flexDirection: 'column',
-    backgroundColor: '#151516',
-    /* justifyContent: 'center',
-    alignItems: 'center' */
+    backgroundColor: '#151516'
   },
   flatList: {
     flexDirection: 'column',

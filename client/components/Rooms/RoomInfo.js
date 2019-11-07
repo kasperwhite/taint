@@ -45,7 +45,7 @@ const DeleteUserButton = (props) => (
     }
     buttonStyle={{marginHorizontal: 3}}
     containerStyle={{padding: 0}}
-    onPress={() => props.deleteUser(props.userId)}
+    onPress={() => props.deleteUser(props.user)}
     type='clear'
   />
 )
@@ -55,29 +55,7 @@ class RoomInfo extends Component {
     super(props);
 
     this.state = {
-      contacts: [
-        {id: 0, username: 'kaper'},
-        {id: 1, username: 'kaper'},
-        {id: 2, username: 'kaper'},
-        {id: 3, username: 'kaper'},
-        {id: 4, username: 'kaper'},
-        {id: 5, username: 'MORANA'},
-        {id: 6, username: 'nastya'}
-      ],
-      roomId: 1,
-      roomName: '',
-      roomType: '',
-      roomKey: '',
-      roomTime: 2981,
-      roomCreator: '0',
-      roomUsers: [
-        {id: 0, username: 'kaper'},
-        {id: 1, username: 'kaper'},
-        {id: 2, username: 'kaper'},
-        {id: 3, username: 'kaper'},
-        {id: 4, username: 'kaper'},
-        {id: 5, username: 'MORANA'}
-      ]
+      room: {}
     }
   }
 
@@ -102,15 +80,8 @@ class RoomInfo extends Component {
 
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
-    const roomName = this.props.navigation.getParam('roomName');
-    const roomKey = '1234-7618-234';
-    const roomType = 'Private';
-    this.setState({
-      roomId,
-      roomName,
-      roomKey,
-      roomType
-    })
+    console.log(roomId);
+    this.setState({ room: this.props.roomStore.getRoom(roomId) })
   }
 
   componentDidMount(){
@@ -124,7 +95,7 @@ class RoomInfo extends Component {
   deleteRoom = () => {
     Alert.alert(
       'Delete Room',
-      `Are you sure you want to delete ${this.state.roomId} room?`,
+      `Are you sure you want to delete ${this.state.room.name} room?`,
       [
         { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
         { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
@@ -134,21 +105,23 @@ class RoomInfo extends Component {
 
   // ADD USER OPERATION
   addUser = () => {
-    const {contacts, roomUsers} = this.state;
     this.props.navigation.navigate('RoomUsersSelect', {
       handleUsersSelect: this.handleUsersSelect,
-      contacts: contacts.filter(c => !roomUsers.find(u => u.id == c.id))
+      contacts: 
+        this.props.contactStore.contacts.filter(
+          c => !this.props.roomUserStore.roomUsers.find(u => u._id == c._id)
+        )
     });
   }
 
   handleUsersSelect = (users) => {
-    console.log(users.map(u => u.id));
+    console.log(users.map(u => u._id));
   }
 
-  deleteUser = (id) => {
+  deleteUser = (user) => {
     Alert.alert(
       'Delete User',
-      `Are you sure you want to delete ${id} user?`,
+      `Are you sure you want to kick ${user.username}?`,
       [
         { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
         { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
@@ -171,7 +144,7 @@ class RoomInfo extends Component {
           />
         }
         rightElement={
-          <DeleteUserButton deleteUser={this.deleteUser} userId={item.id}/>
+          <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
         }
       />
     )
@@ -186,37 +159,37 @@ class RoomInfo extends Component {
       >
         <ListItem
           title='Name'
-          rightTitle={this.state.roomName}
+          rightTitle={this.state.room.name}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <ListItem
           title='Key'
-          rightTitle={this.state.roomKey}
+          rightTitle={this.state.room.key}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <ListItem
           title='Time'
-          rightTitle={`${Math.floor(this.state.roomTime/60)}m`}
+          rightTitle={`${Math.floor(this.state.room.time/60)}m`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <ListItem
           title='Users'
-          rightTitle={`${this.state.roomUsers.length}`}
+          rightTitle={`${this.state.room.users.length}`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
-        <FlatList
-          keyExtractor={item => item.id.toString()}
-          data={this.state.roomUsers}
+        {<FlatList
+          keyExtractor={item => item._id.toString()}
+          data={this.props.roomUserStore.roomUsers}
           renderItem={this.renderUser}
-        />
+        />}
       </ScrollView>
     )
   }
@@ -234,4 +207,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomStore', 'contactStore')(observer(RoomInfo));
+export default inject('roomStore', 'roomUserStore','contactStore')(observer(RoomInfo));

@@ -99,7 +99,7 @@ class Contacts extends Component {
         rightElement={
           <DeleteContactButton
             deleteContact={this.deleteContact}
-            userId={item.id}
+            userId={item._id}
           />
         }
         containerStyle={{backgroundColor: '#151516'}}
@@ -117,7 +117,7 @@ class Contacts extends Component {
         <FlatList
           data={this.props.contactStore.contacts}
           renderItem={this.renderContact}
-          keyExtractor={i => i.id.toString()}
+          keyExtractor={i => i._id.toString()}
           contentContainerStyle={{
             paddingBottom: 20,
             marginVertical: 0

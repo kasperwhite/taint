@@ -7,7 +7,7 @@ const roomsRouter = express.Router();
 roomsRouter.use(bodyParser.json());
 
 roomsRouter.route('/')
-.get((req, res, next) => { // NOT ALLOW
+.get((req, res, next) => {
   RoomModel.find({})
   .then((rooms) => {
     const userRooms = rooms.filter((r) => r.users.includes(req.user._id));
@@ -19,23 +19,13 @@ roomsRouter.route('/')
 })
 
 .post(async (req, res, next) => { // ALLOW: add room
-  /* const roomTypes = ['private', 'public'];
-  if(roomTypes.includes(String(req.body.type))){ */
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
-    /* if(req.body.type === 'private'){
-      const key = await KeyModel.create({ key: req.body.publicKey, owner: req.user._id });
-      req.body.publicKeys = [key._id];
-    } */
+
     const room = await RoomModel.create(req.body)
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(room);
-  /* } else {
-    err = new Error('Unknown room type');
-    err.status = 400;
-    return next(err);
-  } */
 })
 
 .put((req, res, next) => {
@@ -121,7 +111,7 @@ roomsRouter.route('/:roomId')
 })
  
 roomsRouter.route('/:roomId/messages')
-/* .get((req, res, next) => {
+.get((req, res, next) => {
   const {roomId} = req.params;
   RoomModel.findById(roomId)
   .populate('messages.sender')
@@ -137,7 +127,7 @@ roomsRouter.route('/:roomId/messages')
     }
   }, err => next(err))
   .catch(err => next(err))
-}) */
+})
 
 .post((req, res, next) => { // ALLOW: add message
   const {roomId} = req.params;

@@ -54,10 +54,8 @@ class SignIn extends Component {
 
   signIn = async () => {
     const {username, password} = this.state;
-    const user = { username,password };
-    console.log(user);
+    await this.props.authStore.signIn({username, password});
     
-    await AsyncStorage.setItem('userToken', '1234-5678');
     this.props.navigation.navigate('AuthLoading');
   }
 

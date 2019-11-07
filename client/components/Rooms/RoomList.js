@@ -27,10 +27,7 @@ class RoomList extends Component {
   constructor(props){
     super(props)
 
-    this.state = {
-      rooms: [],
-      isLoading: false
-    }
+    this.state = { }
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -67,14 +64,10 @@ class RoomList extends Component {
     };
   };
 
-  componentDidMount(){
-    this.setState({
-      rooms: this.props.roomStore.rooms
-    })
-  }
+  componentDidMount(){ }
 
-  enterRoom = (roomId, roomName) => {
-    this.props.navigation.navigate('Room', { roomId, roomName })
+  enterRoom = (roomId) => {
+    this.props.navigation.navigate('Room', { roomId })
   }
 
   renderRoom = ({item, index}) => {
@@ -87,7 +80,7 @@ class RoomList extends Component {
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
-        onPress={() => this.enterRoom(item.id, item.name)}
+        onPress={() => this.enterRoom(item._id)}
       />
     )
   }
@@ -95,7 +88,7 @@ class RoomList extends Component {
   render(){
     if(this.props.roomStore.isLoading){
       return( <Loading/> )
-    } else if(!this.state.rooms.length){
+    } else if(!this.props.roomStore.rooms.length){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
           <Text style={{color: 'grey', fontSize: 20}}>Room list is empty</Text>
@@ -105,9 +98,9 @@ class RoomList extends Component {
       return(
         <View style={{backgroundColor: '#151516', height: '100%'}}>
           <FlatList
-            data={this.state.rooms}
+            data={this.props.roomStore.rooms}
             renderItem={this.renderRoom}
-            keyExtractor={i => i.id.toString()}
+            keyExtractor={i => i._id.toString()}
             contentContainerStyle={{backgroundColor: '#151516', flexDirection: 'column-reverse'}}
           />
         </View>

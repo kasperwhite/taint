@@ -39,13 +39,6 @@ class RoomCreate extends Component {
     super(props);
 
     this.state = {
-      contacts: [
-        {id: 0, username: 'kaper'},
-        {id: 1, username: 'kaper'},
-        {id: 2, username: 'kaper'},
-        {id: 3, username: 'kaper'},
-        {id: 4, username: 'kaper'},
-      ],
       roomName: '',
       timeValue: 1,
       roomUsers: []
@@ -72,11 +65,9 @@ class RoomCreate extends Component {
   handleSubmit = () => {
     const { timeValue, roomName, roomUsers } = this.state;
     const result = this.props.roomStore.postRoom({
-      id: 0,
       time: timeValue*3600,
       name: roomName,
-      users: roomUsers.map(el => { return el.id }),
-      messages: []
+      users: roomUsers.map(el => { return el.id })
     });
     this.resetForm();
   }
@@ -84,13 +75,13 @@ class RoomCreate extends Component {
   addUser = () => {
     this.props.navigation.navigate('RoomUsersSelect', { 
       handleUsersSelect: this.handleUsersSelect,
-      contacts: this.state.contacts
+      contacts: this.props.contactStore.contacts
     });
   }
 
   deleteUser = (id) => {
     const roomUsers = Object.assign([], this.state.roomUsers);
-    roomUsers.splice(roomUsers.indexOf(roomUsers.find(el => el.id == id)), 1);
+    roomUsers.splice(roomUsers.indexOf(roomUsers.find(el => el._id == id)), 1);
     this.setState({ roomUsers });
   }
 
@@ -117,7 +108,7 @@ class RoomCreate extends Component {
           }
           buttonStyle={{marginHorizontal: 3}}
           containerStyle={{padding: 0}}
-          onPress={() => this.deleteUser(item.id)}
+          onPress={() => this.deleteUser(item._id)}
           type='clear'
         />
       }
@@ -151,7 +142,7 @@ class RoomCreate extends Component {
           />
         </View>
         <FlatList
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           data={this.state.roomUsers}
           renderItem={this.renderUser}
           contentContainerStyle={{paddingHorizontal: 10}}

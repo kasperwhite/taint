@@ -46,13 +46,13 @@ class RoomUsersSelect extends Component {
     });
     const contacts = this.props.navigation.getParam('contacts');
     const contactsForSelect = contacts.map((c) => {
-      return { id: c.id, username: c.username, checked: false }
+      return { _id: c._id, username: c.username, checked: false }
     })
     this.setState({ contactsForSelect });
   }
 
-  toggleCheckbox = (id) => {
-    const changedContact = this.state.contactsForSelect.find((c) => c.id === id);
+  toggleCheckbox = (_id) => {
+    const changedContact = this.state.contactsForSelect.find((c) => c._id === _id);
     changedContact.checked = !changedContact.checked;
     const contactsForSelect = Object.assign([], this.state.contactsForSelect, changedContact);
     this.setState({ contactsForSelect });
@@ -73,11 +73,11 @@ class RoomUsersSelect extends Component {
       titleStyle={{color: '#fff'}}
       rightElement={
         <CheckBox
-          key={item.id}
+          key={item._id}
           containerStyle={{margin: 0}}
           size={18}
-          checked={this.state.contactsForSelect.find(el => el.id === item.id).checked}
-          onPress={() => this.toggleCheckbox(item.id)}
+          checked={this.state.contactsForSelect.find(el => el._id === item._id).checked}
+          onPress={() => this.toggleCheckbox(item._id)}
         />
       }
     />
@@ -93,7 +93,7 @@ class RoomUsersSelect extends Component {
         }}
       >
         <FlatList
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           data={this.state.contactsForSelect}
           renderItem={this.renderContact}
         />

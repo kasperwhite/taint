@@ -132,7 +132,7 @@ class Main extends Component{
   constructor(props){
     super(props)
 
-    this.state = {}
+    this.state = { }
   }
 
   render(){

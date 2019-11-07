@@ -2,9 +2,7 @@ import { observable, action } from "mobx";
 
 class ObservableContactStore {
   @observable contacts = [
-    {id: 0, username: 'Popovich', avatar: require('../assets/cat.jpg')},
-    {id: 1, username: 'Yaroslav', avatar: require('../assets/cat.jpg')},
-    {id: 2, username: 'Vladimir', avatar: require('../assets/cat.jpg')}
+    {_id: '5dc3c34d4ce0c52834c2a23a', username: 'Popovich', avatar: require('../assets/cat.jpg')},
   ];
   @observable isLoading = false;
 

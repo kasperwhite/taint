@@ -72,7 +72,8 @@ describe('Rooms', () => {
       .set('Authorization', `bearer ${token}`)
       .send({
         name: 'TestRoom',
-        users: []
+        users: [],
+        time: 2000
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
@@ -156,7 +157,7 @@ describe('Rooms', () => {
       })
   })
 
-  /* it('/GET rooms/:id/messages', done => {
+  it('/GET rooms/:id/messages', done => {
     const currentPath = path + '/' + roomId + '/messages';
 
     chai.request(url)
@@ -169,7 +170,7 @@ describe('Rooms', () => {
 
         done();
       })
-  }); */
+  });
 
   it('/POST rooms/:id/messages', done => {
     const currentPath = path + '/' + roomId + '/messages';
