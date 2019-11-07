@@ -65,9 +65,9 @@ class Room extends Component {
   }
 
   // SEND MESSAGE OPERATION
-  sendMessage = () => {
+  sendMessage = async () => {
     let {message} = this.state;
-    console.log('Send Message', message.trim());
+    await this.props.roomMessageStore.postRoomMessage(this.state.room._id, message.trim())
     this.setState({message: ''});
   }
 

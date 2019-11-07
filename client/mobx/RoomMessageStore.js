@@ -13,12 +13,12 @@ class ObservableRoomMessageStore {
 
   constructor(){ }
   
-  @action.bound getRoomMessages(roomId) {
+  @action.bound async getRoomMessages(roomId) {
 
   }
 
-  @action.bound postRoomMessages(roomId, messageData) {
-
+  @action.bound async postRoomMessage(roomId, messageData) {
+    console.log(messageData, ' in ', roomId);
   }
 }
 

@@ -8,15 +8,15 @@ class ObservableContactStore {
 
   constructor(){ }
 
-  @action.bound getContacts() {
+  @action.bound async getContacts() {
 
   }
 
-  @action.bound postContact(id) {
+  @action.bound async postContact(id) {
 
   }
 
-  @action.bound deleteContact(id) {
+  @action.bound async deleteContact(id) {
 
   }
 }

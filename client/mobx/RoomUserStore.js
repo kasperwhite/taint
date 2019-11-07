@@ -8,15 +8,15 @@ class ObservableRoomUserStore {
 
   constructor(){ }
   
-  @action.bound getRoomUsers(roomId) {
+  @action.bound async getRoomUsers(roomId) {
     
   }
 
-  @action.bound postRoomUser(roomId, userId) {
+  @action.bound async postRoomUser(roomId, userId) {
 
   }
 
-  @action.bound deleteRoomUser(roomId, userId) {
+  @action.bound async deleteRoomUser(roomId, userId) {
 
   }
 }

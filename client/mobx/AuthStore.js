@@ -24,7 +24,7 @@ class ObservableAuthStore {
     await AsyncStorage.removeItem('userToken');
   }
 
-  @action.bound deleteAccount() {
+  @action.bound async deleteAccount() {
 
   }
 }

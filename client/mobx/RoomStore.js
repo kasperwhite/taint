@@ -15,11 +15,11 @@ class ObservableRoomStore {
 
   constructor(){ }
   
-  @action.bound getRooms() {
+  @action.bound async getRooms() {
 
   }
 
-  @action.bound postRoom(data) {
+  @action.bound async postRoom(data) {
     data._id = this.rooms.length;
     data.messages = [];
     this.rooms.push(data);
@@ -31,7 +31,7 @@ class ObservableRoomStore {
     return this.rooms.find(r => r._id == id);
   }
 
-  @action.bound deleteRoom(id) {
+  @action.bound async deleteRoom(id) {
 
   }
 }

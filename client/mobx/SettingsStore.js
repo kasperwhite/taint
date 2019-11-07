@@ -6,15 +6,15 @@ class ObservableSettingsStore {
 
   constructor(){ }
 
-  @action.bound getSettings() {
+  @action.bound async getSettings() {
 
   }
 
-  @action.bound changeSettings() {
+  @action.bound async changeSettings() {
 
   }
 
-  @action.bound restoreSettings() {
+  @action.bound async restoreSettings() {
 
   }
 }

@@ -80,7 +80,6 @@ class RoomInfo extends Component {
 
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
-    console.log(roomId);
     this.setState({ room: this.props.roomStore.getRoom(roomId) })
   }
 
