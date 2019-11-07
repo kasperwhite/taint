@@ -1,23 +1,5 @@
 const mongoose = require('mongoose');
 
-const messageSchema = new mongoose.Schema({
-  text: {
-    type: String,
-    required: true
-  },
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  hash: { // forsecure
-    type: String,
-    required: true
-  }
-}, {
-  timestamps: true
-})
-
 const roomSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -33,9 +15,11 @@ const roomSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
-  messages: [
-    messageSchema
-  ],
+  messages: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Message',
+    required: true
+  }],
   time: {
     type: Number,
     required: true

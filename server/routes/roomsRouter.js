@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto-js');
 const RoomModel = require('../models/room');
+const MessageModel = require('../models/message');
 const roomsRouter = express.Router();
 
 roomsRouter.use(bodyParser.json());
@@ -22,10 +23,13 @@ roomsRouter.route('/')
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
 
-    const room = await RoomModel.create(req.body)
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(room);
+    await RoomModel.create(req.body)
+    .then((room) => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(room);
+    })
+    .catch(err => next(err))
 })
 
 .put((req, res, next) => {
@@ -46,7 +50,6 @@ roomsRouter.route('/')
 roomsRouter.route('/:roomId')
 .get((req, res, next) => { // ALLOW: get room
   RoomModel.findById(req.params.roomId)
-  .populate('messages')
   .then((room) => {
     if(room.users.includes(req.user._id)){
       res.statusCode = 200;
@@ -111,52 +114,45 @@ roomsRouter.route('/:roomId')
 })
  
 roomsRouter.route('/:roomId/messages')
-.get((req, res, next) => {
-  const {roomId} = req.params;
-  RoomModel.findById(roomId)
-  .populate('messages.sender')
-  .then((room) => {
-    if(room){
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(room.messages);
-    } else {
-      err = new Error('Room ' + roomId + ' not found');
-      err.status = 404;
-      return next(err);
-    }
-  }, err => next(err))
-  .catch(err => next(err))
+.get(async (req, res, next) => {
+  const { roomId } = req.params;
+  
+  const room = await RoomModel.findById(roomId).populate('messages');
+
+  if(room){
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(room.messages);
+  } else {
+    err = new Error('Room ' + roomId + ' not found');
+    err.status = 404;
+    return next(err);
+  }
 })
 
-.post((req, res, next) => { // ALLOW: add message
-  const {roomId} = req.params;
-  RoomModel.findById(roomId)
-  .then(room => {
-    if(room && room.users.includes(req.user._id)){
-      req.body.sender = req.user._id;
-      room.messages.push(req.body);
-      room.save()
-      .then((room) => {
-        RoomModel.findById(room._id)
-        .then((room) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json(room.messages)
-        })
-        .catch(err => next(err))
-      })
-    } else if(!room.users.includes(req.user._id)){
-      err = new Error('Forbidden');
-      err.status = 403;
-      return next(err);
-    } else {
-      err = new Error('Room ' + roomId + ' not found')
-      err.status = 404
-      return next(err)
-    }
-  }, err => next(err))
-  .catch(err => next(err))
+.post(async (req, res, next) => {
+  const { roomId } = req.params;
+  let room = await RoomModel.findById(roomId);
+
+  if(room && room.users.includes(req.user._id)){
+    req.body.sender = req.user._id;
+
+    const message = await MessageModel.create(req.body);
+    room.messages.push(message._id);
+    room.save()
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(room.messages)
+  } else if(!room.users.includes(req.user._id)){
+    err = new Error('Forbidden');
+    err.status = 403;
+    return next(err);
+  } else {
+    err = new Error('Room ' + roomId + ' not found')
+    err.status = 404
+    return next(err)
+  }
 })
 
 .put((req, res, next) => {
@@ -164,7 +160,7 @@ roomsRouter.route('/:roomId/messages')
   res.end('PUT operation not supported');
 })
 
-.delete((req, res, next) => { // NOT ALLOW
+/* .delete((req, res, next) => {
   const {roomId} = req.params;
   RoomModel.findById(roomId)
   .then(room => {
@@ -191,10 +187,10 @@ roomsRouter.route('/:roomId/messages')
     }
   }, err => next(err))
   .catch(err => next(err))
-})
+}) */
 
 roomsRouter.route('/:roomId/messages/:messageId')
-.get((req, res, next) => { // NOT ALLOW
+/* .get((req, res, next) => {
   const {roomId, messageId} = req.params;
   
   RoomModel.findById(roomId)
@@ -216,14 +212,14 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
-})
+}) */
 
 .post((req, res, next) => {
   res.statusCode = 403
   res.end('POST operation not supported')
 })
 
-.put((req, res, next) => { // ALLOW: update message
+/* .put((req, res, next) => {
   const {roomId, messageId} = req.params;
   const {text} = req.body;
   RoomModel.findById(roomId)
@@ -257,9 +253,9 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
-})
+}) */
 
-.delete((req, res, next) => { // ALLOW: delete message
+/* .delete((req, res, next) => {
   const {roomId, messageId} = req.params;
 
   RoomModel.findById(roomId)
@@ -291,7 +287,7 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
-})
+}) */
 
 roomsRouter.route('/:roomId/users')
 .post(async (req, res, next) => { // ALLOW: add user in chat
