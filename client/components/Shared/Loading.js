@@ -3,8 +3,8 @@ import { View, ActivityIndicator } from 'react-native';
 
 export default Loading = () => (
   <View style={{
-    height: '100%', 
-    lexDirection: 'column',
+    height: '100%',
+    flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: '#151516'
   }}>
