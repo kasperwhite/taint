@@ -29,8 +29,8 @@ describe('Authenticate', () => {
       })
   })
 
-  it('/POST auth/login', (done) => {
-    const currentPath = path + '/login';
+  it('/POST auth/signin', (done) => {
+    const currentPath = path + '/signin';
     chai.request(url)
       .post(currentPath)
       .send({

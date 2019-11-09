@@ -19,7 +19,7 @@ describe('Rooms', () => {
 
   before((done) => {
     chai.request(url)
-      .post('/auth/login')
+      .post('/auth/signin')
       .send({
         username: 'test',
         password: '123123'

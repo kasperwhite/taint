@@ -19,7 +19,7 @@ describe('Users', () => {
   before((done) => {
     contactId = '5dc627c757408d3580935cfd';
     chai.request(url)
-      .post('/auth/login')
+      .post('/auth/signin')
       .send({
         username: 'test',
         password: '123123'
