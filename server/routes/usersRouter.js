@@ -21,22 +21,10 @@ usersRouter.route('/')
   }, err => next(err))
   .catch(err => next(err))
 })
-/* .post((req, res, next) => {
-  const { login, password } = req.body;
-  if(login && password){
-    const hashPassword = crypto.MD5(password);
-    UserModel.create({login, password:hashPassword})
-    .then((user) => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(user);
-    }, err => next(err))
-    .catch(err => next(err))
-  } else {
-    res.statusCode = 403;
-    res.end('Data is not full');
-  }
-}) */
+.post((req, res, next) => {
+  res.statusCode = 403
+  res.end('POST operation not supported')
+})
 .put((req, res, next) => {
   res.statusCode = 403
   res.end('PUT operation not supported')
@@ -52,7 +40,7 @@ usersRouter.route('/')
 }) 
 
 usersRouter.route('/:userId')
-.get((req, res, next) => {
+/* .get((req, res, next) => {
   UserModel.findById(req.params.userId)
   .then((user) => {
     res.statusCode = 200;
@@ -75,8 +63,8 @@ usersRouter.route('/:userId')
         res.json(user);
     }, (err) => next(err))
     .catch((err) => next(err))
-})
-.delete((req, res, next) => {
+}) */
+.delete((req, res, next) => { // todo: moved to auth router
   UserModel.findByIdAndRemove(req.params.userId)
   .then((user) => {
     res.statusCode = 200
@@ -86,30 +74,40 @@ usersRouter.route('/:userId')
   .catch((err) => next(err))
 })
 
-usersRouter.route('/:userId/contacts')
+usersRouter.route('/contacts')
 .get(async (req, res, next) => {
-  const currentUser = await UserModel.findById(req.params.userId);
+  const currentUser = req.user;
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.json(currentUser.contacts);
 })
 .post(async (req, res, next) => {
-  const {userId} = req.params;
-  let user = await UserModel.update({_id: userId}, {$push: {contacts: req.body.contactId}});
+  const {username} = req.body;
+  const currentUserId = req.user._id;
 
-  user = await UserModel.findById(userId).populate('contacts');
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json(user.contacts);
+  const contact = await UserModel.findOne({ username });
+  if(contact){
+    let user = await UserModel.update({_id: currentUserId}, {$push: {contacts: contact._id}});
+    user = await UserModel.findById(currentUserId).populate('contacts');
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(user.contacts);
+  } else {
+    err = new Error('User ' + username + ' not found');
+    err.status = 404;
+    return next(err);
+  }
 })
 
-usersRouter.route('/:userId/contacts/:contactId')
+usersRouter.route('/contacts/:contactId')
 .delete(async (req, res, next) => {
-  const {userId, contactId} = req.params;
+  const {contactId} = req.params;
+  const currentUserId = req.user._id;
 
-  let user = await UserModel.update({_id: userId}, {$pullAll: {contacts: [contactId]}})
-  user = await UserModel.findById(userId).populate('contacts');
+  let user = await UserModel.update({_id: currentUserId}, {$pullAll: {contacts: [contactId]}})
+  user = await UserModel.findById(currentUserId).populate('contacts');
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.json(user.contacts);

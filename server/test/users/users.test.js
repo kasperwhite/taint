@@ -17,7 +17,7 @@ describe('Users', () => {
   let token;
 
   before((done) => {
-    contactId = '5daffd15fb402a2a7c2bb113';
+    contactId = '5dc627c757408d3580935cfd';
     chai.request(url)
       .post('/auth/login')
       .send({
@@ -62,7 +62,7 @@ describe('Users', () => {
       })
   }); */
 
-  it('/GET users/:id', done => {
+  /* it('/GET users/:id', done => {
     const currentPath = path + '/' + userId;
 
     chai.request(url)
@@ -75,9 +75,9 @@ describe('Users', () => {
 
         done();
       })
-  });
+  }); */
 
-  it('/PUT users/:id', done => {
+  /* it('/PUT users/:id', done => {
     const currentPath = path + '/' + userId;
     const updatedUsername = '321312';
 
@@ -95,10 +95,10 @@ describe('Users', () => {
 
         done();
       })
-  })
+  }) */
 
-  it('/GET users/:id/contacts', done => {
-    const currentPath = path + '/' + userId + '/contacts';
+  it('/GET contacts', done => {
+    const currentPath = path + '/contacts';
 
     chai.request(url)
       .get(currentPath)
@@ -108,30 +108,30 @@ describe('Users', () => {
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.be.equal(0);
 
-        done()
+        done();
       })
   })
 
-  it('/POST users/:id/contacts', done => {
-    const currentPath = path + '/' + userId + '/contacts';
+  it('/POST contacts', done => {
+    const currentPath = path + '/contacts';
 
     chai.request(url)
       .post(currentPath)
       .set('Authorization', `bearer ${token}`)
       .send({
-        contactId: '5daffd15fb402a2a7c2bb113' 
+        username: 'kasper' 
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.be.equal(1);
 
-        done()
+        done();
       })
   })
 
-  it('/DELETE users/:id/contacts/:id', done => {
-    const currentPath = path + '/' + userId + '/contacts/' + contactId;
+  it('/DELETE contacts/:id', done => {
+    const currentPath = path + '/contacts/' + contactId;
 
     chai.request(url)
       .delete(currentPath)
@@ -141,7 +141,7 @@ describe('Users', () => {
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.be.equal(0);
 
-        done()
+        done();
       })
   })
 

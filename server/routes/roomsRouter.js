@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto-js');
 const RoomModel = require('../models/room');
 const MessageModel = require('../models/message');
 const roomsRouter = express.Router();
@@ -91,11 +90,12 @@ roomsRouter.route('/:roomId')
   .catch(err => next(err))
 })
 
-.delete((req, res, next) => { // ALLOW: delete room
+.delete(async (req, res, next) => { // ALLOW: delete room
   RoomModel.findById(req.params.roomId)
-  .then((room) => {
+  .then(async (room) => {
     if(String(room.creator) === String(req.user._id)){
-
+      const room = await RoomModel.findById(req.params.roomId);
+      room.messages.forEach(async (mId) => await MessageModel.findByIdAndRemove(mId));
       RoomModel.findByIdAndRemove(req.params.roomId)
       .then((room) => {
           res.statusCode = 200
@@ -189,8 +189,8 @@ roomsRouter.route('/:roomId/messages')
   .catch(err => next(err))
 }) */
 
-roomsRouter.route('/:roomId/messages/:messageId')
-/* .get((req, res, next) => {
+/* roomsRouter.route('/:roomId/messages/:messageId')
+.get((req, res, next) => {
   const {roomId, messageId} = req.params;
   
   RoomModel.findById(roomId)
@@ -212,14 +212,14 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
-}) */
+})
 
 .post((req, res, next) => {
   res.statusCode = 403
   res.end('POST operation not supported')
 })
 
-/* .put((req, res, next) => {
+.put((req, res, next) => {
   const {roomId, messageId} = req.params;
   const {text} = req.body;
   RoomModel.findById(roomId)
@@ -253,9 +253,9 @@ roomsRouter.route('/:roomId/messages/:messageId')
     }
   }, err => next(err))
   .catch(err => next(err))
-}) */
+})
 
-/* .delete((req, res, next) => {
+.delete((req, res, next) => {
   const {roomId, messageId} = req.params;
 
   RoomModel.findById(roomId)

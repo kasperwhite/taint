@@ -194,7 +194,22 @@ describe('Rooms', () => {
       })
   });
 
-  it('/GET rooms/:id/messages/:id', done => {
+  it('/GET rooms/:id/messages', done => {
+    const currentPath = path + '/' + roomId + '/messages';
+
+    chai.request(url)
+      .get(currentPath)
+      .set('Authorization', `bearer ${token}`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.equal(1);
+
+        done();
+      })
+  });
+
+  /* it('/GET rooms/:id/messages/:id', done => {
     const currentPath = path + '/' + roomId + '/messages/' + messageId;
 
     chai.request(url)
@@ -207,9 +222,9 @@ describe('Rooms', () => {
 
         done();
       })
-  });
+  }); */
 
-  it('/PUT rooms/:id/messages/:id', done => {
+  /* it('/PUT rooms/:id/messages/:id', done => {
     const currentPath = path + '/' + roomId + '/messages/' + messageId;
     const updatedText = 'UpdatedTest';
 
@@ -227,9 +242,9 @@ describe('Rooms', () => {
 
         done();
       })
-  })
+  }) */
 
-  it('/DELETE rooms/:id/messages/:id', done => {
+  /* it('/DELETE rooms/:id/messages/:id', done => {
     const currentPath = path + '/' + roomId + '/messages/' + messageId;
 
     chai.request(url)
@@ -242,9 +257,9 @@ describe('Rooms', () => {
 
         done();
       })
-  })
+  }) */
 
-  it('/DELETE rooms/:id/messages', done => {
+  /* it('/DELETE rooms/:id/messages', done => {
     const currentPath = path + '/' + roomId + '/messages';
 
     chai.request(url)
@@ -257,7 +272,7 @@ describe('Rooms', () => {
 
         done();
       })
-  });
+  }); */
 
   it('/DELETE rooms/:id', done => {
     const currentPath = path + '/' + roomId;
