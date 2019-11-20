@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator, AsyncStorage } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
@@ -64,7 +64,9 @@ class RoomList extends Component {
     };
   };
 
-  componentDidMount(){ }
+  componentDidMount(){
+    this.props.roomStore.getRooms();
+  }
 
   enterRoom = (roomId) => {
     this.props.navigation.navigate('Room', { roomId })
@@ -86,8 +88,14 @@ class RoomList extends Component {
   }
 
   render(){
-    if(this.props.roomStore.isLoading){
+    if(this.props.roomStore.roomsIsLoading){
       return( <Loading/> )
+    } else if(!this.props.roomStore.rooms) {
+      return(
+        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
+          <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
+        </View>
+      )
     } else if(!this.props.roomStore.rooms.length){
       return(
         <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>

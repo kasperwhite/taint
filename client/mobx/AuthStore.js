@@ -1,9 +1,11 @@
 import { observable, action } from "mobx";
 import { AsyncStorage } from "react-native";
+
 import { serverUrl } from './config';
+import { sendRequest } from './NetService';
 
 class ObservableAuthStore {
-  @observable signUpIsLoading = true;
+  @observable signUpIsLoading = false;
   @observable signInIsLoading = false;
 
   @observable userId = '';
@@ -13,16 +15,14 @@ class ObservableAuthStore {
 
   @action.bound
   async signIn({username, password}) {
-    console.log(username, password);
-
-    await AsyncStorage.setItem('userToken', '1234-5678');
+    const result = await this.fetchSignIn({username, password});
+    return result;
   }
 
   @action.bound 
-  signUp({username, password}) {
-    this.fetchSignUp({username, password})
-    .then(r => console.log(r))
-    .catch(er => console.log(er))
+  async signUp({username, password}) {
+    const result = await this.fetchSignUp({username, password});
+    return result;
   }
 
   @action.bound
@@ -35,42 +35,36 @@ class ObservableAuthStore {
   }
 
   @action
-  async fetchSignUp({username, password}){
+  async fetchSignUp(data){
     this.signUpIsLoading = true;
 
-    const url = serverUrl + 'auth/signup';
+    const url = 'auth/signup';
     const method = 'POST';
-    const body = JSON.stringify({
-      username,
-      password
-    });
+    const headers = { 'Content-Type': 'application/json' };
 
     try {
-      let res = await fetch(url, { method, body });
-      let resJson = await res.json();
-      return resJson;
-    } catch(err) {
-      return err.message;
-    } finally {
+      let res = await sendRequest(url, method, headers, data);
       this.signUpIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
     }
   }
 
   @action
-  async fetchSignIn({username, password}){
-    const url = serverUrl + 'auth/signin';
+  async fetchSignIn(data){
+    this.signInIsLoading = true;
+
+    const url = 'auth/signin';
     const method = 'POST';
-    const body = JSON.stringify({
-      username,
-      password
-    });
+    const headers = { 'Content-Type': 'application/json' };
 
     try {
-      let res = await fetch(url, { method, body });
-      let resJson = await res.json();
-      return resJson;
+      let res = await sendRequest(url, method, headers, data);
+      this.signInIsLoading = false;
+      return res;
     } catch(err) {
-      return err.message;
+      console.log(err);
     }
   }
 

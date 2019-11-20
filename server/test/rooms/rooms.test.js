@@ -180,7 +180,6 @@ describe('Rooms', () => {
       .set('Authorization', `bearer ${token}`)
       .send({
         text: 'TestTestTest',
-        sender: userId,
         hash: '123'
       })
       .end((err, res) => {

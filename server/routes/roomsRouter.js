@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const RoomModel = require('../models/room');
 const MessageModel = require('../models/message');
+const UserModel = require('../models/user');
 const roomsRouter = express.Router();
 
 roomsRouter.use(bodyParser.json());
@@ -117,12 +118,17 @@ roomsRouter.route('/:roomId/messages')
 .get(async (req, res, next) => {
   const { roomId } = req.params;
   
-  const room = await RoomModel.findById(roomId).populate('messages');
+  const room = await RoomModel.findById(roomId)
+    .populate({
+      path: 'messages',
+      populate: { path: 'sender' }
+    });
 
   if(room){
+    let messages = room.messages;
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(room.messages);
+    res.json(messages);
   } else {
     err = new Error('Room ' + roomId + ' not found');
     err.status = 404;
@@ -139,7 +145,11 @@ roomsRouter.route('/:roomId/messages')
 
     const message = await MessageModel.create(req.body);
     room.messages.push(message._id);
-    room.save()
+    room = await room.save();
+    room = await RoomModel.findById(room._id).populate({
+      path: 'messages',
+      populate: { path: 'sender' }
+    });
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

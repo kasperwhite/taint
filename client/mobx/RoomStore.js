@@ -1,30 +1,28 @@
 import { observable, action } from "mobx";
 
+import authStore from './AuthStore';
+import { sendRequest } from './NetService';
+
 class ObservableRoomStore {
-  @observable rooms = [
-    {
-      _id: '5dc3c37d4ce0c52834c2a24a',
-      name: 'Test',
-      users: ['5dc3c34d4ce0c52834c2a23a', '5dc3c35d4ce0c52834c2a23a'],
-      key: '123',
-      time: 1231,
-      messages: [0, 1]
-    }
-  ];
-  @observable isLoading = false;
+  @observable rooms = [];
+
+  @observable roomsIsLoading = false;
+  @observable postRoomIsLoading = false;
+
+  @observable token = authStore.userToken;
 
   constructor(){ }
   
   @action.bound async getRooms() {
-
+    const result = await this.fetchGetRooms();
+    this.rooms = result;
+    return result;
   }
 
   @action.bound async postRoom(data) {
-    data._id = this.rooms.length;
-    data.messages = [];
-    this.rooms.push(data);
-
-    return data.id;
+    const room = await this.fetchPostRoom(data);
+    this.rooms.push(room);
+    return room;
   }
 
   @action.bound getRoom(id) {
@@ -33,6 +31,46 @@ class ObservableRoomStore {
 
   @action.bound async deleteRoom(id) {
 
+  }
+
+  @action
+  async fetchGetRooms(){
+    this.roomsIsLoading = true;
+
+    const url = 'rooms/';
+    const method = 'GET';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.token}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers);
+      this.roomsIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  @action
+  async fetchPostRoom(data){
+    this.postRoomIsLoading = true;
+
+    const url = 'rooms/';
+    const method = 'POST';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.token}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.postRoomIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 

@@ -62,14 +62,19 @@ class RoomCreate extends Component {
     this.setState({roomName: '', timeValue: 1, roomUsers: []})
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { timeValue, roomName, roomUsers } = this.state;
-    const result = this.props.roomStore.postRoom({
+    const room = await this.props.roomStore.postRoom({
       time: timeValue*3600,
       name: roomName,
       users: roomUsers.map(el => { return el.id })
     });
-    this.resetForm();
+    if(room._id){
+      this.props.navigation.navigate('Room', { roomId: room._id });
+      this.resetForm();
+    } else {
+      console.log(room);
+    }
   }
 
   addUser = () => {

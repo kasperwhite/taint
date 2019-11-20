@@ -17,7 +17,7 @@ describe('Users', () => {
   let token;
 
   before((done) => {
-    contactId = '5dc627c757408d3580935cfd';
+    contactId = '5dcb59935fedd53a74e6ddf8';
     chai.request(url)
       .post('/auth/signin')
       .send({

@@ -1,24 +1,66 @@
 import { observable, action } from "mobx";
 
+import { sendRequest } from './NetService';
+import roomStore from './RoomStore';
+import authStore from './AuthStore';
+
 class ObservableRoomMessageStore {
-  @observable roomMessages = [
-    { _id: '5dc3c34f4ce0c52834c2a23c',
-    text: 'TestTestTest',
-    sender: {_id: '5dc3c34d4ce0c52834c2a23a', username: 'kasper'},
-    hash: '123',
-    createdAt: '2019-11-07T07:10:07.026Z',
-    updatedAt: '2019-11-07T07:10:07.026Z' }
-  ];
+  @observable roomMessages = [];
+
   @observable messagesIsLoading = false;
+  @observable postMessageIsLoading = false;
+
+  @observable token = authStore.userToken;
 
   constructor(){ }
   
   @action.bound async getRoomMessages(roomId) {
-
+    const messages = await this.fetchGetMessages(roomId);
+    this.roomMessages = messages.reverse();
   }
 
   @action.bound async postRoomMessage(roomId, messageData) {
-    console.log(messageData, ' in ', roomId);
+    const messages = await this.fetchPostMessage(roomId, messageData);
+    this.roomMessages = messages.reverse();
+  }
+
+  @action
+  async fetchGetMessages(roomId){
+    this.messagesIsLoading = true;
+
+    const url = 'rooms/' + roomId + '/messages';
+    const method = 'GET';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.token}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers);
+      this.messagesIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  @action async fetchPostMessage(roomId, data){
+    this.postMessageIsLoading = true;
+
+    const url = 'rooms/' + roomId + '/messages';
+    const method = 'POST';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.token}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.postMessageIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 

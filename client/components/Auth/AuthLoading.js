@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { AsyncStorage, View, ActivityIndicator, StatusBar } from 'react-native';
 import { Text } from 'react-native-elements';
+import { observer, inject } from 'mobx-react';
 
 class AuthLoading extends Component {
   constructor(props){
@@ -15,7 +16,12 @@ class AuthLoading extends Component {
 
   authenticate = async () => {
     const token = await AsyncStorage.getItem('userToken');
-    this.props.navigation.navigate(token ? 'App' : 'Auth');
+    if(token) {
+      this.props.authStore.userToken = token;
+      this.props.navigation.navigate('App');
+    } else {
+      this.props.navigation.navigate('Auth');
+    }
   }
 
   render(){
@@ -40,4 +46,4 @@ class AuthLoading extends Component {
   }
 }
 
-export default AuthLoading;
+export default inject('authStore')(observer(AuthLoading));

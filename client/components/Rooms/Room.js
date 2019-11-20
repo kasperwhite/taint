@@ -7,6 +7,8 @@ import { observer, inject } from 'mobx-react';
 
 import Loading from '../Shared/Loading';
 
+import { MD5 } from 'crypto-js';
+
 class Room extends Component {
   constructor(props){
     super(props)
@@ -56,7 +58,7 @@ class Room extends Component {
   }
 
   componentDidMount(){
-    this.props.roomMessageStore.getRoomMessages(this.state.room.id);
+    this.props.roomMessageStore.getRoomMessages(this.state.room._id);
   }
 
   openInfo = () => {
@@ -67,7 +69,14 @@ class Room extends Component {
   // SEND MESSAGE OPERATION
   sendMessage = async () => {
     let {message} = this.state;
-    await this.props.roomMessageStore.postRoomMessage(this.state.room._id, message.trim())
+    message = message.trim();
+    await this.props.roomMessageStore.postRoomMessage(
+      this.state.room._id,
+      {
+        text: message,
+        hash: MD5(message).toString()
+      }
+    )
     this.setState({message: ''});
   }
 

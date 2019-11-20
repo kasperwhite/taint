@@ -40,9 +40,12 @@ class SignUp extends Component {
 
   signUp = async () => {
     const {username, password} = this.state;
-    this.props.authStore.signUp({username, password});
-
-    //this.props.navigation.navigate('SignIn');
+    const result = await this.props.authStore.signUp({username, password});
+    if(result.success){
+      this.props.navigation.navigate('SignIn')
+    } else {
+      console.log(result);
+    }
   } 
 
   render(){
