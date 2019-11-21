@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { ListItem, Icon, Button } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
@@ -113,21 +113,39 @@ class Contacts extends Component {
   }
 
   render(){
-    return(
-      <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
-        <FlatList
-          data={this.props.contactStore.contacts}
-          renderItem={this.renderContact}
-          keyExtractor={i => i._id.toString()}
-          contentContainerStyle={{
-            paddingBottom: 20,
-            marginVertical: 0
-          }}
-          removeClippedSubviews={true}
-        />
-      </View>
-    )
+    if(this.props.contactStore.contactsIsLoading){
+      return(
+        <View style={styles.emptyScreen}>
+          <Loading size={'large'}/>
+        </View>
+      )
+    } else {
+      return(
+        <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
+          <FlatList
+            data={this.props.contactStore.contacts}
+            renderItem={this.renderContact}
+            keyExtractor={i => i._id.toString()}
+            contentContainerStyle={{
+              paddingBottom: 20,
+              marginVertical: 0
+            }}
+            removeClippedSubviews={true}
+          />
+        </View>
+      )
+    }
   }
 }
+
+const styles = StyleSheet.create({
+  emptyScreen: {
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#151516'
+  }
+})
 
 export default inject('contactStore')(observer(Contacts));

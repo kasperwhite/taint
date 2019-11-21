@@ -1,13 +1,8 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 
-export default Loading = () => (
-  <View style={{
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: '#151516'
-  }}>
-    <ActivityIndicator color="#09C709" size='large'/>
+export default Loading = (props) => (
+  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+    <ActivityIndicator color="#09C709" size={props.size}/>
   </View>
 );

@@ -89,16 +89,20 @@ class RoomList extends Component {
 
   render(){
     if(this.props.roomStore.roomsIsLoading){
-      return( <Loading/> )
+      return(
+        <View style={styles.emptyScreen}>
+          <Loading size={'large'}/>
+        </View>
+      )
     } else if(!this.props.roomStore.rooms) {
       return(
-        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
+        <View style={styles.emptyScreen}>
           <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
         </View>
       )
     } else if(!this.props.roomStore.rooms.length){
       return(
-        <View style={{height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#151516'}}>
+        <View style={styles.emptyScreen}>
           <Text style={{color: 'grey', fontSize: 20}}>Room list is empty</Text>
         </View>
       )
@@ -118,6 +122,13 @@ class RoomList extends Component {
 }
 
 const styles = StyleSheet.create({
+  emptyScreen: {
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#151516'
+  },
   roomCont: {
     justifyContent: 'center',
     alignContent: 'center',

@@ -21,7 +21,7 @@ class ObservableRoomMessageStore {
 
   @action.bound async postRoomMessage(roomId, messageData) {
     const messages = await this.fetchPostMessage(roomId, messageData);
-    this.roomMessages = messages.reverse();
+    this.roomMessages = messages.reverse(); // todo: fix
   }
 
   @action

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+import Loading from '../Shared/Loading';
 
 class ContactAddition extends Component {
   constructor(props){
@@ -55,27 +56,31 @@ class ContactAddition extends Component {
             onChangeText={(t) => this.updateSearch(t)}
             maxLength={20}
           />
-          <Button
-            icon={
-              <Icon
-                name='user-plus'
-                type='font-awesome'
-                color='#167B14'
-                size={17}
+          {
+            this.props.contactStore.postContactIsLoading
+            ? <Loading size={'small'}/>
+            : <Button
+                icon={
+                  <Icon
+                    name='user-plus'
+                    type='font-awesome'
+                    color='#167B14'
+                    size={17}
+                  />
+                }
+                buttonStyle={{marginHorizontal: 3}}
+                containerStyle={{
+                  padding: 0,
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignContent: 'center'
+                }}
+                onPress={this.addContact}
+                type='clear'
+                disabled={!this.state.search}
+                disabledStyle={{opacity: 0.6}}
               />
-            }
-            buttonStyle={{marginHorizontal: 3}}
-            containerStyle={{
-              padding: 0,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignContent: 'center'
-            }}
-            onPress={this.addContact}
-            type='clear'
-            disabled={!this.state.search}
-            disabledStyle={{opacity: 0.6}}
-          />
+          }
         </View>
       </View>
     )

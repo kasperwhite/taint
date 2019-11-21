@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+import Loading from '../Shared/Loading';
 
 const AddUserButton = (props) => {
   return(
@@ -154,7 +155,7 @@ class RoomCreate extends Component {
           keyExtractor={item => item._id.toString()}
           data={this.state.roomUsers}
           renderItem={this.renderUser}
-          contentContainerStyle={{paddingHorizontal: 10}}
+          contentContainerStyle={{paddingHorizontal: 10, marginBottom: 20}}
           ListHeaderComponent={
               <ListItem
                 title='Users'
@@ -167,9 +168,13 @@ class RoomCreate extends Component {
               />
           }
         />
-        <AddButton
-          handleSubmit={this.handleSubmit} disabled={this.state.roomName === ''}
-        />
+        {
+          this.props.roomStore.postRoomIsLoading
+          ? <Loading size={'large'}/>
+          : <AddButton
+              handleSubmit={this.handleSubmit} disabled={this.state.roomName === ''}
+            />
+        }
         </ScrollView>
       </View>
     )
@@ -198,14 +203,12 @@ const styles = StyleSheet.create({
     
   },
   submitButton: {
-    backgroundColor: '#167B14',
-    paddingHorizontal: 10
+    backgroundColor: '#167B14'
   },
   submitButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignSelf: 'center',
-    marginVertical: 20
+    alignSelf: 'center'
   }
 })
 

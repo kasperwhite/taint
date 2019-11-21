@@ -94,7 +94,11 @@ class Room extends Component {
 
   render(){
     if(this.props.roomMessageStore.messagesIsLoading){
-      return( <Loading/> )
+      return(
+        <View style={styles.emptyScreen}>
+          <Loading size={'large'}/>
+        </View>
+      )
     } else {
       return(
         <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
@@ -140,6 +144,13 @@ class Room extends Component {
 }
 
 const styles = StyleSheet.create({
+  emptyScreen: {
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#151516'
+  },
   main: {
     height: '100%',
     flexDirection: 'column',
