@@ -33,9 +33,12 @@ class ContactAddition extends Component {
     this.setState({search: ''});
   }
 
-  addContact = () => {
-    console.log(this.state.search.trim());
-    this.resetForm();
+  addContact = async () => {
+    const result = await this.props.contactStore.postContact(this.state.search.trim());
+    if(result.success){
+      this.props.navigation.navigate('Contacts');
+      this.resetForm();
+    }
   }
 
   render(){

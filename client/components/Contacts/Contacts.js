@@ -26,7 +26,7 @@ const AddContactButton = (props) => (
       <Icon
         name='user-plus'
         type='font-awesome'
-        color='#167B14'
+        color='#09C709'
         size={17}
       />
     }
@@ -78,6 +78,7 @@ class Contacts extends Component {
     this.props.navigation.setParams({ 
       addContact: this.addContact
     });
+    this.props.contactStore.getContacts();
   }
 
   // ADD CONTACT OPERATION
@@ -87,14 +88,14 @@ class Contacts extends Component {
 
   // DELETE CONTACT OPERATION
   deleteContact = (id) => {
-    console.log('Delete', id);
+    this.props.contactStore.deleteContact(id);
   }
 
   renderContact = ({item, index}) => {
     return(
       <ListItem
         title={item.username}
-        leftAvatar={{source: item.avatar}}
+        /* leftAvatar={{source: item.avatar}} */
         bottomDivider
         rightElement={
           <DeleteContactButton

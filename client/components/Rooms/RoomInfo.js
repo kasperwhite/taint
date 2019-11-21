@@ -96,13 +96,7 @@ class RoomInfo extends Component {
       'Delete Room',
       `Are you sure you want to delete ${this.state.room.name} room?`,
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          onPress: () => {
-            console.log('Canceled')
-          } 
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           style: 'default',
@@ -145,16 +139,15 @@ class RoomInfo extends Component {
     return(
       <ListItem
         title={item.username}
-        bottomDivider
         containerStyle={styles.infoListItemCont}
         titleStyle={styles.infoListItemTitle}
-        leftElement={
+        /* leftElement={
           <Avatar
             rounded
             size='small'
             source={require('../../assets/cat.jpg')}
           />
-        }
+        } */
         rightElement={
           <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
         }
@@ -192,6 +185,7 @@ class RoomInfo extends Component {
         />
         <ListItem
           title='Users'
+          bottomDivider
           rightTitle={`${this.state.room.users.length}`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}

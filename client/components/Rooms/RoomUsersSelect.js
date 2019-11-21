@@ -68,7 +68,7 @@ class RoomUsersSelect extends Component {
     <ListItem
       title={item.username}
       bottomDivider
-      leftAvatar={{ source: require('../../assets/cat.jpg')}}
+      /* leftAvatar={{ source: require('../../assets/cat.jpg')}} */
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
       rightElement={

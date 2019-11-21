@@ -58,6 +58,10 @@ class RoomCreate extends Component {
     };
   };
 
+  componentDidMount = async () => {
+    await this.props.contactStore.getContacts();
+  }
+
   resetForm = () => {
     this.setState({roomName: '', timeValue: 1, roomUsers: []})
   }
@@ -67,7 +71,7 @@ class RoomCreate extends Component {
     const room = await this.props.roomStore.postRoom({
       time: timeValue*3600,
       name: roomName,
-      users: roomUsers.map(el => { return el.id })
+      users: roomUsers.map(el => { return el._id })
     });
     if(room._id){
       this.props.navigation.navigate('Room', { roomId: room._id });
@@ -98,7 +102,7 @@ class RoomCreate extends Component {
     <ListItem
       title={item.username}
       bottomDivider
-      leftAvatar={{ source: require('../../assets/cat.jpg'), size: 'small' }}
+      /* leftAvatar={{ source: require('../../assets/cat.jpg'), size: 'small' }} */
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
       rightElement={

@@ -17,7 +17,7 @@ describe('Users', () => {
   let token;
 
   before((done) => {
-    contactId = '5dcb59935fedd53a74e6ddf8';
+    contactId = '5dd4e0297086760cd0489ad2';
     chai.request(url)
       .post('/auth/signin')
       .send({
@@ -119,7 +119,7 @@ describe('Users', () => {
       .post(currentPath)
       .set('Authorization', `bearer ${token}`)
       .send({
-        username: 'kasper' 
+        username: 'Kasper'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);

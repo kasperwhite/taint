@@ -78,9 +78,16 @@ usersRouter.route('/contacts')
 .get(async (req, res, next) => {
   const currentUser = req.user;
 
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json(currentUser.contacts);
+  try {
+    const user = await UserModel.findById(currentUser._id).populate('contacts');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({res: user.contacts, success: true});
+  } catch(err) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
+  }
 })
 .post(async (req, res, next) => {
   const {username} = req.body;
@@ -93,11 +100,14 @@ usersRouter.route('/contacts')
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(user.contacts);
+    res.json({res: user.contacts, success: true});
   } else {
-    err = new Error('User ' + username + ' not found');
+    /* err = new Error('User ' + username + ' not found');
     err.status = 404;
-    return next(err);
+    return next(err); */
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
   }
 })
 
@@ -106,11 +116,17 @@ usersRouter.route('/contacts/:contactId')
   const {contactId} = req.params;
   const currentUserId = req.user._id;
 
-  let user = await UserModel.update({_id: currentUserId}, {$pullAll: {contacts: [contactId]}})
-  user = await UserModel.findById(currentUserId).populate('contacts');
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json(user.contacts);
+  try {
+    let user = await UserModel.update({_id: currentUserId}, {$pullAll: {contacts: [contactId]}})
+    user = await UserModel.findById(currentUserId).populate('contacts');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({res: user.contacts, success: true});
+  } catch(err) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
+  }
 })
 
 module.exports = usersRouter;
