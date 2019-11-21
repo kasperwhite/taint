@@ -11,6 +11,7 @@ class ObservableRoomStore {
   @observable deleteRoomIsLoading = false;
 
   @observable token = authStore.userToken;
+  @observable currentUserId = authStore.user._id;
 
   constructor(){ }
   

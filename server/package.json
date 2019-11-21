@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "test": "mocha --timeout 3000 -s 0 ./test/**/*.test.js",
-    "test-server": "set NODE_ENV=test&&npm start"
+    "test-server": "set NODE_ENV=test&&npm start",
+    "db-server": "cd C:/Program Files/MongoDB/Server/4.2/bin && mongod --dbpath=C:/Projects/taint/db/data --bind_ip 127.0.0.1"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

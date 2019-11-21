@@ -82,7 +82,14 @@ class Room extends Component {
 
   renderMessage = ({item, index}) => {
     return(
-      <View style={item.sender === 'kasperwhite' ? styles.myMessage : styles.message} key={item._id}>
+      <View
+        style={
+          item.sender._id === this.props.roomStore.currentUserId
+          ? styles.myMessage
+          : styles.message
+        }
+        key={item._id}
+      >
         <View style={styles.messageContent}>
           <Text style={styles.messageSender}>{item.sender.username}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
