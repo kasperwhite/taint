@@ -96,8 +96,21 @@ class RoomInfo extends Component {
       'Delete Room',
       `Are you sure you want to delete ${this.state.room.name} room?`,
       [
-        { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
-        { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            console.log('Canceled')
+          } 
+        },
+        {
+          text: 'Delete',
+          style: 'default',
+          onPress: async () => {
+            const result = await this.props.roomStore.deleteRoom(this.state.room._id);
+            if(result._id){ this.props.navigation.navigate('Rooms') }
+          }
+        }
       ]
     )
   }

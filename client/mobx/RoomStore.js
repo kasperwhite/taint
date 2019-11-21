@@ -8,6 +8,7 @@ class ObservableRoomStore {
 
   @observable roomsIsLoading = false;
   @observable postRoomIsLoading = false;
+  @observable deleteRoomIsLoading = false;
 
   @observable token = authStore.userToken;
 
@@ -30,7 +31,9 @@ class ObservableRoomStore {
   }
 
   @action.bound async deleteRoom(id) {
-
+    const result = await this.fetchDeleteRoom(id);
+    this.rooms = this.rooms.filter(r => r._id !== result._id);
+    return result;
   }
 
   @action
@@ -66,6 +69,26 @@ class ObservableRoomStore {
 
     try {
       let res = await sendRequest(url, method, headers, data);
+      this.postRoomIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  @action
+  async fetchDeleteRoom(id){
+    this.deleteRoomIsLoading = true;
+
+    const url = 'rooms/' + id;
+    const method = 'DELETE';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.token}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers);
       this.postRoomIsLoading = false;
       return res;
     } catch(err) {
