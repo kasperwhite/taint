@@ -129,4 +129,11 @@ usersRouter.route('/contacts/:contactId')
   }
 })
 
+usersRouter.route('/me')
+.get(async (req, res, next) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json({res: req.user, success: true});
+})
+
 module.exports = usersRouter;

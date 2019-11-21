@@ -15,7 +15,7 @@ export default inject('authStore')(observer(DrawerContent = (props) => {
     <View>
       <ListItem
         leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
-        title='KASPERWHITE'
+        title={props.authStore.user.username}
         titleStyle={{fontWeight: 'bold', color: '#fff'}}
         containerStyle={{
           height: 130,

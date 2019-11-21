@@ -50,37 +50,38 @@ class ContactAddition extends Component {
             value={this.state.search}
             placeholder='Find...'
             placeholderTextColor='#737373'
-            containerStyle={{width: '82%', borderBottomWidth: 1, borderBottomColor: '#fff'}}
+            containerStyle={{width: '85%', borderBottomWidth: 1, borderBottomColor: '#fff'}}
             inputStyle={styles.searchInput}
             inputContainerStyle={styles.searchInputCont}
             onChangeText={(t) => this.updateSearch(t)}
             maxLength={20}
           />
-          {
-            this.props.contactStore.postContactIsLoading
-            ? <Loading size={'small'}/>
-            : <Button
-                icon={
-                  <Icon
-                    name='user-plus'
-                    type='font-awesome'
-                    color='#167B14'
-                    size={17}
-                  />
-                }
-                buttonStyle={{marginHorizontal: 3}}
-                containerStyle={{
-                  padding: 0,
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignContent: 'center'
-                }}
-                onPress={this.addContact}
-                type='clear'
-                disabled={!this.state.search}
-                disabledStyle={{opacity: 0.6}}
-              />
-          }
+          <View style={{width: '14%', justifyContent: 'center', alignItems: 'center'}}>
+            {
+              this.props.contactStore.postContactIsLoading
+              ? <Loading size={'small'}/>
+              : <Button
+                  icon={
+                    <Icon
+                      name='user-plus'
+                      type='font-awesome'
+                      color='#167B14'
+                      size={19}
+                    />
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignContent: 'center'
+                  }}
+                  onPress={this.addContact}
+                  type='clear'
+                  disabled={!this.state.search}
+                  disabledStyle={{opacity: 0.6}}
+                />
+            }
+          </View>
         </View>
       </View>
     )
@@ -90,15 +91,14 @@ class ContactAddition extends Component {
 const styles = StyleSheet.create({
   searchCont: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignContent: 'center',
     paddingTop: 5,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     paddingBottom: 10,
     backgroundColor: '#222222'
   },
   searchInput: {
-    padding: 5,
     color: '#fff'
   },
   searchInputCont: {

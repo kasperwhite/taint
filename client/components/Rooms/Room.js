@@ -115,26 +115,33 @@ class Room extends Component {
               <Input
                 placeholder='Type message...'
                 placeholderTextColor='#737373'
+                containerStyle={{width: '84%', paddingHorizontal: 0}}
                 inputContainerStyle={styles.messageInput}
                 inputStyle={{fontSize: 20, borderColor: '#222222'}}
                 onChangeText={(text) => this.setState({ message: text })}
                 value={this.state.message}
                 multiline
               />
-              <Button
-                icon={
-                  <Icon
-                    name='paper-plane'
-                    type='font-awesome'
-                    color='#167B14'
-                  />
+              <View style={{width: '14%', justifyContent: 'center', alignItems: 'center'}}>
+                {
+                  this.props.roomMessageStore.postMessageIsLoading
+                  ? <Loading size={'large'}/>
+                  : <Button
+                      icon={
+                        <Icon
+                          name='paper-plane'
+                          type='font-awesome'
+                          color='#167B14'
+                        />
+                      }
+                      onPress={this.sendMessage}
+                      type='clear'
+                      disabled={!this.state.message.trim()}
+                      disabledStyle={{opacity: 0.6}}
+                      containerStyle={{flexDirection: 'column', justifyContent: 'center'}}
+                    />
                 }
-                onPress={this.sendMessage}
-                type='clear'
-                disabled={!this.state.message.trim()}
-                disabledStyle={{opacity: 0.6}}
-                containerStyle={{flexDirection: 'column', justifyContent: 'center'}}
-              />
+              </View>
             </View>
           </View>
         </KeyboardAvoidingView>
@@ -198,19 +205,19 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     borderBottomWidth: 0,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     maxHeight: 65,
     backgroundColor: '#B4B1B1',
-    borderRadius: 10,
+    borderRadius: 10
   },
   messageInputCont: {
-    paddingRight: 10,
-    paddingLeft: 35,
+    width: '100%',
     paddingVertical: 5,
+    paddingHorizontal: 8,
     alignSelf: 'flex-end',
     backgroundColor: '#222222',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignContent: 'center'
   }
 })

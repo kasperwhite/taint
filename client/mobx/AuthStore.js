@@ -8,7 +8,7 @@ class ObservableAuthStore {
   @observable signUpIsLoading = false;
   @observable signInIsLoading = false;
 
-  @observable userId = '';
+  @observable user;
   @observable userToken = '';
 
   constructor(){ }
@@ -28,6 +28,12 @@ class ObservableAuthStore {
   @action.bound
   async signOut() {
     await AsyncStorage.removeItem('userToken');
+  }
+
+  @action.bound
+  async authenticate() {
+    const result = await this.fetchCurrentUser();
+    this.user = result.res;
   }
 
   @action.bound async deleteAccount() {
@@ -68,6 +74,23 @@ class ObservableAuthStore {
     }
   }
 
+  @action
+  async fetchCurrentUser(){
+    
+    const url = 'users/me';
+    const method = 'GET';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${this.userToken}`
+    };
+
+    try {
+      let res = await sendRequest(url, method, headers);
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
 }
 
 const authStore = new ObservableAuthStore();
