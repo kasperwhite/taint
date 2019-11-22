@@ -33,7 +33,10 @@ class ObservableAuthStore {
   @action.bound
   async authenticate() {
     const result = await this.fetchCurrentUser();
-    this.user = result.res;
+    if(result.success){
+      this.user = result.res;
+    }
+    return result;
   }
 
   @action.bound async deleteAccount() {

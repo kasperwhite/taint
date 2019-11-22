@@ -3,6 +3,8 @@ import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-nativ
 import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
+import Loading from '../Shared/Loading';
+
 const ControlPanel = (props) => (
   <View style={{flexDirection: 'row', marginRight: 15}}>
     <Button
@@ -83,11 +85,12 @@ class RoomInfo extends Component {
     this.setState({ room: this.props.roomStore.getRoom(roomId) })
   }
 
-  componentDidMount(){
+  componentDidMount = async () => {
     this.props.navigation.setParams({ 
       addUser: this.addUser,
       deleteRoom: this.deleteRoom
     });
+    await this.props.roomUserStore.getRoomUsers(this.state.room._id);
   }
 
   // DELETE ROOM OPERATION
@@ -129,8 +132,14 @@ class RoomInfo extends Component {
       'Delete User',
       `Are you sure you want to kick ${user.username}?`,
       [
-        { text: 'Cancel', style: 'cancel', onPress: () => {console.log('Canceled')} },
-        { text: 'Delete', style: 'default', onPress: () => {console.log('Deleted')} }
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'default',
+          onPress: () => {
+            this.props.roomUserStore.deleteRoomUser(this.state.room._id, user._id)
+          } 
+        }
       ]
     )
   }
@@ -191,11 +200,14 @@ class RoomInfo extends Component {
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
-        {<FlatList
-          keyExtractor={item => item._id.toString()}
-          data={this.props.roomUserStore.roomUsers}
-          renderItem={this.renderUser}
-        />}
+        {this.props.roomUserStore.usersIsLoading
+        ? <Loading size={'large'}/>
+        : <FlatList
+            keyExtractor={item => item._id.toString()}
+            data={this.props.roomUserStore.roomUsers}
+            renderItem={this.renderUser}
+          />
+        }
       </ScrollView>
     )
   }

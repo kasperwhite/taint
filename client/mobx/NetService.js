@@ -8,10 +8,15 @@ export const sendRequest = async (url, method, headers, data) => {
       headers,
       body: method == 'GET' ? null : JSON.stringify(data)
     })
-    let resJson = await res.json();
-    console.log('response: ', resJson);
-    return resJson;
+    if(res.ok){
+      let resJson = await res.json();
+      console.log('response: ', resJson);
+      return resJson;
+    } else {
+      return {success: false, error: 'Response error'}
+    }
   } catch(err) {
-    console.log(err)
+    console.log(err);
+    return {success: false, error: err};
   }
 }

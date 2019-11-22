@@ -17,9 +17,13 @@ class AuthLoading extends Component {
   authenticate = async () => {
     const token = await AsyncStorage.getItem('userToken');
     if(token) {
-      this.props.authStore.userToken = token;
-      await this.props.authStore.authenticate();
-      this.props.navigation.navigate('App');
+      const result = await this.props.authStore.authenticate();
+      if(result.success){
+        this.props.authStore.userToken = token;
+        this.props.navigation.navigate('App');
+      } else {
+        this.props.navigation.navigate('Auth');
+      }
     } else {
       this.props.navigation.navigate('Auth');
     }

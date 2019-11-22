@@ -300,6 +300,20 @@ roomsRouter.route('/:roomId/messages')
 }) */
 
 roomsRouter.route('/:roomId/users')
+.get(async (req, res, next) => { // ALLOW: add user in chat
+  const {roomId} = req.params;
+
+  try {
+    let room = await RoomModel.findById(roomId).populate('users');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({res: room.users, success: true});
+  } catch(err) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
+  }
+})
 .post(async (req, res, next) => { // ALLOW: add user in chat
   const {roomId} = req.params;
 
@@ -314,11 +328,17 @@ roomsRouter.route('/:roomId/users/:userId')
 .delete(async (req, res, next) => { // ALLOW: remove user from chat
   const {roomId, userId} = req.params;
 
-  let room = await RoomModel.update({_id: roomId}, {$pullAll: {users: [userId]}})
-  room = await RoomModel.findById(roomId);
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json(room.users);
+  try {
+    let room = await RoomModel.update({_id: roomId}, {$pullAll: {users: [userId]}})
+    room = await RoomModel.findById(roomId).populate('users');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({res: room.users, success: true});
+  } catch(err) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
+  }
 })
 
 module.exports = roomsRouter;
