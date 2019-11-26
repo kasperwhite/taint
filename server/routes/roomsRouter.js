@@ -309,7 +309,7 @@ roomsRouter.route('/:roomId/users')
     res.setHeader('Content-Type', 'application/json');
     res.json({res: room.users, success: true});
   } catch(err) {
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }
@@ -328,7 +328,7 @@ roomsRouter.route('/:roomId/users')
     res.json({res: room.users, success: true});
   } catch(err) {
     console.log(err)
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }
@@ -345,7 +345,7 @@ roomsRouter.route('/:roomId/users/:userId')
     res.setHeader('Content-Type', 'application/json');
     res.json({res: room.users, success: true});
   } catch(err) {
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }

@@ -84,7 +84,7 @@ usersRouter.route('/contacts')
     res.setHeader('Content-Type', 'application/json');
     res.json({res: user.contacts, success: true});
   } catch(err) {
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }
@@ -105,7 +105,7 @@ usersRouter.route('/contacts')
     /* err = new Error('User ' + username + ' not found');
     err.status = 404;
     return next(err); */
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }
@@ -123,7 +123,7 @@ usersRouter.route('/contacts/:contactId')
     res.setHeader('Content-Type', 'application/json');
     res.json({res: user.contacts, success: true});
   } catch(err) {
-    res.statusCode = 404;
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
   }
