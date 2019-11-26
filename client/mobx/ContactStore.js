@@ -14,19 +14,19 @@ class ObservableContactStore {
 
   @action.bound async getContacts() {
     const result = await this.fetchGetContacts();
-    if(result.success){ this.contacts = result.res };
+    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
     return result;
   }
 
   @action.bound async postContact(username) {
     const result = await this.fetchPostContact({username});
-    if(result.success){ this.contacts = result.res };
+    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
     return result;
   }
 
   @action.bound async deleteContact(id) {
     const result = await this.fetchDeleteContact(id);
-    if(result.success){ this.contacts = result.res };
+    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
     return result;
   }
 

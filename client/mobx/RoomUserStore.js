@@ -7,7 +7,7 @@ class ObservableRoomUserStore {
   @observable roomUsers = [];
 
   @observable usersIsLoading = false;
-  @observable postUserIsLoading = false;
+  @observable postUsersIsLoading = false;
   @observable deleteUserIsLoading = false;
 
   constructor(){ }
@@ -18,8 +18,10 @@ class ObservableRoomUserStore {
     return result;
   }
 
-  @action.bound async postRoomUser(roomId, userId) {
-
+  @action.bound async postRoomUsers(roomId, users) {
+    const result = await this.fetchPostUsers(roomId, {users});
+    if(result.success){ this.roomUsers = result.res };
+    return result;
   }
 
   @action.bound async deleteRoomUser(roomId, userId) {
@@ -67,6 +69,27 @@ class ObservableRoomUserStore {
       console.log(err);
     }
   }
+
+  @action
+  async fetchPostUsers(roomId, users){
+    this.postUsersIsLoading = true;
+
+    const url = 'rooms/' + roomId + '/users/';
+    const method = 'POST';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${authStore.userToken}`
+    };
+    const body = users;
+
+    try {
+      let res = await sendRequest(url, method, headers, body);
+      this.postUsersIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }  
 }
 
 const roomUserStore = new ObservableRoomUserStore();

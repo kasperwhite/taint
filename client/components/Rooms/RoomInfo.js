@@ -96,6 +96,7 @@ class RoomInfo extends Component {
 
   componentDidMount = async () => {
     await this.props.roomUserStore.getRoomUsers(this.state.room._id);
+    await this.props.contactStore.getContacts();
   }
 
   // DELETE ROOM OPERATION
@@ -128,8 +129,11 @@ class RoomInfo extends Component {
     });
   }
 
-  handleUsersSelect = (users) => {
-    console.log(users.map(u => u._id));
+  handleUsersSelect = async (users) => {
+    await this.props.roomUserStore.postRoomUsers(
+      this.state.room._id,
+      users.map(u => u._id)
+    );
   }
 
   deleteUser = (user) => {
@@ -194,7 +198,7 @@ class RoomInfo extends Component {
         />
         <ListItem
           title='Time'
-          rightTitle={`${Math.floor(this.state.room.time/60)}m`}
+          rightTitle={`${Math.floor(this.state.room.time/3600)}h`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}

@@ -316,12 +316,22 @@ roomsRouter.route('/:roomId/users')
 })
 .post(async (req, res, next) => { // ALLOW: add user in chat
   const {roomId} = req.params;
+  const { users } = req.body;
 
-  let room = await RoomModel.update({_id: roomId}, {$push: {users: req.body.userId}});
-  room = await RoomModel.findById(roomId);
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json(room.users);
+  try {
+    users.map(async u => {
+      await RoomModel.update({_id: roomId}, {$push: {users: u}});
+    })
+    let room = await RoomModel.findById(roomId).populate('users');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({res: room.users, success: true});
+  } catch(err) {
+    console.log(err)
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: false});
+  }
 })
 
 roomsRouter.route('/:roomId/users/:userId')

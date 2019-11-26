@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator, AsyncStorage } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+import moment from 'moment';
 
 import Loading from '../Shared/Loading';
 
@@ -78,7 +79,7 @@ class RoomList extends Component {
         key={index}
         title={item.name}
         bottomDivider
-        rightTitle='Up to 9:22pm'
+        rightTitle={moment(item.createdAt).format('LT')}
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
@@ -92,12 +93,6 @@ class RoomList extends Component {
       return(
         <View style={styles.emptyScreen}>
           <Loading size={'large'}/>
-        </View>
-      )
-    } else if(!this.props.roomStore.rooms) {
-      return(
-        <View style={styles.emptyScreen}>
-          <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
         </View>
       )
     } else if(!this.props.roomStore.rooms.length){
