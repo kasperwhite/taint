@@ -95,16 +95,20 @@ usersRouter.route('/contacts')
 
   const contact = await UserModel.findOne({ username });
   if(contact){
-    let user = await UserModel.update({_id: currentUserId}, {$push: {contacts: contact._id}});
-    user = await UserModel.findById(currentUserId).populate('contacts');
-
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json({res: user.contacts, success: true});
+    let user = await UserModel.findById(currentUserId);
+    if(!user.contacts.includes(contact._id)){
+      user = await UserModel.update({_id: currentUserId}, {$push: {contacts: contact._id}});
+      user = await UserModel.findById(currentUserId).populate('contacts');
+  
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({res: user.contacts, success: true});
+    } else {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: false});
+    }
   } else {
-    /* err = new Error('User ' + username + ' not found');
-    err.status = 404;
-    return next(err); */
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: false});
