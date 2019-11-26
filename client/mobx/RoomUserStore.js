@@ -10,8 +10,6 @@ class ObservableRoomUserStore {
   @observable postUserIsLoading = false;
   @observable deleteUserIsLoading = false;
 
-  @observable token = authStore.userToken;
-
   constructor(){ }
   
   @action.bound async getRoomUsers(roomId) {
@@ -38,7 +36,7 @@ class ObservableRoomUserStore {
     const method = 'GET';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {
@@ -58,7 +56,7 @@ class ObservableRoomUserStore {
     const method = 'DELETE';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {

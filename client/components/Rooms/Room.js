@@ -84,7 +84,7 @@ class Room extends Component {
     return(
       <View
         style={
-          item.sender._id === this.props.roomStore.currentUserId
+          item.sender._id === this.props.authStore.user._id
           ? styles.myMessage
           : styles.message
         }
@@ -229,4 +229,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomStore', 'roomMessageStore')(observer(Room));
+export default inject('authStore','roomStore', 'roomMessageStore')(observer(Room));

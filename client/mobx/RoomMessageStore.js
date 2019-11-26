@@ -10,8 +10,6 @@ class ObservableRoomMessageStore {
   @observable messagesIsLoading = false;
   @observable postMessageIsLoading = false;
 
-  @observable token = authStore.userToken;
-
   constructor(){ }
   
   @action.bound async getRoomMessages(roomId) {
@@ -32,7 +30,7 @@ class ObservableRoomMessageStore {
     const method = 'GET';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {
@@ -51,7 +49,7 @@ class ObservableRoomMessageStore {
     const method = 'POST';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {

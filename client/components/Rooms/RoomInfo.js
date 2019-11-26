@@ -89,7 +89,7 @@ class RoomInfo extends Component {
     this.props.navigation.setParams({ 
       addUser: this.addUser,
       deleteRoom: this.deleteRoom,
-      controlIsVisible: room.creator == this.props.roomStore.currentUserId
+      controlIsVisible: room.creator == this.props.authStore.user._id
     });
     this.setState({ room });
   }
@@ -163,7 +163,7 @@ class RoomInfo extends Component {
           />
         } */
         rightElement={
-          this.state.room.creator == this.props.roomStore.currentUserId
+          this.state.room.creator == this.props.authStore.user._id
           ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
           : null
         }
@@ -232,4 +232,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('roomStore', 'roomUserStore','contactStore')(observer(RoomInfo));
+export default inject('authStore','roomStore', 'roomUserStore','contactStore')(observer(RoomInfo));

@@ -10,8 +10,6 @@ class ObservableContactStore {
   @observable postContactIsLoading = false;
   @observable deleteContactIsLoading = false;
 
-  @observable token = authStore.userToken;
-
   constructor(){ }
 
   @action.bound async getContacts() {
@@ -40,7 +38,7 @@ class ObservableContactStore {
     const method = 'GET';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {
@@ -60,7 +58,7 @@ class ObservableContactStore {
     const method = 'POST';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {
@@ -80,7 +78,7 @@ class ObservableContactStore {
     const method = 'DELETE';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `bearer ${this.token}`
+      'Authorization': `bearer ${authStore.userToken}`
     };
 
     try {
