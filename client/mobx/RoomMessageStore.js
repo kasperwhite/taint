@@ -1,7 +1,6 @@
 import { observable, action } from "mobx";
 
 import { sendRequest } from './NetService';
-import roomStore from './RoomStore';
 import authStore from './AuthStore';
 
 class ObservableRoomMessageStore {
@@ -12,18 +11,17 @@ class ObservableRoomMessageStore {
 
   constructor(){ }
   
-  @action.bound async getRoomMessages(roomId) {
+  @action.bound async getRoomMessages(roomId) { // todo: socket.io ON roomMessages
     const messages = await this.fetchGetMessages(roomId);
     this.roomMessages = messages.reverse();
   }
 
-  @action.bound async postRoomMessage(roomId, messageData) {
+  @action.bound async postRoomMessage(roomId, messageData) { // todo: socket.io EMIT sendMessage
     const messages = await this.fetchPostMessage(roomId, messageData);
-    this.roomMessages = messages.reverse(); // todo: fix
+    this.roomMessages = messages.reverse(); 
   }
 
-  @action
-  async fetchGetMessages(roomId){
+  @action async fetchGetMessages(roomId){
     this.messagesIsLoading = true;
 
     const url = 'rooms/' + roomId + '/messages';

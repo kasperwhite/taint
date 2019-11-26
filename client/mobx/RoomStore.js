@@ -12,13 +12,13 @@ class ObservableRoomStore {
 
   constructor(){ }
   
-  @action.bound async getRooms() {
+  @action.bound async getRooms() { // todo: socket.io ON rooms
     const result = await this.fetchGetRooms();
     this.rooms = result;
     return result;
   }
 
-  @action.bound async postRoom(data) {
+  @action.bound async postRoom(data) { // todo: socket.io EMIT addRoom
     const room = await this.fetchPostRoom(data);
     this.rooms.push(room);
     return room;
@@ -28,14 +28,13 @@ class ObservableRoomStore {
     return this.rooms.find(r => r._id == id);
   }
 
-  @action.bound async deleteRoom(id) {
+  @action.bound async deleteRoom(id) { // todo: socket.io EMIT deleteRoom
     const result = await this.fetchDeleteRoom(id);
     this.rooms = this.rooms.filter(r => r._id !== result._id);
     return result;
   }
 
-  @action
-  async fetchGetRooms(){
+  @action async fetchGetRooms(){
     this.roomsIsLoading = true;
 
     const url = 'rooms/';
@@ -54,8 +53,7 @@ class ObservableRoomStore {
     }
   }
 
-  @action
-  async fetchPostRoom(data){
+  @action async fetchPostRoom(data){
     this.postRoomIsLoading = true;
 
     const url = 'rooms/';
@@ -74,8 +72,7 @@ class ObservableRoomStore {
     }
   }
 
-  @action
-  async fetchDeleteRoom(id){
+  @action async fetchDeleteRoom(id){
     this.deleteRoomIsLoading = true;
 
     const url = 'rooms/' + id;

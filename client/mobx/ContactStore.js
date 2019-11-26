@@ -30,8 +30,7 @@ class ObservableContactStore {
     return result;
   }
 
-  @action
-  async fetchGetContacts(){
+  @action async fetchGetContacts(){
     this.contactsIsLoading = true;
 
     const url = 'users/contacts/';
@@ -50,8 +49,7 @@ class ObservableContactStore {
     }
   }
 
-  @action
-  async fetchPostContact(data){
+  @action async fetchPostContact(data){
     this.postContactIsLoading = true;
 
     const url = 'users/contacts/';
@@ -70,8 +68,7 @@ class ObservableContactStore {
     }
   }
 
-  @action
-  async fetchDeleteContact(id){
+  @action async fetchDeleteContact(id){
     this.deleteContactIsLoading = true;
 
     const url = 'users/contacts/' + id;

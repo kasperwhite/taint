@@ -12,26 +12,25 @@ class ObservableRoomUserStore {
 
   constructor(){ }
   
-  @action.bound async getRoomUsers(roomId) {
+  @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
     const result = await this.fetchGetUsers(roomId);
     if(result.success){ this.roomUsers = result.res };
     return result;
   }
 
-  @action.bound async postRoomUsers(roomId, users) {
+  @action.bound async postRoomUsers(roomId, users) { // todo: socket.io EMIT addRoomUser
     const result = await this.fetchPostUsers(roomId, {users});
     if(result.success){ this.roomUsers = result.res };
     return result;
   }
 
-  @action.bound async deleteRoomUser(roomId, userId) {
+  @action.bound async deleteRoomUser(roomId, userId) { // todo: socket.io EMIT deleteRoomUser
     const result = await this.fetchDeleteUser(roomId, userId);
     if(result.success){ this.roomUsers = result.res };
     return result;
   }
 
-  @action
-  async fetchGetUsers(roomId){
+  @action async fetchGetUsers(roomId){
     this.usersIsLoading = true;
 
     const url = 'rooms/' + roomId + '/users';
@@ -50,8 +49,7 @@ class ObservableRoomUserStore {
     }
   }
 
-  @action
-  async fetchDeleteUser(roomId, userId){
+  @action async fetchDeleteUser(roomId, userId){
     this.deleteUserIsLoading = true;
 
     const url = 'rooms/' + roomId + '/users/' + userId;
@@ -70,8 +68,7 @@ class ObservableRoomUserStore {
     }
   }
 
-  @action
-  async fetchPostUsers(roomId, users){
+  @action async fetchPostUsers(roomId, users){
     this.postUsersIsLoading = true;
 
     const url = 'rooms/' + roomId + '/users/';

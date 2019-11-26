@@ -13,25 +13,21 @@ class ObservableAuthStore {
 
   constructor(){ }
 
-  @action.bound
-  async signIn({username, password}) {
+  @action.bound async signIn({username, password}) {
     const result = await this.fetchSignIn({username, password});
     return result;
   }
 
-  @action.bound 
-  async signUp({username, password}) {
+  @action.bound async signUp({username, password}) {
     const result = await this.fetchSignUp({username, password});
     return result;
   }
 
-  @action.bound
-  async signOut() {
+  @action.bound async signOut() {
     await AsyncStorage.removeItem('userToken');
   }
 
-  @action.bound
-  async authenticate() {
+  @action.bound async authenticate() {
     const result = await this.fetchCurrentUser();
     if(result.success){
       this.user = result.res;
@@ -43,8 +39,7 @@ class ObservableAuthStore {
 
   }
 
-  @action
-  async fetchSignUp(data){
+  @action async fetchSignUp(data){
     this.signUpIsLoading = true;
 
     const url = 'auth/signup';
@@ -60,8 +55,7 @@ class ObservableAuthStore {
     }
   }
 
-  @action
-  async fetchSignIn(data){
+  @action async fetchSignIn(data){
     this.signInIsLoading = true;
 
     const url = 'auth/signin';
@@ -77,8 +71,7 @@ class ObservableAuthStore {
     }
   }
 
-  @action
-  async fetchCurrentUser(){
+  @action async fetchCurrentUser(){
     
     const url = 'users/me';
     const method = 'GET';
