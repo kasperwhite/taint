@@ -3,6 +3,8 @@ import { Text, AsyncStorage, View, StyleSheet } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
+import Loading from '../Shared/Loading';
+
 class SignIn extends Component {
   constructor(props){
     super(props)
@@ -127,15 +129,19 @@ class SignIn extends Component {
             inputStyle={{color: '#fff'}}
           />
         </View>
-        <Button
-          title='Sign In'
-          titleStyle={{color: '#151516'}}
-          containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
-          disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
-          onPress={this.signIn}
-          disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-        />
+        {
+          this.props.authStore.signInIsLoading
+          ? <Loading size={'large'}/>
+          : <Button
+              title='Sign In'
+              titleStyle={{color: '#151516'}}
+              containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
+              buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
+              disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
+              onPress={this.signIn}
+              disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
+            />
+        }
       </View>
     )
   }

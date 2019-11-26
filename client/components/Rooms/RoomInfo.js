@@ -63,7 +63,7 @@ class RoomInfo extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Information',
+      title: 'Info',
       headerStyle: {
         backgroundColor: '#222222'
       },
@@ -72,24 +72,29 @@ class RoomInfo extends Component {
         fontWeight: 'bold',
       },
       headerRight: (
-        <ControlPanel
-          addUser={navigation.getParam('addUser')}
-          deleteRoom={navigation.getParam('deleteRoom')}
-        />
+        navigation.getParam('controlIsVisible')
+        ? <ControlPanel
+            addUser={navigation.getParam('addUser')}
+            deleteRoom={navigation.getParam('deleteRoom')}
+            room={navigation.getParam('room')}
+          />
+        : null
       )
     };
   };
 
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
-    this.setState({ room: this.props.roomStore.getRoom(roomId) })
+    const room = this.props.roomStore.getRoom(roomId);
+    this.props.navigation.setParams({ 
+      addUser: this.addUser,
+      deleteRoom: this.deleteRoom,
+      controlIsVisible: room.creator == this.props.roomStore.currentUserId
+    });
+    this.setState({ room });
   }
 
   componentDidMount = async () => {
-    this.props.navigation.setParams({ 
-      addUser: this.addUser,
-      deleteRoom: this.deleteRoom
-    });
     await this.props.roomUserStore.getRoomUsers(this.state.room._id);
   }
 
@@ -158,7 +163,9 @@ class RoomInfo extends Component {
           />
         } */
         rightElement={
-          <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
+          this.state.room.creator == this.props.roomStore.currentUserId
+          ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
+          : null
         }
       />
     )

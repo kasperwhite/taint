@@ -3,6 +3,8 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
+import Loading from '../Shared/Loading';
+
 class SignUp extends Component {
   constructor(props){
     super(props)
@@ -107,21 +109,25 @@ class SignUp extends Component {
             disabled={this.state.passwordIsVisible}
           />
         </View>
-        <Button
-          title='Sign Up'
-          titleStyle={{color: '#151516'}}
-          containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-          buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
-          disabled={
-            !Boolean(this.state.username
-            && this.state.password
-            && this.state.password.length >= 12
-            && this.state.username.length >= 4
-            && this.state.password === this.state.repeatedPassword)
-          }
-          onPress={this.signUp}
-          disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-        />
+        {
+          this.props.authStore.signUpIsLoading
+          ? <Loading size={'large'}/>
+          : <Button
+              title='Sign Up'
+              titleStyle={{color: '#151516'}}
+              containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
+              buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
+              disabled={
+                !Boolean(this.state.username
+                && this.state.password
+                && this.state.password.length >= 12
+                && this.state.username.length >= 4
+                && this.state.password === this.state.repeatedPassword)
+              }
+              onPress={this.signUp}
+              disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
+            />
+        }
       </View>
     )
   }
