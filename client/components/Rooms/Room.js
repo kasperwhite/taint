@@ -193,17 +193,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
-    maxWidth: 200
+    maxWidth: 200,
+    minWidth: 100
   },
   messageSender: {
     color: '#fff',
     fontSize: 13,
-    fontWeight: 'bold',
-    marginBottom: 5
+    opacity: 0.6
   },
   messageText: {
     color: '#fff',
-    fontSize: 16
+    fontSize: 18
   },
   messageTime: {
     alignSelf: 'flex-end',

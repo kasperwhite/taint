@@ -8,13 +8,10 @@ const UserModel = require('../models/user');
 authRouter.use(bodyParser.json());
 
 authRouter.post('/signup', (req, res, next) => {
-  if(req.body.username.length > 20){
-    err = new Error('Username validation error')
-    err.status = 409;
-    return next(err);
-  } else {
-    UserModel.register(new UserModel({username: req.body.username}),
-      req.body.password, (err, user) => {
+  const { username, password } = req.body;
+  if(username.length < 20 && username.length > 4 && password.length >= 12){
+    UserModel.register(new UserModel({username: username}),
+      password, (err, user) => {
       if(err) {
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
@@ -28,6 +25,10 @@ authRouter.post('/signup', (req, res, next) => {
         });
       }
     });
+  } else {
+    err = new Error('Username validation error')
+    err.status = 409;
+    return next(err);
   }
 });
 
