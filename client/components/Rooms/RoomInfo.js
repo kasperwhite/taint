@@ -111,7 +111,7 @@ class RoomInfo extends Component {
           style: 'default',
           onPress: async () => {
             const result = await this.props.roomStore.deleteRoom(this.state.room._id);
-            if(result._id){ this.props.navigation.navigate('Rooms') }
+            if(result.success){ this.props.navigation.navigate('Rooms') }
           }
         }
       ]

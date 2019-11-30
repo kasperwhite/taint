@@ -14,14 +14,14 @@ class ObservableRoomStore {
   
   @action.bound async getRooms() { // todo: socket.io ON rooms
     const result = await this.fetchGetRooms();
-    this.rooms = result;
+    this.rooms = result.res;
     return result;
   }
 
   @action.bound async postRoom(data) { // todo: socket.io EMIT addRoom
-    const room = await this.fetchPostRoom(data);
-    this.rooms.push(room);
-    return room;
+    const result = await this.fetchPostRoom(data);
+    this.rooms.push(result.res);
+    return result;
   }
 
   @action.bound getRoom(id) {
@@ -30,7 +30,7 @@ class ObservableRoomStore {
 
   @action.bound async deleteRoom(id) { // todo: socket.io EMIT deleteRoom
     const result = await this.fetchDeleteRoom(id);
-    this.rooms = this.rooms.filter(r => r._id !== result._id);
+    this.rooms = this.rooms.filter(r => r._id !== result.res._id);
     return result;
   }
 

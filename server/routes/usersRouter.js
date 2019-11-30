@@ -82,11 +82,11 @@ usersRouter.route('/contacts')
     const user = await UserModel.findById(currentUser._id).populate('contacts');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({res: user.contacts, success: true});
+    res.json(user.contacts);
   } catch(err) {
-    res.statusCode = 200;
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: err});
   }
 })
 .post(async (req, res, next) => {
@@ -102,16 +102,16 @@ usersRouter.route('/contacts')
   
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({res: user.contacts, success: true});
+      res.json(user.contacts);
     } else {
-      res.statusCode = 200;
+      res.statusCode = 400;
       res.setHeader('Content-Type', 'application/json');
-      res.json({success: false});
+      res.json({error: 'User already exists in contacts'});
     }
   } else {
-    res.statusCode = 200;
+    res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: 'User not found'});
   }
 })
 
@@ -125,19 +125,25 @@ usersRouter.route('/contacts/:contactId')
     user = await UserModel.findById(currentUserId).populate('contacts');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({res: user.contacts, success: true});
+    res.json(user.contacts);
   } catch(err) {
-    res.statusCode = 200;
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: err});
   }
 })
 
 usersRouter.route('/me')
 .get(async (req, res, next) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.json({res: req.user, success: true});
+  try {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(req.user);
+  } catch(err) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({error: err});
+  }
 })
 
 module.exports = usersRouter;

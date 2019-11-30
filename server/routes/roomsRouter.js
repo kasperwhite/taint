@@ -307,11 +307,11 @@ roomsRouter.route('/:roomId/users')
     let room = await RoomModel.findById(roomId).populate('users');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({res: room.users, success: true});
+    res.json(room.users);
   } catch(err) {
-    res.statusCode = 200;
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: err});
   }
 })
 .post(async (req, res, next) => { // ALLOW: add user in chat
@@ -325,12 +325,11 @@ roomsRouter.route('/:roomId/users')
     let room = await RoomModel.findById(roomId).populate('users');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({res: room.users, success: true});
+    res.json(room.users);
   } catch(err) {
-    console.log(err)
-    res.statusCode = 200;
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: err});
   }
 })
 
@@ -343,11 +342,11 @@ roomsRouter.route('/:roomId/users/:userId')
     room = await RoomModel.findById(roomId).populate('users');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({res: room.users, success: true});
+    res.json(room.users);
   } catch(err) {
-    res.statusCode = 200;
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.json({success: false});
+    res.json({error: err});
   }
 })
 

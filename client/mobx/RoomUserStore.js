@@ -14,19 +14,19 @@ class ObservableRoomUserStore {
   
   @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
     const result = await this.fetchGetUsers(roomId);
-    if(result.success){ this.roomUsers = result.res };
+    if(result.success){ this.roomUsers = this.sort(result.res) };
     return result;
   }
 
   @action.bound async postRoomUsers(roomId, users) { // todo: socket.io EMIT addRoomUser
     const result = await this.fetchPostUsers(roomId, {users});
-    if(result.success){ this.roomUsers = result.res };
+    if(result.success){ this.roomUsers = this.sort(result.res) };
     return result;
   }
 
   @action.bound async deleteRoomUser(roomId, userId) { // todo: socket.io EMIT deleteRoomUser
     const result = await this.fetchDeleteUser(roomId, userId);
-    if(result.success){ this.roomUsers = result.res };
+    if(result.success){ this.roomUsers = this.sort(result.res) };
     return result;
   }
 
@@ -86,7 +86,11 @@ class ObservableRoomUserStore {
     } catch(err) {
       console.log(err);
     }
-  }  
+  }
+  
+  @action sort(list) {
+    return list.sort((a, b) => a.username.localeCompare(b.username));
+  }
 }
 
 const roomUserStore = new ObservableRoomUserStore();

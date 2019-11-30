@@ -14,19 +14,19 @@ class ObservableContactStore {
 
   @action.bound async getContacts() {
     const result = await this.fetchGetContacts();
-    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
+    if(result.success){ this.contacts = this.sort(result.res) };
     return result;
   }
 
   @action.bound async postContact(username) {
     const result = await this.fetchPostContact({username});
-    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
+    if(result.success){ this.contacts = this.sort(result.res) };
     return result;
   }
 
   @action.bound async deleteContact(id) {
     const result = await this.fetchDeleteContact(id);
-    if(result.success){ this.contacts = result.res.sort((a, b) => a.username.localeCompare(b.username)) };
+    if(result.success){ this.contacts = this.sort(result.res) };
     return result;
   }
 
@@ -85,6 +85,10 @@ class ObservableContactStore {
     } catch(err) {
       console.log(err);
     }
+  }
+
+  @action sort(list) {
+    return list.sort((a, b) => a.username.localeCompare(b.username));
   }
 }
 

@@ -69,16 +69,16 @@ class RoomCreate extends Component {
 
   handleSubmit = async () => {
     const { timeValue, roomName, roomUsers } = this.state;
-    const room = await this.props.roomStore.postRoom({
+    const result = await this.props.roomStore.postRoom({
       time: timeValue*3600,
       name: roomName,
       users: roomUsers.map(el => { return el._id })
     });
-    if(room._id){
-      this.props.navigation.navigate('Room', { roomId: room._id });
+    if(result.success){
+      this.props.navigation.navigate('Room', { roomId: result.res._id });
       this.resetForm();
     } else {
-      console.log(room);
+      console.log(result);
     }
   }
 

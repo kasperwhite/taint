@@ -12,13 +12,13 @@ class ObservableRoomMessageStore {
   constructor(){ }
   
   @action.bound async getRoomMessages(roomId) { // todo: socket.io ON roomMessages
-    const messages = await this.fetchGetMessages(roomId);
-    this.roomMessages = messages.reverse();
+    const result = await this.fetchGetMessages(roomId);
+    this.roomMessages = result.res.reverse();
   }
 
   @action.bound async postRoomMessage(roomId, messageData) { // todo: socket.io EMIT sendMessage
-    const messages = await this.fetchPostMessage(roomId, messageData);
-    this.roomMessages = messages.reverse(); 
+    const result = await this.fetchPostMessage(roomId, messageData);
+    this.roomMessages = result.res.reverse(); 
   }
 
   @action async fetchGetMessages(roomId){

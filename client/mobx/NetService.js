@@ -11,12 +11,11 @@ export const sendRequest = async (url, method, headers, data) => {
     if(res.ok){
       let resJson = await res.json();
       console.log('response: ', resJson);
-      return resJson;
+      return {success: true, res: resJson};
     } else {
-      return {success: false, error: 'Response error'}
+      return {success: false, error: res.statusText}
     }
   } catch(err) {
-    console.log(err);
     return {success: false, error: err};
   }
 }
