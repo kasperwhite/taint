@@ -1,7 +1,7 @@
 import { observable, action } from "mobx";
 
 import authStore from './AuthStore';
-import { sendRequest } from './NetService';
+import { sendRequest, socket } from './NetService';
 
 class ObservableRoomStore {
   @observable rooms = [];
@@ -10,17 +10,26 @@ class ObservableRoomStore {
   @observable postRoomIsLoading = false;
   @observable deleteRoomIsLoading = false;
 
-  constructor(){ }
+  constructor(){
+    socket.on('rooms', data => {
+      console.log('Room added on client: ', data);
+    })
+  }
   
   @action.bound async getRooms() { // todo: socket.io ON rooms
     const result = await this.fetchGetRooms();
-    this.rooms = result.res;
+    if(result.success){
+      this.rooms = result.res;
+    }
     return result;
   }
 
   @action.bound async postRoom(data) { // todo: socket.io EMIT addRoom
     const result = await this.fetchPostRoom(data);
-    this.rooms.push(result.res);
+    if(result.success){
+      this.rooms.push(result.res);
+      socket.emit('addRoom',  result.res);
+    } 
     return result;
   }
 
@@ -30,7 +39,9 @@ class ObservableRoomStore {
 
   @action.bound async deleteRoom(id) { // todo: socket.io EMIT deleteRoom
     const result = await this.fetchDeleteRoom(id);
-    this.rooms = this.rooms.filter(r => r._id !== result.res._id);
+    if(result.success){
+      this.rooms = this.rooms.filter(r => r._id !== result.res._id);
+    }
     return result;
   }
 
@@ -90,6 +101,8 @@ class ObservableRoomStore {
       console.log(err);
     }
   }
+
+
 }
 
 const roomStore = new ObservableRoomStore();

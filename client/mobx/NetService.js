@@ -1,4 +1,5 @@
 import { serverUrl } from './config';
+import openSocket from 'socket.io-client';
 
 export const sendRequest = async (url, method, headers, data) => {
   console.log('request: ', url, method, headers, data);
@@ -19,3 +20,5 @@ export const sendRequest = async (url, method, headers, data) => {
     return {success: false, error: err};
   }
 }
+
+export const socket = openSocket(serverUrl);
