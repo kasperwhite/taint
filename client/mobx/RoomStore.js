@@ -16,7 +16,7 @@ class ObservableRoomStore {
     const result = await this.fetchGetRooms();
     if(result.success){
       this.rooms = result.res;
-      socket.on('rooms', room => { this.rooms.push(room) })
+      socket.on('rooms', room => { console.log(room) })
     }
     return result;
   }

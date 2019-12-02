@@ -1,5 +1,5 @@
 import { serverUrl } from './config';
-import openSocket from 'socket.io-client';
+import io from 'socket.io-client';
 
 export const sendRequest = async (url, method, headers, data) => {
   console.log('request: ', url, method, headers, data);
@@ -21,4 +21,4 @@ export const sendRequest = async (url, method, headers, data) => {
   }
 }
 
-export const socket = openSocket(serverUrl);
+export const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
