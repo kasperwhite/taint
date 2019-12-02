@@ -10,16 +10,13 @@ class ObservableRoomStore {
   @observable postRoomIsLoading = false;
   @observable deleteRoomIsLoading = false;
 
-  constructor(){
-    socket.on('rooms', data => {
-      console.log('Room added on client: ', data);
-    })
-  }
+  constructor(){ }
   
   @action.bound async getRooms() { // todo: socket.io ON rooms
     const result = await this.fetchGetRooms();
     if(result.success){
       this.rooms = result.res;
+      socket.on('rooms', room => { this.rooms.push(room) })
     }
     return result;
   }

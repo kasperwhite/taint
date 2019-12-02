@@ -29,13 +29,23 @@ server.listen(port, () => {
 server.on('error', onError);
 server.on('listening', onListening);
 
-io.on('connection', (client) => {
-  console.log('Client connected');
-  
-  client.on('addRoom', data => {
-    console.log('Room added on server: ', data);
-    client.emit('rooms', data);
+const activeUsers = [];
+io.on('connection', (client) => {  
+
+  client.on('authenticate', userId => {
+    activeUsers.push({ soketId: client.id, userId });
+    console.log('Client connected: ', activeUsers);
   })
+
+  client.on('disconnect', () => {
+    activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.socketId == client.id)), 1);
+    console.log('Client disconnected: ', activeUsers);
+  })
+
+  client.on('addRoom', room => {
+    client.broadcast.emit('rooms', room);
+  })
+
 });
 
 /* var credentials = {

@@ -24,6 +24,22 @@ const AddButton = (props) => {
   )
 }
 
+const RefreshButton = (props) => (
+  <Button
+    icon={
+      <Icon
+        name='refresh'
+        type='material'
+        color='#09C709'
+        size={24}
+      />
+    }
+    containerStyle={{width: 50, marginRight: 5}}
+    onPress={props.refresh}
+    type='clear'
+  />
+)
+
 class RoomList extends Component {
   constructor(props){
     super(props)
@@ -44,6 +60,7 @@ class RoomList extends Component {
       },
       headerRight: (
         <View style={{flexDirection: 'row'}}>
+          {/* <RefreshButton refresh={navigation.getParam('refresh')}/> */}
           <AddButton handlePress={navigation.navigate}/>
         </View>
       ),
@@ -65,7 +82,17 @@ class RoomList extends Component {
     };
   };
 
+  componentWillMount(){
+    this.props.navigation.setParams({ 
+      refresh: this.refresh
+    });
+  }
+
   componentDidMount(){
+    this.props.roomStore.getRooms();
+  }
+
+  refresh = () => {
     this.props.roomStore.getRooms();
   }
 

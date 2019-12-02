@@ -2,7 +2,7 @@ import { observable, action } from "mobx";
 import { AsyncStorage } from "react-native";
 
 import { serverUrl } from './config';
-import { sendRequest } from './NetService';
+import { sendRequest, socket } from './NetService';
 
 class ObservableAuthStore {
   @observable signUpIsLoading = false;
@@ -15,6 +15,11 @@ class ObservableAuthStore {
 
   @action.bound async signIn({username, password}) {
     const result = await this.fetchSignIn({username, password});
+    if(result.success) {
+      const token = result.res.token;
+      this.userToken = token;
+      await AsyncStorage.setItem('userToken', token);
+    }
     return result;
   }
 
@@ -25,12 +30,14 @@ class ObservableAuthStore {
 
   @action.bound async signOut() {
     await AsyncStorage.removeItem('userToken');
+    socket.disconnect();
   }
 
   @action.bound async authenticate() {
     const result = await this.fetchCurrentUser();
     if(result.success){
       this.user = result.res;
+      socket.emit('authenticate', this.user._id);
     }
     return result;
   }
