@@ -16,7 +16,12 @@ class ObservableRoomStore {
     const result = await this.fetchGetRooms();
     if(result.success){
       this.rooms = result.res;
-      socket.on('rooms', room => { console.log(room) })
+      socket.on('roomCreate', room => {
+        this.rooms.unshift(room);
+      });
+      socket.on('roomDelete', room => {
+        this.rooms = this.rooms.filter(r => r._id !== room._id); 
+      });
     }
     return result;
   }
@@ -24,20 +29,19 @@ class ObservableRoomStore {
   @action.bound async postRoom(data) { // todo: socket.io EMIT addRoom
     const result = await this.fetchPostRoom(data);
     if(result.success){
-      this.rooms.push(result.res);
-      socket.emit('addRoom',  result.res);
+      const room = result.res;
+      this.rooms.unshift(room);
+      socket.emit('roomCreate',  room);
     } 
     return result;
-  }
-
-  @action.bound getRoom(id) {
-    return this.rooms.find(r => r._id == id);
   }
 
   @action.bound async deleteRoom(id) { // todo: socket.io EMIT deleteRoom
     const result = await this.fetchDeleteRoom(id);
     if(result.success){
-      this.rooms = this.rooms.filter(r => r._id !== result.res._id);
+      const room = result.res;
+      this.rooms = this.rooms.filter(r => r._id !== room._id);
+      socket.emit('roomDelete',  room);
     }
     return result;
   }
@@ -99,6 +103,9 @@ class ObservableRoomStore {
     }
   }
 
+  @action getRoom(id) {
+    return this.rooms.find(r => r._id == id);
+  }
 
 }
 

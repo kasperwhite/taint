@@ -32,12 +32,19 @@ server.on('listening', onListening);
 const activeUsers = [];
 io.on('connection', (client) => {
 
-  client.on('authenticate', userId => {
-    activeUsers.push({ socketId: client.id, userId });
-    console.log('Client connected: ', activeUsers);
+  client.on('online', userId => {
+    if(activeUsers.find((u) => u.userId == userId)){
+      activeUsers.forEach((u) => {
+        u.socketId = u.userId == userId ? client.id : u.socketId
+      })
+      console.log('Client reconnected: ', activeUsers);
+    } else {
+      activeUsers.push({ socketId: client.id, userId });
+      console.log('Client connected: ', activeUsers);
+    }
   })
 
-  client.on('disconnect', (reason) => {
+  client.on('disconnect', (reason) => { // offline
     if(reason == 'io server disconnect' || reason == 'io client disconnect' || reason == 'ping timeout'){
 
     } else {
@@ -46,11 +53,26 @@ io.on('connection', (client) => {
     }
   })
 
-  client.on('addRoom', room => {
-    room.users.forEach((u) => {
+  client.on('roomCreate', room => {
+    const currentUser = activeUsers.find((u) => u.socketId == client.id);
+    const users = room.users.filter((u) => u != currentUser.userId);
+    users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
-      client.to(`${receiver.socketId}`).emit('rooms', room);
+      client.to(`${receiver.socketId}`).emit('roomCreate', room);
     })
+  })
+
+  client.on('roomDelete', room => {
+    const currentUser = activeUsers.find((u) => u.socketId == client.id);
+    const users = room.users.filter((u) => u != currentUser.userId);
+    users.forEach((u) => {
+      const receiver = activeUsers.find((au) => au.userId == u);
+      client.to(`${receiver.socketId}`).emit('roomDelete', room);
+    })
+  })
+
+  client.on('messageCreate', ({message, users}) => {
+    
   })
 
 });

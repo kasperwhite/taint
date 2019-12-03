@@ -143,17 +143,14 @@ roomsRouter.route('/:roomId/messages')
   if(room && room.users.includes(req.user._id)){
     req.body.sender = req.user._id;
 
-    const message = await MessageModel.create(req.body);
+    let message = await MessageModel.create(req.body);
     room.messages.push(message._id);
     room = await room.save();
-    room = await RoomModel.findById(room._id).populate({
-      path: 'messages',
-      populate: { path: 'sender' }
-    });
+    message = await MessageModel.findById(message._id).populate('sender');
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(room.messages)
+    res.json(message)
   } else if(!room.users.includes(req.user._id)){
     err = new Error('Forbidden');
     err.status = 403;

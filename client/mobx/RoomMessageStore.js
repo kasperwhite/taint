@@ -1,9 +1,10 @@
 import { observable, action } from "mobx";
 
-import { sendRequest } from './NetService';
+import { sendRequest, socket } from './NetService';
 import authStore from './AuthStore';
 
 class ObservableRoomMessageStore {
+  @observable roomUsers = [];
   @observable roomMessages = [];
 
   @observable messagesIsLoading = false;
@@ -18,7 +19,11 @@ class ObservableRoomMessageStore {
 
   @action.bound async postRoomMessage(roomId, messageData) { // todo: socket.io EMIT sendMessage
     const result = await this.fetchPostMessage(roomId, messageData);
-    this.roomMessages = result.res.reverse(); 
+    if(result.success){
+      const message = result.res;
+      this.roomMessages.unshift(message);
+    }
+    return result
   }
 
   @action async fetchGetMessages(roomId){

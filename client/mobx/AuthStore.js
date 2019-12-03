@@ -37,7 +37,7 @@ class ObservableAuthStore {
     const result = await this.fetchCurrentUser();
     if(result.success){
       this.user = result.res;
-      socket.emit('authenticate', this.user._id);
+      socket.emit('online', this.user._id);
     }
     return result;
   }
