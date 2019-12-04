@@ -50,7 +50,6 @@ class Room extends Component {
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
     const room = this.props.roomStore.getRoom(roomId);
-    this.props.roomMessageStore.roomUsers = room.users;
     this.props.navigation.setParams({
       openInfo: this.openInfo,
       roomName: room.name
@@ -60,6 +59,10 @@ class Room extends Component {
 
   componentDidMount(){
     this.props.roomMessageStore.getRoomMessages(this.state.room._id);
+  }
+
+  componentWillUnmount(){
+    this.props.roomMessageStore.leaveRoom(this.state.room._id);
   }
 
   openInfo = () => {

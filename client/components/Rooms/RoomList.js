@@ -60,7 +60,6 @@ class RoomList extends Component {
       },
       headerRight: (
         <View style={{flexDirection: 'row'}}>
-          {/* <RefreshButton refresh={navigation.getParam('refresh')}/> */}
           <AddButton handlePress={navigation.navigate}/>
         </View>
       ),

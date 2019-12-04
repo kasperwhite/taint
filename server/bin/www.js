@@ -71,8 +71,16 @@ io.on('connection', (client) => {
     })
   })
 
-  client.on('messageCreate', ({message, users}) => {
-    
+  client.on('roomJoin', roomId => {
+    client.join(`${roomId}`);
+  })
+
+  client.on('roomLeave', roomId => {
+    client.leave(`${roomId}`);
+  })
+
+  client.on('messageCreate', ({message, roomId}) => {
+    io.sockets.in(`${roomId}`).emit('messageCreate', message);
   })
 
 });
