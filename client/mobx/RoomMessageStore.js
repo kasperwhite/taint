@@ -18,11 +18,9 @@ class ObservableRoomMessageStore {
 
       socket.emit('roomJoin', roomId);
       socket.on('messageCreate', message => {
-        // this.roomMessages.unshift(message)
-        console.log('Message received: ', message);
+        this.roomMessages.unshift(message);
       })
     }
-    this.prevRoomId = `${roomId}`;
     return result;
   }
 
@@ -74,7 +72,12 @@ class ObservableRoomMessageStore {
     }
   }
 
+  @action joinRoom(roomId) {
+    socket.emit('roomJoin', roomId);
+  }
+
   @action leaveRoom(roomId) {
+    socket.removeEventListener('messageCreate');
     socket.emit('roomLeave', roomId);
   }
 }
