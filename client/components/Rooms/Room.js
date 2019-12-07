@@ -57,7 +57,7 @@ class Room extends Component {
     this.props.roomMessageStore.getRoomMessages();
     this.props.roomMessageStore.joinRoom({
       roomDeleteHandler: this.props.navigation.navigate
-    })
+    });
   }
 
   componentWillUnmount(){

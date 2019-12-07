@@ -75,7 +75,8 @@ class RoomCreate extends Component {
       users: roomUsers.map(el => { return el._id })
     });
     if(result.success){
-      this.props.navigation.navigate('Room', { roomId: result.res._id });
+      const room = result.res;
+      this.props.navigation.navigate('Room', { roomId: room._id, roomName: room.name });
       this.resetForm();
     } else {
       console.log(result);

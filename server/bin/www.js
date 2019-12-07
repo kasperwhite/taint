@@ -29,9 +29,13 @@ server.listen(port, () => {
 server.on('error', onError);
 server.on('listening', onListening);
 
+/**
+ * Socket.io listener
+ */
 const activeUsers = [];
 io.on('connection', (client) => {
 
+  /* Activity events */
   client.on('online', userId => {
     if(activeUsers.find((u) => u.userId == userId)){
       activeUsers.forEach((u) => {
@@ -45,7 +49,7 @@ io.on('connection', (client) => {
   })
 
   client.on('offline', userId => {
-    activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId)), 1);
+    activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId && u.socketId == client.id)), 1);
     console.log('Client offline: ', activeUsers);
   })
 
@@ -58,6 +62,7 @@ io.on('connection', (client) => {
     }
   })
 
+  /* Room List events */
   client.on('roomCreate', room => {
     const currentUser = activeUsers.find((u) => u.socketId == client.id);
     const users = room.users.filter((u) => u != currentUser.userId);
@@ -80,6 +85,7 @@ io.on('connection', (client) => {
     })
   })
 
+  /* Room events */
   client.on('roomJoin', roomId => {
     client.join(`${roomId}`);
   })
