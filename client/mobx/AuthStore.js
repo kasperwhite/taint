@@ -30,7 +30,7 @@ class ObservableAuthStore {
 
   @action.bound async signOut() {
     await AsyncStorage.removeItem('userToken');
-    socket.disconnect();
+    socket.emit('offline', this.user._id);
   }
 
   @action.bound async authenticate() {

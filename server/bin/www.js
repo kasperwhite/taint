@@ -44,6 +44,11 @@ io.on('connection', (client) => {
     }
   })
 
+  client.on('offline', userId => {
+    activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId)), 1);
+    console.log('Client offline: ', activeUsers);
+  })
+
   client.on('disconnect', (reason) => { // offline
     if(reason == 'io server disconnect' || reason == 'io client disconnect' || reason == 'ping timeout'){
 
@@ -58,7 +63,9 @@ io.on('connection', (client) => {
     const users = room.users.filter((u) => u != currentUser.userId);
     users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
-      client.to(`${receiver.socketId}`).emit('roomCreate', room);
+      if(receiver){
+        client.to(`${receiver.socketId}`).emit('roomCreate', room);
+      }
     })
   })
 

@@ -11,15 +11,13 @@ class ObservableRoomMessageStore {
 
   constructor(){ }
   
-  @action.bound async getRoomMessages(roomId) { // todo: socket.io ON roomMessages
+  @action.bound async getRoomMessages(roomId) {
     const result = await this.fetchGetMessages(roomId);
-    if(result.success){
-      this.roomMessages = result.res.reverse();
-    }
+    if(result.success){ this.roomMessages = result.res.reverse() }
     return result;
   }
 
-  @action.bound async postRoomMessage(roomId, messageData) { // todo: socket.io EMIT sendMessage
+  @action.bound async postRoomMessage(roomId, messageData) {
     const result = await this.fetchPostMessage(roomId, messageData);
     if(result.success){
       const message = result.res;
@@ -70,12 +68,8 @@ class ObservableRoomMessageStore {
   @action joinRoom({roomId, roomDeleteHandler}) {
     socket.emit('roomJoin', roomId);
 
-    socket.on('messageCreate', message => {
-      this.roomMessages.unshift(message);
-    })
-    socket.on('roomDeleteForActive', roomId => {
-      roomDeleteHandler('Rooms')
-    })
+    socket.on('messageCreate', message => { this.roomMessages.unshift(message) });
+    socket.on('roomDeleteForActive', roomId => { roomDeleteHandler('Rooms') });
   }
 
   @action leaveRoom(roomId) {

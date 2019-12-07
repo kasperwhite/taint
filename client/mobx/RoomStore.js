@@ -12,15 +12,13 @@ class ObservableRoomStore {
 
   constructor(){ }
   
-  @action.bound async getRooms() { // todo: socket.io ON rooms
+  @action.bound async getRooms() {
     const result = await this.fetchGetRooms();
-    if(result.success){
-      this.rooms = result.res;
-    }
+    if(result.success){ this.rooms = result.res }
     return result;
   }
 
-  @action.bound async postRoom(data) { // todo: socket.io EMIT addRoom
+  @action.bound async postRoom(data) {
     const result = await this.fetchPostRoom(data);
     if(result.success){
       const room = result.res;
@@ -30,7 +28,7 @@ class ObservableRoomStore {
     return result;
   }
 
-  @action.bound async deleteRoom(id) { // todo: socket.io EMIT deleteRoom
+  @action.bound async deleteRoom(id) {
     const result = await this.fetchDeleteRoom(id);
     if(result.success){
       const room = result.res;
@@ -103,12 +101,8 @@ class ObservableRoomStore {
   }
 
   @action openSocketListeners() {
-    socket.on('roomCreate', room => {
-      this.rooms.unshift(room);
-    });
-    socket.on('roomDelete', room => {
-      this.rooms = this.rooms.filter(r => r._id !== room._id); 
-    });
+    socket.on('roomCreate', room => { this.rooms.unshift(room) });
+    socket.on('roomDelete', room => { this.rooms = this.rooms.filter(r => r._id !== room._id) });
   }
 
   @action removeSocketListeners() {

@@ -99,7 +99,6 @@ class RoomInfo extends Component {
     await this.props.contactStore.getContacts();
   }
 
-  // DELETE ROOM OPERATION
   deleteRoom = () => {
     Alert.alert(
       'Delete Room',
@@ -118,7 +117,6 @@ class RoomInfo extends Component {
     )
   }
 
-  // ADD USER OPERATION
   addUser = () => {
     this.props.navigation.navigate('RoomUsersSelect', {
       handleUsersSelect: this.handleUsersSelect,
