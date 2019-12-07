@@ -36,6 +36,7 @@ class ObservableRoomStore {
       const room = result.res;
       this.rooms = this.rooms.filter(r => r._id !== room._id);
       socket.emit('roomDelete',  room);
+      socket.emit('roomDeleteForActive', room._id);
     }
     return result;
   }

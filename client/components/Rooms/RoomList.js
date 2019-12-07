@@ -81,9 +81,7 @@ class RoomList extends Component {
     };
   };
 
-  componentWillMount(){
-    this.props.roomStore.openSocketListeners();
-  }
+  componentWillMount(){ }
 
   componentWillUnmount(){
     this.props.roomStore.removeSocketListeners();
@@ -91,6 +89,7 @@ class RoomList extends Component {
 
   componentDidMount(){
     this.props.roomStore.getRooms();
+    this.props.roomStore.openSocketListeners();
   }
 
   enterRoom = (roomId) => {

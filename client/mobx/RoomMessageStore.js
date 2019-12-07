@@ -15,11 +15,6 @@ class ObservableRoomMessageStore {
     const result = await this.fetchGetMessages(roomId);
     if(result.success){
       this.roomMessages = result.res.reverse();
-
-      socket.emit('roomJoin', roomId);
-      socket.on('messageCreate', message => {
-        this.roomMessages.unshift(message);
-      })
     }
     return result;
   }
@@ -72,8 +67,20 @@ class ObservableRoomMessageStore {
     }
   }
 
+  @action joinRoom({roomId, roomDeleteHandler}) {
+    socket.emit('roomJoin', roomId);
+
+    socket.on('messageCreate', message => {
+      this.roomMessages.unshift(message);
+    })
+    socket.on('roomDeleteForActive', roomId => {
+      roomDeleteHandler('Rooms')
+    })
+  }
+
   @action leaveRoom(roomId) {
     socket.removeEventListener('messageCreate');
+    socket.removeEventListener('roomDeleteForActive');
     socket.emit('roomLeave', roomId);
   }
 }

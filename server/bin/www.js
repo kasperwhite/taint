@@ -67,7 +67,9 @@ io.on('connection', (client) => {
     const users = room.users.filter((u) => u != currentUser.userId);
     users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
-      client.to(`${receiver.socketId}`).emit('roomDelete', room);
+      if(receiver){
+        client.to(`${receiver.socketId}`).emit('roomDelete', room);
+      }
     })
   })
 
@@ -81,6 +83,10 @@ io.on('connection', (client) => {
 
   client.on('messageCreate', ({message, roomId}) => {
     io.sockets.in(`${roomId}`).emit('messageCreate', message);
+  })
+
+  client.on('roomDeleteForActive', roomId => {
+    io.sockets.in(`${roomId}`).emit('roomDeleteForActive', roomId);
   })
 
 });

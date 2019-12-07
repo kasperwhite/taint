@@ -58,7 +58,12 @@ class Room extends Component {
   }
 
   componentDidMount(){
-    this.props.roomMessageStore.getRoomMessages(this.state.room._id);
+    const roomId = this.state.room._id;
+    this.props.roomMessageStore.getRoomMessages(roomId);
+    this.props.roomMessageStore.joinRoom({
+      roomId,
+      roomDeleteHandler: this.props.navigation.navigate
+    })
   }
 
   componentWillUnmount(){
