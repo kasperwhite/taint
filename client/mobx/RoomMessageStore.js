@@ -72,10 +72,6 @@ class ObservableRoomMessageStore {
     }
   }
 
-  @action joinRoom(roomId) {
-    socket.emit('roomJoin', roomId);
-  }
-
   @action leaveRoom(roomId) {
     socket.removeEventListener('messageCreate');
     socket.emit('roomLeave', roomId);

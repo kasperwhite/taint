@@ -16,12 +16,6 @@ class ObservableRoomStore {
     const result = await this.fetchGetRooms();
     if(result.success){
       this.rooms = result.res;
-      socket.on('roomCreate', room => {
-        this.rooms.unshift(room);
-      });
-      socket.on('roomDelete', room => {
-        this.rooms = this.rooms.filter(r => r._id !== room._id); 
-      });
     }
     return result;
   }
@@ -105,6 +99,20 @@ class ObservableRoomStore {
 
   @action getRoom(id) {
     return this.rooms.find(r => r._id == id);
+  }
+
+  @action openSocketListeners() {
+    socket.on('roomCreate', room => {
+      this.rooms.unshift(room);
+    });
+    socket.on('roomDelete', room => {
+      this.rooms = this.rooms.filter(r => r._id !== room._id); 
+    });
+  }
+
+  @action removeSocketListeners() {
+    socket.removeEventListener('roomCreate');
+    socket.removeEventListener('roomDelete');
   }
 
 }

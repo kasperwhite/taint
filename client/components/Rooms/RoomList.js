@@ -82,16 +82,14 @@ class RoomList extends Component {
   };
 
   componentWillMount(){
-    this.props.navigation.setParams({ 
-      refresh: this.refresh
-    });
+    this.props.roomStore.openSocketListeners();
+  }
+
+  componentWillUnmount(){
+    this.props.roomStore.removeSocketListeners();
   }
 
   componentDidMount(){
-    this.props.roomStore.getRooms();
-  }
-
-  refresh = () => {
     this.props.roomStore.getRooms();
   }
 
