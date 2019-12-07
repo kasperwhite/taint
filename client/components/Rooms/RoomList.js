@@ -92,8 +92,8 @@ class RoomList extends Component {
     this.props.roomStore.openSocketListeners();
   }
 
-  enterRoom = (roomId) => {
-    this.props.navigation.navigate('Room', { roomId })
+  enterRoom = (roomId, roomName) => {
+    this.props.navigation.navigate('Room', { roomId, roomName })
   }
 
   renderRoom = ({item, index}) => {
@@ -106,7 +106,7 @@ class RoomList extends Component {
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
-        onPress={() => this.enterRoom(item._id)}
+        onPress={() => this.enterRoom(item._id, item.name)}
       />
     )
   }

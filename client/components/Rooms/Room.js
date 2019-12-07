@@ -14,7 +14,6 @@ class Room extends Component {
     super(props)
 
     this.state = {
-      room: {},
       message: ''
     }
   }
@@ -48,44 +47,35 @@ class Room extends Component {
   };
 
   componentWillMount(){
+    const roomName = this.props.navigation.getParam('roomName');
+    this.props.navigation.setParams({ openInfo: this.openInfo, roomName });
     const roomId = this.props.navigation.getParam('roomId');
-    const room = this.props.roomStore.getRoom(roomId);
-    this.props.navigation.setParams({
-      openInfo: this.openInfo,
-      roomName: room.name
-    });
-    this.setState({ room });
+    this.props.roomMessageStore.roomId = roomId;
   }
 
   componentDidMount(){
-    const roomId = this.state.room._id;
-    this.props.roomMessageStore.getRoomMessages(roomId);
+    this.props.roomMessageStore.getRoomMessages();
     this.props.roomMessageStore.joinRoom({
-      roomId,
       roomDeleteHandler: this.props.navigation.navigate
     })
   }
 
   componentWillUnmount(){
-    this.props.roomMessageStore.leaveRoom(this.state.room._id);
+    this.props.roomMessageStore.leaveRoom();
   }
 
   openInfo = () => {
-    const { room } = this.state;
-    this.props.navigation.navigate('RoomInfo', { roomId: room._id })
+    this.props.navigation.navigate('RoomInfo', { roomId: this.props.roomMessageStore.roomId })
   }
 
   // SEND MESSAGE OPERATION
   sendMessage = async () => {
     let {message} = this.state;
     message = message.trim();
-    await this.props.roomMessageStore.postRoomMessage(
-      this.state.room._id,
-      {
-        text: message,
-        hash: MD5(message).toString()
-      }
-    )
+    await this.props.roomMessageStore.postRoomMessage({
+      text: message,
+      hash: MD5(message).toString()
+    })
     this.setState({message: ''});
   }
 

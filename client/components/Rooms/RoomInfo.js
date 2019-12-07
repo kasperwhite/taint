@@ -152,6 +152,7 @@ class RoomInfo extends Component {
   }
 
   renderUser = ({ item }) => {
+    const myId = this.props.authStore.user._id;
     return(
       <ListItem
         title={item.username}
@@ -165,7 +166,7 @@ class RoomInfo extends Component {
           />
         } */
         rightElement={
-          this.state.room.creator == this.props.authStore.user._id
+          this.state.room.creator == myId && item._id != myId
           ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
           : null
         }

@@ -4,6 +4,7 @@ import { sendRequest, socket } from './NetService';
 import authStore from './AuthStore';
 
 class ObservableRoomMessageStore {
+  @observable roomId = '';
   @observable roomMessages = [];
 
   @observable messagesIsLoading = false;
@@ -11,13 +12,14 @@ class ObservableRoomMessageStore {
 
   constructor(){ }
   
-  @action.bound async getRoomMessages(roomId) {
-    const result = await this.fetchGetMessages(roomId);
+  @action.bound async getRoomMessages() {
+    const result = await this.fetchGetMessages(this.roomId);
     if(result.success){ this.roomMessages = result.res.reverse() }
     return result;
   }
 
-  @action.bound async postRoomMessage(roomId, messageData) {
+  @action.bound async postRoomMessage(messageData) {
+    const roomId = this.roomId;
     const result = await this.fetchPostMessage(roomId, messageData);
     if(result.success){
       const message = result.res;
@@ -65,8 +67,8 @@ class ObservableRoomMessageStore {
     }
   }
 
-  @action.bound joinRoom({roomId, roomDeleteHandler}) {
-    socket.emit('roomJoin', roomId);
+  @action.bound joinRoom({roomDeleteHandler}) {
+    socket.emit('roomJoin', this.roomId);
 
     socket.on('messageCreate', message => {
       this.roomMessages.unshift(JSON.parse(message));
@@ -74,10 +76,10 @@ class ObservableRoomMessageStore {
     socket.on('roomDeleteForActive', roomId => { roomDeleteHandler('Rooms') });
   }
 
-  @action.bound leaveRoom(roomId) {
+  @action.bound leaveRoom() {
     socket.removeEventListener('messageCreate');
     socket.removeEventListener('roomDeleteForActive');
-    socket.emit('roomLeave', roomId);
+    socket.emit('roomLeave', this.roomId);
   }
 }
 
