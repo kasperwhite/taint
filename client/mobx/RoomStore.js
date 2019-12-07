@@ -33,7 +33,7 @@ class ObservableRoomStore {
     if(result.success){
       const room = result.res;
       this.rooms = this.rooms.filter(r => r._id !== room._id);
-      socket.emit('roomDelete',  room);
+      socket.emit('roomDelete',  {roomId: id, roomUsers: room.users});
       socket.emit('roomDeleteForActive', room._id);
     }
     return result;
@@ -102,7 +102,7 @@ class ObservableRoomStore {
 
   @action openSocketListeners() {
     socket.on('roomCreate', room => { this.rooms.unshift(room) });
-    socket.on('roomDelete', room => { this.rooms = this.rooms.filter(r => r._id !== room._id) });
+    socket.on('roomDelete', roomId => { this.rooms = this.rooms.filter(r => r._id !== roomId) });
   }
 
   @action removeSocketListeners() {

@@ -129,7 +129,7 @@ class RoomInfo extends Component {
 
   handleUsersSelect = async (users) => {
     await this.props.roomUserStore.postRoomUsers(
-      this.state.room._id,
+      this.state.room,
       users.map(u => u._id)
     );
   }

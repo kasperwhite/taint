@@ -69,13 +69,13 @@ io.on('connection', (client) => {
     })
   })
 
-  client.on('roomDelete', room => {
+  client.on('roomDelete', ({roomId, roomUsers}) => {
     const currentUser = activeUsers.find((u) => u.socketId == client.id);
-    const users = room.users.filter((u) => u != currentUser.userId);
+    const users = roomUsers.filter((u) => u != currentUser.userId);
     users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
       if(receiver){
-        client.to(`${receiver.socketId}`).emit('roomDelete', room);
+        client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
       }
     })
   })
@@ -94,6 +94,23 @@ io.on('connection', (client) => {
 
   client.on('roomDeleteForActive', roomId => {
     io.sockets.in(`${roomId}`).emit('roomDeleteForActive', roomId);
+  })
+
+  client.on('roomUserAdd', ({room, users}) => {
+    users.forEach((u) => {
+      const receiver = activeUsers.find((au) => au.userId == u);
+      if(receiver){
+        client.to(`${receiver.socketId}`).emit('roomCreate', room);
+      }
+    })
+  })
+
+  client.on('roomUserDelete', ({roomId, userId}) => {
+    const receiver = activeUsers.find((au) => au.userId == userId);
+    if(receiver) {
+      client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+      client.to(`${receiver.socketId}`).emit('roomDeleteForActive', roomId);
+    }
   })
 
 });

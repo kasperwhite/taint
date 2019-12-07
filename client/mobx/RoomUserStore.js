@@ -1,7 +1,7 @@
 import { observable, action } from "mobx";
 
 import authStore from './AuthStore';
-import { sendRequest } from './NetService';
+import { sendRequest, socket } from './NetService';
 
 class ObservableRoomUserStore {
   @observable roomUsers = [];
@@ -18,15 +18,21 @@ class ObservableRoomUserStore {
     return result;
   }
 
-  @action.bound async postRoomUsers(roomId, users) { // todo: socket.io EMIT addRoomUser
-    const result = await this.fetchPostUsers(roomId, {users});
-    if(result.success){ this.roomUsers = this.sort(result.res) };
+  @action.bound async postRoomUsers(room, users) { // todo: socket.io EMIT addRoomUser
+    const result = await this.fetchPostUsers(room._id, {users});
+    if(result.success){
+      this.roomUsers = this.sort(result.res);
+      socket.emit('roomUserAdd', { room, users });
+    };
     return result;
   }
 
   @action.bound async deleteRoomUser(roomId, userId) { // todo: socket.io EMIT deleteRoomUser
     const result = await this.fetchDeleteUser(roomId, userId);
-    if(result.success){ this.roomUsers = this.sort(result.res) };
+    if(result.success){
+      this.roomUsers = this.sort(result.res);
+      socket.emit('roomUserDelete', {roomId, userId});
+    };
     return result;
   }
 

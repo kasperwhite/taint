@@ -22,7 +22,7 @@ class ObservableRoomMessageStore {
     if(result.success){
       const message = result.res;
       // this.roomMessages.unshift(message);
-      socket.emit('messageCreate', {message, roomId});
+      socket.emit('messageCreate', {message: JSON.stringify(message), roomId});
     }
     return result
   }
@@ -65,14 +65,16 @@ class ObservableRoomMessageStore {
     }
   }
 
-  @action joinRoom({roomId, roomDeleteHandler}) {
+  @action.bound joinRoom({roomId, roomDeleteHandler}) {
     socket.emit('roomJoin', roomId);
 
-    socket.on('messageCreate', message => { this.roomMessages.unshift(message) });
+    socket.on('messageCreate', message => {
+      this.roomMessages.unshift(JSON.parse(message));
+    });
     socket.on('roomDeleteForActive', roomId => { roomDeleteHandler('Rooms') });
   }
 
-  @action leaveRoom(roomId) {
+  @action.bound leaveRoom(roomId) {
     socket.removeEventListener('messageCreate');
     socket.removeEventListener('roomDeleteForActive');
     socket.emit('roomLeave', roomId);
