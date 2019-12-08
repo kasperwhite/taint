@@ -114,8 +114,13 @@ io.on('connection', (client) => {
   client.on('roomUserDelete', ({roomId, userId}) => {
     const receiver = activeUsers.find((au) => au.userId == userId);
     if(receiver) {
-      client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
-      client.to(`${receiver.socketId}`).emit('roomDeleteForActive', roomId);
+      if(receiver.socketId == client.id) {
+        client.emit('roomDelete', roomId);
+        client.emit('roomDeleteForActive', roomId);
+      } else {
+        client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+        client.to(`${receiver.socketId}`).emit('roomDeleteForActive', roomId);
+      }
     }
   })
 

@@ -137,11 +137,13 @@ class RoomInfo extends Component {
   deleteUser = (user) => {
     Alert.alert(
       'Delete User',
-      `Are you sure you want to kick ${user.username}?`,
+      user._id == this.props.authStore.user._id
+      ? `Are you sure you want to leave from room?`
+      : `Are you sure you want to kick ${user.username}?`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Delete',
+          text: user._id == this.props.authStore.user._id ? 'Leave' :'Delete',
           style: 'default',
           onPress: () => {
             this.props.roomUserStore.deleteRoomUser(this.state.room._id, user._id)
@@ -167,6 +169,8 @@ class RoomInfo extends Component {
         } */
         rightElement={
           this.state.room.creator == myId && item._id != myId
+          ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
+          : item._id == myId && this.state.room.creator != myId
           ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
           : null
         }
