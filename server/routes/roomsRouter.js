@@ -22,7 +22,6 @@ roomsRouter.route('/')
 .post(async (req, res, next) => { // ALLOW: add room
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
-    req.body.avatarId = Math.floor(Math.random() * 2);
 
     await RoomModel.create(req.body)
     .then((room) => {

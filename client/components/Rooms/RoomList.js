@@ -5,7 +5,6 @@ import { observer, inject } from 'mobx-react';
 import moment from 'moment';
 
 import Loading from '../Shared/Loading';
-import { avatarsUrl } from '../../mobx/config';
 
 const AddButton = (props) => {
   return(
@@ -110,13 +109,6 @@ class RoomList extends Component {
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
         onPress={() => this.enterRoom(item._id, item.name)}
-        leftElement={
-          <Avatar
-            rounded
-            size='medium'
-            source={{uri: avatarsUrl + item.avatarId}}
-          />
-        }
       />
     )
   }
