@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { ListItem, Icon, Button } from 'react-native-elements';
+import { ListItem, Icon, Button, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+
+import { avatarsUrl } from '../../mobx/config';
 
 const DeleteContactButton = (props) => (
   <Button
@@ -95,7 +97,13 @@ class Contacts extends Component {
     return(
       <ListItem
         title={item.username}
-        /* leftAvatar={{source: item.avatar}} */
+        leftElement={
+          <Avatar
+            rounded
+            size='small'
+            source={{uri: avatarsUrl + item.avatarId}}
+          />
+        }
         bottomDivider
         rightElement={
           <DeleteContactButton

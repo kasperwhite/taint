@@ -4,6 +4,8 @@ import { ListItem, Avatar, Button, Icon } from 'react-native-elements';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { observer, inject } from 'mobx-react';
 
+import { avatarsUrl } from '../mobx/config';
+
 export default inject('authStore')(observer(DrawerContent = (props) => {
 
   const signOut = async () => {
@@ -14,7 +16,13 @@ export default inject('authStore')(observer(DrawerContent = (props) => {
   return(
     <View>
       <ListItem
-        leftElement={<Avatar rounded source={require('../assets/cat.jpg')} size={40}/>}
+        leftElement={
+          <Avatar
+            rounded
+            source={{uri: avatarsUrl + props.authStore.user.avatarId}}
+            size={40}
+          />
+        }
         title={props.authStore.user.username}
         titleStyle={{fontWeight: 'bold', color: '#fff'}}
         containerStyle={{

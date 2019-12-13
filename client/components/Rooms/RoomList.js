@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, StyleSheet, FlatList, ActivityIndicator, AsyncStorage } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input } from 'react-native-elements';
+import { ListItem, Badge, ButtonGroup, Button, Icon, Overlay, Input, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 import moment from 'moment';
 
 import Loading from '../Shared/Loading';
+import { avatarsUrl } from '../../mobx/config';
 
 const AddButton = (props) => {
   return(
@@ -109,6 +110,13 @@ class RoomList extends Component {
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
         onPress={() => this.enterRoom(item._id, item.name)}
+        leftElement={
+          <Avatar
+            rounded
+            size='medium'
+            source={{uri: avatarsUrl + item.avatarId}}
+          />
+        }
       />
     )
   }
@@ -159,7 +167,7 @@ const styles = StyleSheet.create({
   roomCont: {
     justifyContent: 'center',
     alignContent: 'center',
-    height: 65,
+    height: 70,
     paddingHorizontal: 20,
     backgroundColor: '#151516'
   },

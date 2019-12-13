@@ -4,6 +4,7 @@ import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-nati
 import { observer, inject } from 'mobx-react';
 
 import Loading from '../Shared/Loading';
+import { avatarsUrl } from '../../mobx/config';
 
 const AddUserComponent = (props) => (
   <ListItem
@@ -52,7 +53,7 @@ const DeleteUserButton = (props) => (
         name='minus-circle'
         type='font-awesome'
         color='#167B14'
-        size={15}
+        size={18}
       />
     }
     buttonStyle={{marginHorizontal: 3}}
@@ -160,7 +161,7 @@ class RoomInfo extends Component {
           <Avatar
             rounded
             size='medium'
-            source={require('../../assets/cat.jpg')}
+            source={{uri: avatarsUrl + item.avatarId}}
           />
         }
         rightElement={
@@ -241,7 +242,8 @@ const styles = StyleSheet.create({
   submitButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginVertical: 15
   },
   submitButton: {
     backgroundColor: '#C71414'

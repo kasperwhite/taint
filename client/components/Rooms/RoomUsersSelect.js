@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
-import { ListItem, CheckBox, Button, Icon } from 'react-native-elements';
+import { ListItem, CheckBox, Button, Icon, Avatar } from 'react-native-elements';
+
+import { avatarsUrl } from '../../mobx/config';
 
 class RoomUsersSelect extends Component {
   constructor(props){
@@ -46,7 +48,7 @@ class RoomUsersSelect extends Component {
     });
     const contacts = this.props.navigation.getParam('contacts');
     const contactsForSelect = contacts.map((c) => {
-      return { _id: c._id, username: c.username, checked: false }
+      return { _id: c._id, username: c.username, avatarId: c.avatarId, checked: false }
     })
     this.setState({ contactsForSelect });
   }
@@ -68,7 +70,13 @@ class RoomUsersSelect extends Component {
     <ListItem
       title={item.username}
       bottomDivider
-      /* leftAvatar={{ source: require('../../assets/cat.jpg')}} */
+      leftElement={
+        <Avatar
+          rounded
+          size='small'
+          source={{uri: avatarsUrl + item.avatarId}}
+        />
+      }
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
       rightElement={

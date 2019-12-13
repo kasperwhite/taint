@@ -5,6 +5,10 @@ const roomSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  avatarId: {
+    type: Number,
+    required: true
+  },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

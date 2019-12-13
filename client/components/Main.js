@@ -92,7 +92,7 @@ const MainNavigator = createDrawerNavigator({
       )
     }
   },
-  Settings: {
+  /* Settings: {
     screen: SettingsNavigator,
     navigationOptions: {
       title: 'Settings',
@@ -101,7 +101,7 @@ const MainNavigator = createDrawerNavigator({
         <Icon name='cog' type='font-awesome' color='#167B14' size={23}/>
       )
     }
-  }
+  } */
 }, {
   initialRouteName: 'Rooms',
   drawerBackgroundColor: '#151516',

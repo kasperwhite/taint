@@ -5,7 +5,11 @@ const userSchema = new mongoose.Schema({
   contacts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }]
+  }],
+  avatarId: {
+    type: Number,
+    required: true
+  }
 }, {
   timestamps: true
 })

@@ -22,6 +22,7 @@ roomsRouter.route('/')
 .post(async (req, res, next) => { // ALLOW: add room
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
+    req.body.avatarId = Math.floor(Math.random() * 2);
 
     await RoomModel.create(req.body)
     .then((room) => {
@@ -150,7 +151,7 @@ roomsRouter.route('/:roomId/messages')
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(message)
+    res.json(message);
   } else if(!room.users.includes(req.user._id)){
     err = new Error('Forbidden');
     err.status = 403;

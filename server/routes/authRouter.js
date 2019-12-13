@@ -10,7 +10,8 @@ authRouter.use(bodyParser.json());
 authRouter.post('/signup', (req, res, next) => {
   const { username, password } = req.body;
   if(username.length < 20 && username.length > 4 && password.length >= 12){
-    UserModel.register(new UserModel({username: username}),
+    let avatarId = Math.floor(Math.random() * 2);
+    UserModel.register(new UserModel({username: username, avatarId}),
       password, (err, user) => {
       if(err) {
         res.statusCode = 500;
