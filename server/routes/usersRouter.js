@@ -12,7 +12,7 @@ const filterKeys = (object, keys) => {
 }
 
 usersRouter.route('/')
-.get((req, res, next) => {
+/* .get((req, res, next) => {
   UserModel.find({})
   .then(users => {
     res.statusCode = 200;
@@ -37,7 +37,7 @@ usersRouter.route('/')
     res.json(users);
   }, err => next(err))
   .catch(err => next(err))
-}) 
+}) */ 
 
 usersRouter.route('/:userId')
 /* .get((req, res, next) => {

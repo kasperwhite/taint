@@ -10,10 +10,14 @@ class ObservableRoomMessageStore {
   @observable messagesIsLoading = false;
   @observable postMessageIsLoading = false;
 
+  @observable messagesIsSuccess = false;
+  @observable postMessageIsSuccess = false;
+
   constructor(){ }
   
   @action.bound async getRoomMessages() {
     const result = await this.fetchGetMessages(this.roomId);
+    this.messagesIsSuccess = result.success;
     if(result.success){ this.roomMessages = result.res.reverse() }
     return result;
   }
@@ -21,6 +25,7 @@ class ObservableRoomMessageStore {
   @action.bound async postRoomMessage(messageData) {
     const roomId = this.roomId;
     const result = await this.fetchPostMessage(roomId, messageData);
+    this.postMessageIsSuccess = result.success;
     if(result.success){
       const message = result.res;
       // this.roomMessages.unshift(message);

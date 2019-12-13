@@ -9,17 +9,23 @@ class ObservableRoomStore {
   @observable roomsIsLoading = false;
   @observable postRoomIsLoading = false;
   @observable deleteRoomIsLoading = false;
+  
+  @observable roomsIsSuccess = false;
+  @observable postRoomIsSuccess = false;
+  @observable deleteRoomIsSuccess = false;
 
   constructor(){ }
   
   @action.bound async getRooms() {
     const result = await this.fetchGetRooms();
+    this.roomsIsSuccess = result.success;
     if(result.success){ this.rooms = result.res }
     return result;
   }
 
   @action.bound async postRoom(data) {
     const result = await this.fetchPostRoom(data);
+    this.postRoomIsSuccess = result.success;
     if(result.success){
       const room = result.res;
       this.rooms.unshift(room);
@@ -30,6 +36,7 @@ class ObservableRoomStore {
 
   @action.bound async deleteRoom(id) {
     const result = await this.fetchDeleteRoom(id);
+    this.deleteRoomIsSuccess = result.success;
     if(result.success){
       const room = result.res;
       this.rooms = this.rooms.filter(r => r._id !== room._id);

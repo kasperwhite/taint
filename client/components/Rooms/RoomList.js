@@ -87,9 +87,11 @@ class RoomList extends Component {
     this.props.roomStore.removeSocketListeners();
   }
 
-  componentDidMount(){
-    this.props.roomStore.getRooms();
-    this.props.roomStore.openSocketListeners();
+  async componentDidMount(){
+    await this.props.roomStore.getRooms();
+    if(this.props.roomStore.roomsIsSuccess) {
+      this.props.roomStore.openSocketListeners();
+    }
   }
 
   enterRoom = (roomId, roomName) => {
@@ -118,6 +120,13 @@ class RoomList extends Component {
           <Loading size={'large'}/>
         </View>
       )
+    } else if(!this.props.roomStore.roomsIsSuccess) {
+      return(
+        <View style={styles.emptyScreen}>
+          <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
+          <Text style={{color: 'grey', fontSize: 20}}>Try again later</Text>
+        </View>
+      );
     } else if(!this.props.roomStore.rooms.length){
       return(
         <View style={styles.emptyScreen}>

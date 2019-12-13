@@ -53,11 +53,13 @@ class Room extends Component {
     this.props.roomMessageStore.roomId = roomId;
   }
 
-  componentDidMount(){
-    this.props.roomMessageStore.getRoomMessages();
-    this.props.roomMessageStore.joinRoom({
-      roomDeleteHandler: this.props.navigation.navigate
-    });
+  async componentDidMount(){
+    await this.props.roomMessageStore.getRoomMessages();
+    if(this.props.roomMessageStore.messagesIsSuccess) {
+      this.props.roomMessageStore.joinRoom({
+        roomDeleteHandler: this.props.navigation.navigate
+      });
+    }
   }
 
   componentWillUnmount(){
@@ -105,6 +107,13 @@ class Room extends Component {
           <Loading size={'large'}/>
         </View>
       )
+    } else if(!this.props.roomMessageStore.messagesIsSuccess) {
+      return(
+        <View style={styles.emptyScreen}>
+          <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
+          <Text style={{color: 'grey', fontSize: 20}}>Try again later</Text>
+        </View>
+      );
     } else {
       return(
         <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>

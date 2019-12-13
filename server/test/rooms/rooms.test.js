@@ -21,8 +21,8 @@ describe('Rooms', () => {
     chai.request(url)
       .post('/auth/signin')
       .send({
-        username: 'test',
-        password: '123123'
+        username: 'testtest',
+        password: '123123123123'
       })
       .end((err, res) => {
         token = res.body.token;
@@ -110,7 +110,7 @@ describe('Rooms', () => {
       .post(currentPath)
       .set('Authorization', `bearer ${token}`)
       .send({
-        userId: '5da15ac9cf43cf2770c6a534'
+        users: ['5de21323057bfb5468f30c79']
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
@@ -122,7 +122,7 @@ describe('Rooms', () => {
   })
 
   it('/DELETE rooms/:id/users/:id', done => {
-    const currentPath = path + '/' + roomId + '/users/5da15ac9cf43cf2770c6a534';
+    const currentPath = path + '/' + roomId + '/users/5de21323057bfb5468f30c79';
 
     chai.request(url)
       .delete(currentPath)
@@ -184,10 +184,10 @@ describe('Rooms', () => {
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(1);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.include.all.keys('_id', 'text', 'sender', 'hash');
 
-        messageId = res.body[0]._id;
+        messageId = res.body._id;
 
         done();
       })

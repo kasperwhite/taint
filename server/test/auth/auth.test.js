@@ -16,8 +16,8 @@ describe('Authenticate', () => {
     chai.request(url)
       .post(currentPath)
       .send({
-        username: 'test',
-        password: '123123'
+        username: 'testtest',
+        password: '123123123123'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
@@ -34,8 +34,8 @@ describe('Authenticate', () => {
     chai.request(url)
       .post(currentPath)
       .send({
-        username: 'test',
-        password: '123123'
+        username: 'testtest',
+        password: '123123123123'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);

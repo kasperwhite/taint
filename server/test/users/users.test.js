@@ -17,12 +17,12 @@ describe('Users', () => {
   let token;
 
   before((done) => {
-    contactId = '5dd4e0297086760cd0489ad2';
+    contactId = '5decd23a7223d673a8782c89';
     chai.request(url)
       .post('/auth/signin')
       .send({
-        username: 'test',
-        password: '123123'
+        username: 'testtest',
+        password: '123123123123'
       })
       .end((err, res) => {
         token = res.body.token;
@@ -31,7 +31,7 @@ describe('Users', () => {
       })
   });
 
-  it('/GET users', done => {
+  /* it('/GET users', done => {
     chai.request(url)
       .get(path)
       .set('Authorization', `bearer ${token}`)
@@ -41,7 +41,7 @@ describe('Users', () => {
 
         done();
       });
-  });
+  }); */
 
   /* it('/POST users', done => {
     const password = '123123';
@@ -119,7 +119,7 @@ describe('Users', () => {
       .post(currentPath)
       .set('Authorization', `bearer ${token}`)
       .send({
-        username: 'Kasper'
+        username: 'Nastya'
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);

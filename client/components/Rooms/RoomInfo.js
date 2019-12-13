@@ -5,34 +5,44 @@ import { observer, inject } from 'mobx-react';
 
 import Loading from '../Shared/Loading';
 
-const ControlPanel = (props) => (
-  <View style={{flexDirection: 'row', marginRight: 15}}>
-    <Button
-      icon={
-        <Icon
-          name='user-plus'
-          type='font-awesome'
-          color='#09C709'
-          size={18}
-        />
-      }
-      containerStyle={{marginRight: 5}}
-      onPress={props.addUser}
-      type='clear'
-    />
-    <Button
-      icon={
-        <Icon
-          name='trash'
-          type='font-awesome'
-          color='#09C709'
-          size={18}
-        />
-      }
-      onPress={props.deleteRoom}
-      type='clear'
-    />
-  </View>
+const AddUserComponent = (props) => (
+  <ListItem
+    leftElement={
+      <Button
+        icon={
+          <Icon
+            name='plus'
+            type='font-awesome'
+            color='#151516'
+            size={20}
+          />
+        }
+        containerStyle={{
+          borderRadius: 40,
+          backgroundColor: '#167B14',
+          width: 40,
+          height: 40,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        onPress={props.addUser}
+        type='clear'
+      />
+    }
+    title={'Add user'}
+    titleStyle={{color: '#fff'}}
+    containerStyle={styles.infoListItemCont}
+  />
+)
+
+const DeleteRoomComponent = (props) => (
+  <Button
+    title='Delete Room'
+    onPress={props.deleteRoom}
+    containerStyle={styles.submitButtonContainer}
+    buttonStyle={styles.submitButton}
+  />
 )
 
 const DeleteUserButton = (props) => (
@@ -70,27 +80,13 @@ class RoomInfo extends Component {
       headerTintColor: '#09C709',
       headerTitleStyle: {
         fontWeight: 'bold',
-      },
-      headerRight: (
-        navigation.getParam('controlIsVisible')
-        ? <ControlPanel
-            addUser={navigation.getParam('addUser')}
-            deleteRoom={navigation.getParam('deleteRoom')}
-            room={navigation.getParam('room')}
-          />
-        : null
-      )
+      }
     };
   };
 
   componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
     const room = this.props.roomStore.getRoom(roomId);
-    this.props.navigation.setParams({ 
-      addUser: this.addUser,
-      deleteRoom: this.deleteRoom,
-      controlIsVisible: room.creator == this.props.authStore.user._id
-    });
     this.setState({ room });
   }
 
@@ -160,13 +156,13 @@ class RoomInfo extends Component {
         title={item.username}
         containerStyle={styles.infoListItemCont}
         titleStyle={styles.infoListItemTitle}
-        /* leftElement={
+        leftElement={
           <Avatar
             rounded
-            size='small'
+            size='medium'
             source={require('../../assets/cat.jpg')}
           />
-        } */
+        }
         rightElement={
           this.state.room.creator == myId && item._id != myId
           ? <DeleteUserButton deleteUser={this.deleteUser} user={item}/>
@@ -220,7 +216,12 @@ class RoomInfo extends Component {
             keyExtractor={item => item._id.toString()}
             data={this.props.roomUserStore.roomUsers}
             renderItem={this.renderUser}
+            ListHeaderComponent={<AddUserComponent addUser={this.addUser}/>}
           />
+        }
+        {this.state.room.creator == this.props.authStore.user._id
+          ? <DeleteRoomComponent deleteRoom={this.deleteRoom}/>
+          : null
         }
       </ScrollView>
     )
@@ -236,6 +237,14 @@ const styles = StyleSheet.create({
   },
   infoListItemRigthTitle: {
     color: 'grey'
+  },
+  submitButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+  submitButton: {
+    backgroundColor: '#C71414'
   }
 })
 
