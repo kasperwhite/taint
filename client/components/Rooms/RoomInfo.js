@@ -213,7 +213,7 @@ class RoomInfo extends Component {
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         {this.props.roomUserStore.usersIsLoading
-          ? <Loading size={'large'}/>
+          ? <View style={{marginVertical: 20}}><Loading size={'large'}/></View>
           : this.props.roomUserStore.usersIsSuccess
             ? <FlatList
                 keyExtractor={item => item._id.toString()}

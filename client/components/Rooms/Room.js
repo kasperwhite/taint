@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView,
-  FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Input, Icon, Avatar, Button, Overlay } from 'react-native-elements';
+import { Text, View, StyleSheet, KeyboardAvoidingView, FlatList } from 'react-native';
+import { Input, Icon, Button } from 'react-native-elements';
 import moment from 'moment';
+import { toJS } from 'mobx';
 import { observer, inject } from 'mobx-react';
+import { MD5 } from 'crypto-js';
 
 import Loading from '../Shared/Loading';
-
-import { MD5 } from 'crypto-js';
 
 class Room extends Component {
   constructor(props){
@@ -123,8 +122,8 @@ class Room extends Component {
             <FlatList
               ref={(ref) => { this.flatListRef = ref; }}
               inverted
-              extraData={this.props.roomMessageStore.refresh}
-              data={this.props.roomMessageStore.messages}
+              // extraData={this.props.roomMessageStore.refresh}
+              data={toJS(this.props.roomMessageStore.messages)}
               renderItem={this.renderMessage}
               keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatList}
