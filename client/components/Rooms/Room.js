@@ -82,16 +82,13 @@ class Room extends Component {
   }
 
   renderMessage = ({item, index}) => {
+    const isMyMessage = item.sender._id === this.props.authStore.user._id;
     return(
       <View
-        style={
-          item.sender._id === this.props.authStore.user._id
-          ? styles.myMessage
-          : styles.message
-        }
+        style={isMyMessage ? styles.myMessage : styles.message}
         key={item._id}
       >
-        <View style={styles.messageContent}>
+        <View style={isMyMessage ? styles.myMessageContent : styles.messageContent}>
           <Text style={styles.messageSender}>{item.sender.username}</Text>
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
@@ -196,18 +193,27 @@ const styles = StyleSheet.create({
   messageAvatar: {
     margin: 5
   },
-  messageContent: {
-    backgroundColor: '#22593B',
+  myMessageContent: {
+    backgroundColor: 'rgb(9, 90, 9)',
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
     maxWidth: 200,
     minWidth: 100
   },
+  messageContent: {
+    backgroundColor: 'rgb(9, 60, 9)',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 10,
+    maxWidth: 200,
+    minWidth: 100,
+  },
   messageSender: {
     color: '#fff',
     fontSize: 13,
-    opacity: 0.6
+    opacity: 0.6,
+    fontStyle: 'italic'
   },
   messageText: {
     color: '#fff',

@@ -18,7 +18,9 @@ class ObservableRoomUserStore {
   
   @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
     const result = await this.fetchGetUsers(roomId);
-    if(result.success){ this.roomUsers = result.res };
+    if(result.success){
+      this.roomUsers = this.sort(result.res);
+    };
     return result;
   }
 
