@@ -10,6 +10,10 @@ class ObservableRoomUserStore {
   @observable postUsersIsLoading = false;
   @observable deleteUserIsLoading = false;
 
+  @observable usersIsSuccess = false;
+  @observable postUsersSuccess = false;
+  @observable deleteUserSuccess = false;
+
   constructor(){ }
 
   @computed get users() {
@@ -18,6 +22,7 @@ class ObservableRoomUserStore {
   
   @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
     const result = await this.fetchGetUsers(roomId);
+    this.usersIsSuccess = result.success;
     if(result.success){
       this.roomUsers = this.sort(result.res);
     };
@@ -26,6 +31,7 @@ class ObservableRoomUserStore {
 
   @action.bound async postRoomUsers(room, users) { // todo: socket.io EMIT addRoomUser
     const result = await this.fetchPostUsers(room._id, {users});
+    this.postUsersSuccess = result.success;
     if(result.success){
       this.roomUsers = this.sort(result.res);
       socket.emit('roomUserAdd', { room, users });
@@ -35,6 +41,7 @@ class ObservableRoomUserStore {
 
   @action.bound async deleteRoomUser(roomId, userId) { // todo: socket.io EMIT deleteRoomUser
     const result = await this.fetchDeleteUser(roomId, userId);
+    this.deleteUserSuccess = result.success;
     if(result.success){
       this.roomUsers = this.sort(result.res);
       socket.emit('roomUserDelete', {roomId, userId});

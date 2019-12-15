@@ -213,13 +213,18 @@ class RoomInfo extends Component {
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         {this.props.roomUserStore.usersIsLoading
-        ? <Loading size={'large'}/>
-        : <FlatList
-            keyExtractor={item => item._id.toString()}
-            data={this.props.roomUserStore.users}
-            renderItem={this.renderUser}
-            ListHeaderComponent={<AddUserComponent addUser={this.addUser}/>}
-          />
+          ? <Loading size={'large'}/>
+          : this.props.roomUserStore.usersIsSuccess
+            ? <FlatList
+                keyExtractor={item => item._id.toString()}
+                data={this.props.roomUserStore.users}
+                renderItem={this.renderUser}
+                ListHeaderComponent={<AddUserComponent addUser={this.addUser}/>}
+              />
+            : <View style={{flexDirection: 'column',alignItems: 'center', marginVertical: 20}}>
+                <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
+                <Text style={{color: 'grey', fontSize: 20}}>Try again later</Text>
+              </View>
         }
         {this.state.room.creator == this.props.authStore.user._id
           ? <DeleteRoomComponent deleteRoom={this.deleteRoom}/>
