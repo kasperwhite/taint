@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 import authStore from './AuthStore';
 import { sendRequest, socket } from './NetService';
@@ -11,10 +11,14 @@ class ObservableRoomUserStore {
   @observable deleteUserIsLoading = false;
 
   constructor(){ }
+
+  @computed get users() {
+    return this.roomUsers;
+  }
   
   @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
     const result = await this.fetchGetUsers(roomId);
-    if(result.success){ this.roomUsers = this.sort(result.res) };
+    if(result.success){ this.roomUsers = result.res };
     return result;
   }
 

@@ -215,7 +215,7 @@ class RoomInfo extends Component {
         ? <Loading size={'large'}/>
         : <FlatList
             keyExtractor={item => item._id.toString()}
-            data={this.props.roomUserStore.roomUsers}
+            data={this.props.roomUserStore.users}
             renderItem={this.renderUser}
             ListHeaderComponent={<AddUserComponent addUser={this.addUser}/>}
           />

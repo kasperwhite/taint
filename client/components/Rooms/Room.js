@@ -120,7 +120,7 @@ class Room extends Component {
           <View style={styles.main}>
             <FlatList
               inverted
-              data={this.props.roomMessageStore.roomMessages}
+              data={this.props.roomMessageStore.messages}
               renderItem={this.renderMessage}
               keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatList}

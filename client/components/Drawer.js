@@ -20,11 +20,11 @@ export default inject('authStore')(observer(DrawerContent = (props) => {
           <Avatar
             rounded
             source={{uri: avatarsUrl + props.authStore.user.avatarId}}
-            size={40}
+            size='medium'
           />
         }
         title={props.authStore.user.username}
-        titleStyle={{fontWeight: 'bold', color: '#fff'}}
+        titleStyle={{fontWeight: 'bold', color: '#fff', fontSize: 20}}
         containerStyle={{
           height: 130,
           backgroundColor: '#222222',

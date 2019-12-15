@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 import authStore from './AuthStore';
 import { sendRequest } from './NetService';
@@ -11,6 +11,10 @@ class ObservableContactStore {
   @observable deleteContactIsLoading = false;
 
   constructor(){ }
+
+  @computed get contactList() {
+    return this.contacts;
+  }
 
   @action.bound async getContacts() {
     const result = await this.fetchGetContacts();

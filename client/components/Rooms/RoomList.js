@@ -137,7 +137,7 @@ class RoomList extends Component {
       return(
         <View style={{backgroundColor: '#151516', height: '100%'}}>
           <FlatList
-            data={this.props.roomStore.rooms}
+            data={this.props.roomStore.roomList}
             renderItem={this.renderRoom}
             keyExtractor={i => i._id.toString()}
             contentContainerStyle={{backgroundColor: '#151516', flexDirection: 'column-reverse'}}

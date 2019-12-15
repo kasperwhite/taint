@@ -73,11 +73,11 @@ class RoomUsersSelect extends Component {
       leftElement={
         <Avatar
           rounded
-          size='small'
+          size='medium'
           source={{uri: avatarsUrl + item.avatarId}}
         />
       }
-      containerStyle={{backgroundColor: '#151516'}}
+      containerStyle={{backgroundColor: '#151516', height: 70}}
       titleStyle={{color: '#fff'}}
       rightElement={
         <CheckBox

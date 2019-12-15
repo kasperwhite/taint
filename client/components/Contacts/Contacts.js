@@ -12,7 +12,7 @@ const DeleteContactButton = (props) => (
         name='user-times'
         type='font-awesome'
         color='#167B14'
-        size={17}
+        size={19}
       />
     }
     buttonStyle={{marginHorizontal: 3}}
@@ -100,7 +100,7 @@ class Contacts extends Component {
         leftElement={
           <Avatar
             rounded
-            size='small'
+            size='medium'
             source={{uri: avatarsUrl + item.avatarId}}
           />
         }
@@ -111,7 +111,7 @@ class Contacts extends Component {
             userId={item._id}
           />
         }
-        containerStyle={{backgroundColor: '#151516'}}
+        containerStyle={{backgroundColor: '#151516', height: 70}}
         titleStyle={{
           fontSize: 17,
           color: '#fff'
@@ -131,7 +131,7 @@ class Contacts extends Component {
       return(
         <View style={{height: '100%', flexDirection: 'column', backgroundColor: '#151516'}}>
           <FlatList
-            data={this.props.contactStore.contacts}
+            data={this.props.contactStore.contactList}
             renderItem={this.renderContact}
             keyExtractor={i => i._id.toString()}
             contentContainerStyle={{

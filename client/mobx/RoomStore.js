@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 import authStore from './AuthStore';
 import { sendRequest, socket } from './NetService';
@@ -15,6 +15,10 @@ class ObservableRoomStore {
   @observable deleteRoomIsSuccess = false;
 
   constructor(){ }
+
+  @computed get roomList() {
+    return this.rooms;
+  }
   
   @action.bound async getRooms() {
     const result = await this.fetchGetRooms();
