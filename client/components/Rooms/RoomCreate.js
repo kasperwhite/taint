@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
-import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon } from 'react-native-elements';
+import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+
 import Loading from '../Shared/Loading';
+import { avatarsUrl } from '../../mobx/config';
 
 const AddUserButton = (props) => {
   return(
@@ -26,6 +28,8 @@ const AddButton = (props) => {
   return(
     <Button
       title='Create'
+      titleStyle={{color: '#151516'}}
+      disabledTitleStyle={{color: '#151516'}}
       disabled={props.disabled}
       onPress={props.handleSubmit}
       containerStyle={styles.submitButtonContainer}
@@ -104,7 +108,13 @@ class RoomCreate extends Component {
     <ListItem
       title={item.username}
       bottomDivider
-      /* leftAvatar={{ source: require('../../assets/cat.jpg'), size: 'small' }} */
+      leftElement={
+        <Avatar
+          rounded
+          size='small'
+          source={{uri: avatarsUrl + item.avatarId}}
+        />
+      }
       containerStyle={{backgroundColor: '#151516'}}
       titleStyle={{color: '#fff'}}
       rightElement={

@@ -53,6 +53,7 @@ class ObservableRoomMessageStore {
     try {
       let res = await sendRequest(url, method, headers);
       this.messagesIsLoading = false;
+      this.postMessageIsLoading = false;
       return res;
     } catch(err) {
       console.log(err);

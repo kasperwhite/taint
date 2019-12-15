@@ -138,7 +138,7 @@ class Room extends Component {
                 placeholderTextColor='#737373'
                 containerStyle={{width: '84%', paddingHorizontal: 0}}
                 inputContainerStyle={styles.messageInput}
-                inputStyle={{fontSize: 20, borderColor: '#222222'}}
+                inputStyle={{fontSize: 20, borderColor: '#222222', paddingVertical: 5}}
                 onChangeText={(text) => this.setState({ message: text })}
                 value={this.state.message}
                 multiline
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   myMessageContent: {
-    backgroundColor: 'rgb(10, 80, 10)',
+    backgroundColor: 'rgb(50, 105, 45)',
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     minWidth: 100
   },
   messageContent: {
-    backgroundColor: 'rgb(10, 60, 10)',
+    backgroundColor: 'rgb(45, 90, 45)', 
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   messageInput: {
     borderBottomWidth: 0,
     paddingHorizontal: 10,
-    maxHeight: 65,
+    maxHeight: 70,
     backgroundColor: '#B4B1B1',
     borderRadius: 10
   },

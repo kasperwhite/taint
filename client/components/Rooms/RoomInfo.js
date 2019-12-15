@@ -40,6 +40,7 @@ const AddUserComponent = (props) => (
 const DeleteRoomComponent = (props) => (
   <Button
     title='Delete Room'
+    titleStyle={{color: '#151516'}}
     onPress={props.deleteRoom}
     containerStyle={styles.submitButtonContainer}
     buttonStyle={styles.submitButton}
