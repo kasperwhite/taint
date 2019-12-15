@@ -97,6 +97,11 @@ class Room extends Component {
     );
   }
 
+  onContentSizeChange = () => {
+    this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+    this.props.roomMessageStore.refresh = false;
+  }
+
   render(){
     if(this.props.roomMessageStore.messagesIsLoading){
       return(
@@ -116,12 +121,16 @@ class Room extends Component {
         <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={80}>
           <View style={styles.main}>
             <FlatList
+              ref={(ref) => { this.flatListRef = ref; }}
               inverted
+              extraData={this.props.roomMessageStore.refresh}
               data={this.props.roomMessageStore.messages}
               renderItem={this.renderMessage}
               keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatList}
+              windowSize={10}
               removeClippedSubviews={true}
+              onContentSizeChange={this.onContentSizeChange}
             />
             <View style={styles.messageInputCont}>
               <Input
@@ -194,7 +203,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   myMessageContent: {
-    backgroundColor: 'rgb(9, 90, 9)',
+    backgroundColor: 'rgb(10, 80, 10)',
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
@@ -202,7 +211,7 @@ const styles = StyleSheet.create({
     minWidth: 100
   },
   messageContent: {
-    backgroundColor: 'rgb(9, 60, 9)',
+    backgroundColor: 'rgb(10, 60, 10)',
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,

@@ -13,6 +13,8 @@ class ObservableRoomMessageStore {
   @observable messagesIsSuccess = false;
   @observable postMessageIsSuccess = false;
 
+  @observable refresh = false;
+
   constructor(){ }
 
   @computed get messages() {
@@ -69,7 +71,6 @@ class ObservableRoomMessageStore {
 
     try {
       let res = await sendRequest(url, method, headers, data);
-      this.postMessageIsLoading = false;
       return res;
     } catch(err) {
       console.log(err);
@@ -81,6 +82,8 @@ class ObservableRoomMessageStore {
 
     socket.on('messageCreate', message => {
       this.roomMessages.unshift(JSON.parse(message));
+      this.refresh = true;
+      this.postMessageIsLoading = false;
     });
     socket.on('roomDeleteForActive', roomId => { roomDeleteHandler('Rooms') });
   }
