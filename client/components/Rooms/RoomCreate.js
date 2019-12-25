@@ -74,7 +74,7 @@ class RoomCreate extends Component {
   handleSubmit = async () => {
     const { timeValue, roomName, roomUsers } = this.state;
     const result = await this.props.roomStore.postRoom({
-      time: timeValue*3600,
+      time: timeValue*3600000,
       name: roomName,
       users: roomUsers.map(el => { return el._id })
     });

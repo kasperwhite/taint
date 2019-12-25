@@ -1,6 +1,7 @@
 import { observable, action, computed } from "mobx";
 
 import authStore from './AuthStore';
+import messageStore from './RoomMessageStore';
 import { sendRequest, socket } from './NetService';
 
 class ObservableRoomStore {
@@ -18,6 +19,10 @@ class ObservableRoomStore {
 
   @computed get roomList() {
     return this.rooms;
+  }
+
+  set roomList(rooms) {
+    this.rooms = rooms;
   }
   
   @action.bound async getRooms() {
@@ -43,9 +48,7 @@ class ObservableRoomStore {
     this.deleteRoomIsSuccess = result.success;
     if(result.success){
       const room = result.res;
-      this.rooms = this.rooms.filter(r => r._id !== room._id);
       socket.emit('roomDelete',  {roomId: id, roomUsers: room.users});
-      socket.emit('roomDeleteForActive', room._id);
     }
     return result;
   }
@@ -111,9 +114,15 @@ class ObservableRoomStore {
     return this.rooms.find(r => r._id == id);
   }
 
-  @action openSocketListeners() {
+  @action.bound openSocketListeners({onRoomDeleteNavigate}) {
     socket.on('roomCreate', room => { this.rooms.unshift(room) });
-    socket.on('roomDelete', roomId => { this.rooms = this.rooms.filter(r => r._id !== roomId) });
+    socket.on('roomDelete', roomId => {
+      const newRooms = this.rooms.filter(r => r._id != roomId);
+      this.roomList = newRooms;
+      if(messageStore.roomId == roomId) {
+        onRoomDeleteNavigate('Rooms');
+      }
+    });
   }
 
   @action removeSocketListeners() {

@@ -86,12 +86,10 @@ class ObservableRoomMessageStore {
       this.refresh = true;
       this.postMessageIsLoading = false;
     });
-    socket.on('roomDeleteForActive', roomId => { roomDeleteHandler('Rooms') });
   }
 
   @action.bound leaveRoom() {
     socket.removeEventListener('messageCreate');
-    socket.removeEventListener('roomDeleteForActive');
     socket.emit('roomLeave', this.roomId);
   }
 }

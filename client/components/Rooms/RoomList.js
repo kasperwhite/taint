@@ -90,7 +90,9 @@ class RoomList extends Component {
   async componentDidMount(){
     await this.props.roomStore.getRooms();
     if(this.props.roomStore.roomsIsSuccess) {
-      this.props.roomStore.openSocketListeners();
+      this.props.roomStore.openSocketListeners({
+        onRoomDeleteNavigate: this.props.navigation.navigate
+      });
     }
   }
 

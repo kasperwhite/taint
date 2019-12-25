@@ -199,7 +199,7 @@ class RoomInfo extends Component {
         />
         <ListItem
           title='Time'
-          rightTitle={`${Math.floor(this.state.room.time/3600)}h`}
+          rightTitle={`${Math.floor(this.state.room.time/3600000)}h`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
