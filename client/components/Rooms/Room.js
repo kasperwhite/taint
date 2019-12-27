@@ -45,14 +45,14 @@ class Room extends Component {
     };
   };
 
-  componentWillMount(){
+  componentDidMount(){
     const roomName = this.props.navigation.getParam('roomName');
     this.props.navigation.setParams({ openInfo: this.openInfo, roomName });
-    const roomId = this.props.navigation.getParam('roomId');
-    this.props.roomMessageStore.roomId = roomId;
   }
 
-  async componentDidMount(){
+  async componentWillMount(){
+    const roomId = this.props.navigation.getParam('roomId');
+    this.props.roomMessageStore.roomId = roomId;
     await this.props.roomMessageStore.getRoomMessages();
     if(this.props.roomMessageStore.messagesIsSuccess) {
       this.props.roomMessageStore.joinRoom({

@@ -72,15 +72,19 @@ io.on('connection', (client) => {
 
   /* Room List events */
   client.on('roomCreate', room => {
-    const currentUser = activeUsers.find((u) => u.socketId == client.id);
-    const users = room.users.filter((u) => u != currentUser.userId);
-    users.forEach((u) => {
-      const receiver = activeUsers.find((au) => au.userId == u);
-      if(receiver){
-        client.to(`${receiver.socketId}`).emit('roomCreate', room);
-      }
-    })
-    activeRooms.push(room);
+    try {
+      const currentUser = activeUsers.find((u) => u.socketId == client.id);
+      const users = room.users.filter((u) => u != currentUser.userId);
+      users.forEach((u) => {
+        const receiver = activeUsers.find((au) => au.userId == u);
+        if(receiver){
+          client.to(`${receiver.socketId}`).emit('roomCreate', room);
+        }
+      })
+      activeRooms.push(room);
+    } catch(err) {
+      console.log(err)
+    }
   })
 
   client.on('roomDelete', ({roomId, roomUsers}) => {
@@ -115,28 +119,36 @@ io.on('connection', (client) => {
   })
 
   client.on('roomUserDelete', ({roomId, userId}) => {
-    const receiver = activeUsers.find((au) => au.userId == userId);
-    if(receiver) {
-      if(receiver.socketId == client.id) {
-        client.emit('roomDelete', roomId);
-      } else {
-        client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+    try {
+      const receiver = activeUsers.find((au) => au.userId == userId);
+      if(receiver) {
+        if(receiver.socketId == client.id) {
+          client.emit('roomDelete', roomId);
+        } else {
+          client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+        }
       }
+    } catch(err) {
+      console.log(err)
     }
   })
 
   // this.roomDelete = ({roomId, roomUsers}) => {
   socketRoomDelete = ({roomId, roomUsers}) => {
-    const currentUser = activeUsers.find((u) => u.socketId == client.id);
-    const users = roomUsers.filter((u) => u != currentUser.userId);
-    users.forEach((u) => {
-      const receiver = activeUsers.find((au) => au.userId == u);
-      if(receiver){
-        client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
-      }
-    })
-    client.emit('roomDelete', roomId);
-    activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == roomId)), 1);
+    try {
+      const currentUser = activeUsers.find((u) => u.socketId == client.id);
+      const users = roomUsers.filter((u) => u != currentUser.userId);
+      users.forEach((u) => {
+        const receiver = activeUsers.find((au) => au.userId == u);
+        if(receiver){
+          client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+        }
+      })
+      client.emit('roomDelete', roomId);
+      activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == roomId)), 1);
+    } catch(err) {
+      console.log(err)
+    }
   }
 
 });
