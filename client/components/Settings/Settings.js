@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { Text, ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Icon, Avatar, Input, ListItem } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+import { avatarsUrl } from '../../mobx/config';
+
+const UserInfo = (props) => (
+  <View style={styles.infoHeader}>
+    <Avatar
+      rounded
+      size='medium'
+      source={{uri: avatarsUrl + props.avatarId}}
+    />
+    <Text style={styles.usernameField}>{props.username}</Text>
+  </View>
+)
 
 class Settings extends Component {
   constructor(props){
@@ -39,11 +51,76 @@ class Settings extends Component {
     };
   };
 
+  onUsernameChange = () => {
+    this.props.navigation.navigate('UsernameChange')
+  }
+
+  onPasswordChange = () => {
+    this.props.navigation.navigate('PasswordChange')
+  }
+
   render(){
+    const { avatarId, username } = this.props.authStore.user;
     return(
-      <Text>Settings</Text>
+      <ScrollView style={styles.screen}>
+        <ListItem
+          bottomDivider
+          title={username}
+          subtitle={'Username'}
+          containerStyle={styles.changeUsernameFieldContainer}
+          titleStyle={styles.changeUsernameFieldTitle}
+          subtitleStyle={styles.changeUsernameFieldSubtitle}
+          onPress={this.onUsernameChange}
+        />
+        <ListItem
+          bottomDivider
+          title={'Change password'}
+          containerStyle={styles.changePasswordFieldContainer}
+          titleStyle={styles.changePasswordFieldTitle}
+          onPress={this.onPasswordChange}
+        />
+      </ScrollView>
     )
   }
 }
 
-export default inject('settingsStore')(observer(Settings));
+const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: '#151516',
+    padding: 10
+  },
+  infoHeader: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderBottomWidth: 1,
+    borderBottomColor: '#777'
+  },
+  usernameField: {
+    fontSize: 23,
+    color: '#fff',
+    marginLeft: 20
+  },
+  changeUsernameFieldContainer: {
+    backgroundColor: '#151516'
+  },
+  changeUsernameFieldTitle: {
+    color: '#fff',
+    fontSize: 19
+  },
+  changeUsernameFieldSubtitle: {
+    color: '#777',
+    fontSize: 13
+  },
+  changePasswordFieldContainer: {
+    backgroundColor: '#151516'
+  },
+  changePasswordFieldTitle: {
+    color: '#fff',
+    fontSize: 19
+  }
+})
+
+export default inject('settingsStore', 'authStore')(observer(Settings));

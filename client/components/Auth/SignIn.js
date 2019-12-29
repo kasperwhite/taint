@@ -133,6 +133,7 @@ class SignIn extends Component {
               disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
               onPress={this.signIn}
               disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
+              disabledTitleStyle={{color: '#151516'}}
             />
         }
       </View>

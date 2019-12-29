@@ -1,8 +1,10 @@
 import { observable, action } from "mobx";
+import { sendRequest } from './NetService';
 
 class ObservableSettingsStore {
   @observable settings = {};
-  @observable isLoading = false;
+
+  @observable changePasswordIsLoading = false;
 
   constructor(){ }
 
@@ -16,6 +18,27 @@ class ObservableSettingsStore {
 
   @action.bound async restoreSettings() {
 
+  }
+
+  @action.bound async changePassword({oldPass, newPass}) {
+    const result = await this.fetchChangePassword({oldPass, newPass});
+    return result;
+  }
+
+  @action async fetchChangePassword(data) {
+    this.changePasswordIsLoading = true;
+
+    const url = 'auth/change_password';
+    const method = 'POST';
+    const headers = { 'Content-Type': 'application/json' };
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.changePasswordIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 

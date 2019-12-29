@@ -1,7 +1,5 @@
 import { observable, action } from "mobx";
 import { AsyncStorage } from "react-native";
-
-import { serverUrl } from './config';
 import { sendRequest, socket } from './NetService';
 
 class ObservableAuthStore {

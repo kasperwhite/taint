@@ -126,6 +126,7 @@ class SignUp extends Component {
               }
               onPress={this.signUp}
               disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
+              disabledTitleStyle={{color: '#151516'}}
             />
         }
       </View>

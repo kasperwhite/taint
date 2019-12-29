@@ -40,4 +40,22 @@ authRouter.post('/signin', passport.authenticate('local'), (req, res) => {
   res.json({success: true, token: token});
 });
 
+authRouter.post('/change_password', (req, res, next) => {
+  const { oldPass, newPass } = req.body;
+  UserModel.changePassword(oldPass, newPass, (err, user) =>{
+    if(err) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({err: err});
+    }
+    else {
+      passport.authenticate('local')(req, res, () => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({success: true});
+      });
+    }
+  })
+})
+
 module.exports = authRouter;

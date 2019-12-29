@@ -21,6 +21,8 @@ import Contacts from './Contacts/Contacts';
 import ContactAddition from './Contacts/ContactAddition';
 
 import Settings from './Settings/Settings';
+import UsernameChange from './Settings/UsernameChange';
+import PasswordChange from './Settings/PasswordChange';
 
 import authStore from '../mobx/AuthStore';
 import roomStore from '../mobx/RoomStore';
@@ -55,7 +57,9 @@ const ContactsNavigator = createStackNavigator(
 
 const SettingsNavigator = createStackNavigator(
   {
-    Settings: Settings
+    Settings: Settings,
+    UsernameChange: UsernameChange,
+    PasswordChange: PasswordChange
   }, {
     initialRouteName: 'Settings'
   }
@@ -92,7 +96,7 @@ const MainNavigator = createDrawerNavigator({
       )
     }
   },
-  /* Settings: {
+  Settings: {
     screen: SettingsNavigator,
     navigationOptions: {
       title: 'Settings',
@@ -101,7 +105,7 @@ const MainNavigator = createDrawerNavigator({
         <Icon name='cog' type='font-awesome' color='#167B14' size={23}/>
       )
     }
-  } */
+  }
 }, {
   initialRouteName: 'Rooms',
   drawerBackgroundColor: '#151516',
