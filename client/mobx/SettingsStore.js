@@ -1,6 +1,8 @@
 import { observable, action } from "mobx";
 import { sendRequest } from './NetService';
 
+import authStore from './AuthStore';
+
 class ObservableSettingsStore {
   @observable settings = {};
 
@@ -21,7 +23,7 @@ class ObservableSettingsStore {
   }
 
   @action.bound async changePassword({oldPass, newPass}) {
-    const result = await this.fetchChangePassword({oldPass, newPass});
+    const result = await this.fetchChangePassword({oldPass, newPass, userId: authStore.user._id});
     return result;
   }
 
