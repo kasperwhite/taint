@@ -1,15 +1,24 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import { sendRequest } from './NetService';
 
 import authStore from './AuthStore';
 
 class ObservableSettingsStore {
-  @observable settings = {};
+  @observable settingsData = { };
 
   @observable changePasswordIsLoading = false;
   @observable changeUsernameIsLoading = false;
+  @observable changeVisibleIsLoading = false;
 
   constructor(){ }
+
+  @computed get settings() {
+    return this.settingsData;
+  }
+
+  set settings(data) {
+    this.settingsData = data;
+  }
 
   @action.bound async getSettings() {
 
@@ -30,6 +39,12 @@ class ObservableSettingsStore {
 
   @action.bound async changeUsername({newUsername}) {
     const result = await this.fetchChangeUsername({newUsername, userId: authStore.user._id});
+    if(result.success) { authStore.user = result.res }
+    return result;
+  }
+
+  @action.bound async changeVisible({value}) {
+    const result = await this.fetchChangeVisible({value, userId: authStore.user._id});
     if(result.success) { authStore.user = result.res }
     return result;
   }
@@ -60,6 +75,22 @@ class ObservableSettingsStore {
     try {
       let res = await sendRequest(url, method, headers, data);
       this.changeUsernameIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  @action async fetchChangeVisible(data) {
+    this.changeVisibleIsLoading = true;
+
+    const url = 'auth/change_visible';
+    const method = 'POST';
+    const headers = { 'Content-Type': 'application/json' };
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.changeVisibleIsLoading = false;
       return res;
     } catch(err) {
       console.log(err);

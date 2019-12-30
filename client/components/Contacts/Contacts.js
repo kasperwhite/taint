@@ -80,6 +80,9 @@ class Contacts extends Component {
     this.props.navigation.setParams({ 
       addContact: this.addContact
     });
+  }
+
+  componentWillMount(){
     this.props.contactStore.getContacts();
   }
 

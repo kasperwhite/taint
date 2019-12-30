@@ -1,25 +1,16 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, StyleSheet, View } from 'react-native';
+import { Text, ScrollView, StyleSheet, View, Switch } from 'react-native';
 import { Button, Icon, Avatar, Input, ListItem } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 import { avatarsUrl } from '../../mobx/config';
-
-const UserInfo = (props) => (
-  <View style={styles.infoHeader}>
-    <Avatar
-      rounded
-      size='medium'
-      source={{uri: avatarsUrl + props.avatarId}}
-    />
-    <Text style={styles.usernameField}>{props.username}</Text>
-  </View>
-)
 
 class Settings extends Component {
   constructor(props){
     super(props)
 
-    this.state = { }
+    this.state = {
+      visible: false
+    }
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -51,6 +42,10 @@ class Settings extends Component {
     };
   };
 
+  componentWillMount = () => {
+    this.state.visible = this.props.authStore.user.visible;
+  }
+
   onUsernameChange = () => {
     this.props.navigation.navigate('UsernameChange')
   }
@@ -59,8 +54,16 @@ class Settings extends Component {
     this.props.navigation.navigate('PasswordChange')
   }
 
+  onToggle = async () => {
+    const value = !this.state.visible;
+    this.setState((state, props) => ({
+      visible: value
+    }));
+    await this.props.settingsStore.changeVisible({value});
+  }
+
   render(){
-    const { avatarId, username } = this.props.authStore.user;
+    const { avatarId, username, visible } = this.props.authStore.user;
     return(
       <ScrollView style={styles.screen}>
         <ListItem
@@ -78,6 +81,22 @@ class Settings extends Component {
           containerStyle={styles.changePasswordFieldContainer}
           titleStyle={styles.changePasswordFieldTitle}
           onPress={this.onPasswordChange}
+        />
+        <ListItem
+          bottomDivider
+          title={'Invisible'}
+          subtitle={"Others can't add me to contacts"}
+          containerStyle={styles.changePasswordFieldContainer}
+          titleStyle={styles.changePasswordFieldTitle}
+          subtitleStyle={styles.changeUsernameFieldSubtitle}
+          rightElement={
+            <Switch
+              value={!this.state.visible}
+              onValueChange={this.onToggle}
+              thumbColor='#09C709'
+              trackColor='#057a05'
+            />
+          }
         />
       </ScrollView>
     )
@@ -104,7 +123,8 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   changeUsernameFieldContainer: {
-    backgroundColor: '#151516'
+    backgroundColor: '#151516',
+    paddingHorizontal: 10
   },
   changeUsernameFieldTitle: {
     color: '#fff',
@@ -115,7 +135,8 @@ const styles = StyleSheet.create({
     fontSize: 13
   },
   changePasswordFieldContainer: {
-    backgroundColor: '#151516'
+    backgroundColor: '#151516',
+    paddingHorizontal: 10
   },
   changePasswordFieldTitle: {
     color: '#fff',

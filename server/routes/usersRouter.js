@@ -94,7 +94,7 @@ usersRouter.route('/contacts')
   const currentUserId = req.user._id;
 
   const contact = await UserModel.findOne({ username });
-  if(contact){
+  if(contact && contact.visible){
     let user = await UserModel.findById(currentUserId);
     if(!user.contacts.includes(contact._id)){
       user = await UserModel.update({_id: currentUserId}, {$push: {contacts: contact._id}});

@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
   avatarId: {
     type: Number,
     required: true
+  },
+  visible: {
+    type: Boolean,
+    required: true
   }
 }, {
   timestamps: true

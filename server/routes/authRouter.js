@@ -11,7 +11,8 @@ authRouter.post('/signup', (req, res, next) => {
   const { username, password } = req.body;
   if(username.length < 20 && username.length > 4 && password.length >= 12){
     let avatarId = Math.floor(Math.random() * 2);
-    UserModel.register(new UserModel({username: username, avatarId}),
+    const visible = true;
+    UserModel.register(new UserModel({username: username, avatarId, visible}),
       password, (err, user) => {
       if(err) {
         res.statusCode = 500;
@@ -63,6 +64,24 @@ authRouter.post('/change_username', async (req, res, next) => {
   try {
     let user = await UserModel.findById(userId);
     user.username = newUsername;
+    user = await user.save();
+    user = await UserModel.findById(userId);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(user);
+  } catch(err) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({error: err});
+  }
+})
+
+authRouter.post('/change_visible', async (req, res, next) => {
+  const { value, userId } = req.body;
+
+  try {
+    let user = await UserModel.findById(userId);
+    user.visible = value;
     user = await user.save();
     user = await UserModel.findById(userId);
     res.statusCode = 200;
