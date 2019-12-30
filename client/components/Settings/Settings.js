@@ -87,7 +87,7 @@ class Settings extends Component {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: '#151516',
-    padding: 10
+    paddingHorizontal: 10
   },
   infoHeader: {
     flexDirection: 'row',

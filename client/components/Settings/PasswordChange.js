@@ -10,6 +10,7 @@ class PasswordChange extends Component {
     super(props)
     
     this.state = {
+      error: false,
       oldPass: '',
       newPass: ''
     }
@@ -34,8 +35,13 @@ class PasswordChange extends Component {
     const result = await this.props.settingsStore.changePassword({oldPass, newPass});
     if(result.success) {
       this.setState({
+        error: false,
         oldPass: '',
         newPass: ''
+      })
+    } else {
+      this.setState({
+        error: true
       })
     }
   }
@@ -50,13 +56,14 @@ class PasswordChange extends Component {
           containerStyle={{marginBottom: 5}}
           inputStyle={{color: '#fff'}}
           inputContainerStyle={{borderBottomColor: '#167B14'}}
+          errorMessage={this.state.error ? 'Incorrect' : null}
           secureTextEntry
         />
         <Input
           placeholder='New password'
           value={this.state.newPass}
           onChangeText={(pass) => this.setState({newPass: pass.replace(/\s/g,'')})}
-          containerStyle={{marginBottom: 5}}
+          containerStyle={{marginBottom: 20}}
           inputStyle={{color: '#fff'}}
           inputContainerStyle={{borderBottomColor: '#167B14'}}
           secureTextEntry
@@ -66,7 +73,7 @@ class PasswordChange extends Component {
         : <Button
             title='Change'
             titleStyle={{color: '#151516'}}
-            containerStyle={{flexDirection: 'row', justifyContent: 'center', marginVertical: 15}}
+            containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
             buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
             disabled={!Boolean(this.state.oldPass.trim() && this.state.newPass.trim())}
             disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}

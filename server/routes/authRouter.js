@@ -57,4 +57,22 @@ authRouter.post('/change_password', async (req, res, next) => {
   })
 })
 
+authRouter.post('/change_username', async (req, res, next) => {
+  const { newUsername, userId } = req.body;
+
+  try {
+    let user = await UserModel.findById(userId);
+    user.username = newUsername;
+    user = await user.save();
+    user = await UserModel.findById(userId);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(user);
+  } catch(err) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({error: err});
+  }
+})
+
 module.exports = authRouter;

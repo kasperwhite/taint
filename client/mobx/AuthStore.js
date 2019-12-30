@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import { AsyncStorage } from "react-native";
 import { sendRequest, socket } from './NetService';
 
@@ -6,10 +6,18 @@ class ObservableAuthStore {
   @observable signUpIsLoading = false;
   @observable signInIsLoading = false;
 
-  @observable user;
+  @observable userData;
   @observable userToken = '';
 
   constructor(){ }
+
+  @computed get user() {
+    return this.userData;
+  }
+
+  set user(user) {
+    this.userData = user;
+  }
 
   @action.bound async signIn({username, password}) {
     const result = await this.fetchSignIn({username, password});

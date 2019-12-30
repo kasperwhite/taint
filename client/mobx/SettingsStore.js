@@ -7,6 +7,7 @@ class ObservableSettingsStore {
   @observable settings = {};
 
   @observable changePasswordIsLoading = false;
+  @observable changeUsernameIsLoading = false;
 
   constructor(){ }
 
@@ -27,6 +28,12 @@ class ObservableSettingsStore {
     return result;
   }
 
+  @action.bound async changeUsername({newUsername}) {
+    const result = await this.fetchChangeUsername({newUsername, userId: authStore.user._id});
+    if(result.success) { authStore.user = result.res }
+    return result;
+  }
+
   @action async fetchChangePassword(data) {
     this.changePasswordIsLoading = true;
 
@@ -37,6 +44,22 @@ class ObservableSettingsStore {
     try {
       let res = await sendRequest(url, method, headers, data);
       this.changePasswordIsLoading = false;
+      return res;
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  @action async fetchChangeUsername(data) {
+    this.changeUsernameIsLoading = true;
+
+    const url = 'auth/change_username';
+    const method = 'POST';
+    const headers = { 'Content-Type': 'application/json' };
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.changeUsernameIsLoading = false;
       return res;
     } catch(err) {
       console.log(err);
