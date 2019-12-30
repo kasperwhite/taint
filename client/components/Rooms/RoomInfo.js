@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Text, ScrollView, FlatList, View, Alert, StyleSheet } from 'react-native';
 import { ListItem, Icon, Tooltip, ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
-
+import TaintButton from '../Shared/TaintButton';
 import Loading from '../Shared/Loading';
 import { avatarsUrl } from '../../mobx/config';
 
@@ -34,16 +34,6 @@ const AddUserComponent = (props) => (
     title={'Add user'}
     titleStyle={{color: '#fff'}}
     containerStyle={styles.infoListItemCont}
-  />
-)
-
-const DeleteRoomComponent = (props) => (
-  <Button
-    title='Delete Room'
-    titleStyle={{color: '#151516'}}
-    onPress={props.deleteRoom}
-    containerStyle={styles.submitButtonContainer}
-    buttonStyle={styles.submitButton}
   />
 )
 
@@ -227,7 +217,7 @@ class RoomInfo extends Component {
               </View>
         }
         {this.state.room.creator == this.props.authStore.user._id
-          ? <DeleteRoomComponent deleteRoom={this.deleteRoom}/>
+          ? <TaintButton type='warning' title='Delete Room' onPress={this.deleteRoom}/>
           : null
         }
       </ScrollView>

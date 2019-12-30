@@ -3,6 +3,7 @@ import { Text, ScrollView, StyleSheet } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { Input, Button } from 'react-native-elements';
 import Loading from '../Shared/Loading';
+import TaintButton from '../Shared/TaintButton';
 
 class UsernameChange extends Component {
   constructor(props) {
@@ -57,24 +58,19 @@ class UsernameChange extends Component {
           maxLength={20}
         />
         {this.props.settingsStore.changeUsernameIsLoading
-        ? <Loading size={'large'}/>
-        : <Button
-            title='Change'
-            titleStyle={{color: '#151516'}}
-            containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-            buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
-            disabled={
-              !Boolean(
-                this.state.newUsername.trim() 
-                && this.state.newUsername.length >= 4
-                && this.state.newUsername != this.props.authStore.user.username
-              )
-            }
-            disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-            disabledTitleStyle={{color: '#151516'}}
-            onPress={this.onChangeSubmit}
-          />
-      }
+          ? <Loading size={'large'}/>
+          : <TaintButton
+              title='Change'
+              disabled={
+                !Boolean(
+                  this.state.newUsername.trim() 
+                  && this.state.newUsername.length >= 4
+                  && this.state.newUsername != this.props.authStore.user.username
+                )
+              }
+              onPress={this.onChangeSubmit}
+            />
+        }
       </ScrollView>
     )
   }

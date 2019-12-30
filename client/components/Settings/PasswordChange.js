@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { Input, Button } from 'react-native-elements';
+import { Input } from 'react-native-elements';
 
 import Loading from '../Shared/Loading';
+import TaintButton from '../Shared/TaintButton';
 
 class PasswordChange extends Component {
   constructor(props) {
@@ -70,14 +71,9 @@ class PasswordChange extends Component {
         />
         {this.props.settingsStore.changePasswordIsLoading
         ? <Loading size={'large'}/>
-        : <Button
+        : <TaintButton
             title='Change'
-            titleStyle={{color: '#151516'}}
-            containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-            buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
             disabled={!Boolean(this.state.oldPass.trim() && this.state.newPass.trim())}
-            disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-            disabledTitleStyle={{color: '#151516'}}
             onPress={this.onChangeSubmit}
           />
       }

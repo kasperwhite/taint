@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { Text, AsyncStorage, View, StyleSheet } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
-
 import Loading from '../Shared/Loading';
+import TaintButton from '../Shared/TaintButton';
 
 class SignIn extends Component {
   constructor(props){
@@ -88,6 +88,7 @@ class SignIn extends Component {
             onChangeText={(username) => this.setState({username: username.replace(/\s/g,'')})}
             containerStyle={{marginBottom: 5}}
             inputStyle={{color: '#fff'}}
+            inputContainerStyle={{borderBottomColor: '#167B14'}}
             maxLength={20}
           />
           <Input 
@@ -120,20 +121,16 @@ class SignIn extends Component {
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
             inputStyle={{color: '#fff'}}
+            inputContainerStyle={{borderBottomColor: '#167B14'}}
           />
         </View>
         {
           this.props.authStore.signInIsLoading
           ? <Loading size={'large'}/>
-          : <Button
+          : <TaintButton
               title='Sign In'
-              titleStyle={{color: '#151516'}}
-              containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-              buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
               disabled={!Boolean(this.state.username.trim() && this.state.password.trim())}
               onPress={this.signIn}
-              disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-              disabledTitleStyle={{color: '#151516'}}
             />
         }
       </View>

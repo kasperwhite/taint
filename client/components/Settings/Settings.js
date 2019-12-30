@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   changeUsernameFieldTitle: {
     color: '#fff',
-    fontSize: 19
+    fontSize: 17
   },
   changeUsernameFieldSubtitle: {
     color: '#777',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   changePasswordFieldTitle: {
     color: '#fff',
-    fontSize: 19
+    fontSize: 17
   }
 })
 

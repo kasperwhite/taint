@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
-
 import Loading from '../Shared/Loading';
+import TaintButton from '../Shared/TaintButton';
 
 class SignUp extends Component {
   constructor(props){
@@ -66,6 +66,7 @@ class SignUp extends Component {
             containerStyle={{marginBottom: 5}}
             inputStyle={{color: '#fff'}}
             maxLength={20}
+            inputContainerStyle={{borderBottomColor: '#167B14'}}
           />
           <Input 
             placeholder='Password'
@@ -93,6 +94,7 @@ class SignUp extends Component {
             secureTextEntry={!this.state.passwordIsVisible}
             containerStyle={{marginBottom: 5}}
             inputStyle={{color: '#fff'}}
+            inputContainerStyle={{borderBottomColor: '#167B14'}}
           />
           <Input
             inputStyle={{color: '#fff'}}
@@ -107,16 +109,13 @@ class SignUp extends Component {
             }
             secureTextEntry={true}
             disabled={this.state.passwordIsVisible}
+            inputContainerStyle={{borderBottomColor: '#167B14'}}
           />
         </View>
-        {
-          this.props.authStore.signUpIsLoading
+        {this.props.authStore.signUpIsLoading
           ? <Loading size={'large'}/>
-          : <Button
+          : <TaintButton
               title='Sign Up'
-              titleStyle={{color: '#151516'}}
-              containerStyle={{flexDirection: 'row', justifyContent: 'center'}}
-              buttonStyle={{backgroundColor: '#167B14', paddingHorizontal: 10}}
               disabled={
                 !Boolean(this.state.username
                 && this.state.password
@@ -125,8 +124,6 @@ class SignUp extends Component {
                 && this.state.password === this.state.repeatedPassword)
               }
               onPress={this.signUp}
-              disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
-              disabledTitleStyle={{color: '#151516'}}
             />
         }
       </View>

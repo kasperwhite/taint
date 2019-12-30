@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
-
 import Loading from '../Shared/Loading';
+import TaintButton from '../Shared/TaintButton';
 import { avatarsUrl } from '../../mobx/config';
 
 const AddUserButton = (props) => {
@@ -20,21 +20,6 @@ const AddUserButton = (props) => {
       containerStyle={{borderRadius: 30, backgroundColor: '#167B14', width: 30, height: 30}}
       onPress={props.addUser}
       type='clear'
-    />
-  )
-}
-
-const AddButton = (props) => {
-  return(
-    <Button
-      title='Create'
-      titleStyle={{color: '#151516'}}
-      disabledTitleStyle={{color: '#151516'}}
-      disabled={props.disabled}
-      onPress={props.handleSubmit}
-      containerStyle={styles.submitButtonContainer}
-      buttonStyle={styles.submitButton}
-      disabledStyle={{backgroundColor: '#167B14', opacity: 0.6}}
     />
   )
 }
@@ -182,8 +167,10 @@ class RoomCreate extends Component {
         {
           this.props.roomStore.postRoomIsLoading
           ? <Loading size={'large'}/>
-          : <AddButton
-              handleSubmit={this.handleSubmit} disabled={this.state.roomName === ''}
+          : <TaintButton
+              title='Create'
+              disabled={this.state.roomName === ''}
+              onPress={this.handleSubmit}
             />
         }
         </ScrollView>
@@ -212,14 +199,6 @@ const styles = StyleSheet.create({
   },
   sliderTrack: {
     
-  },
-  submitButton: {
-    backgroundColor: '#167B14'
-  },
-  submitButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center'
   }
 })
 
