@@ -101,6 +101,7 @@ class RoomList extends Component {
   }
 
   renderRoom = ({item, index}) => {
+    const isLocked = false;
     return(
       <ListItem
         key={index}
@@ -110,6 +111,14 @@ class RoomList extends Component {
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
+        leftElement={ 
+          <Icon
+            name={isLocked ? 'lock' : 'unlock'} 
+            type='font-awesome'
+            color='#09C709'
+            size={24}
+          /> 
+        }
         onPress={() => this.enterRoom(item._id, item.name)}
       />
     )

@@ -15,6 +15,7 @@ const moment = require('moment');
 
 const roomDeleteDb = require('../services/roomService').roomDeleteDb;
 const getRoomsDb = require('../services/roomService').getRoomsDb;
+const establishRoomKeys = require('../services/roomService').establishRoomKeys;
 
 /**
  * Get port from environment and store in Express.
@@ -43,6 +44,30 @@ const activeRooms = [];
 let socketRoomDelete;
 
 io.on('connection', (client) => {
+  const planner = async () => {
+    const rooms = await getRoomsDb();
+    rooms.forEach(r => activeRooms.push(r));
+  
+    setInterval(() => {
+      activeRooms.forEach(room => {
+        const now = moment(new Date());
+        const destroyTime = moment(room.createdAt).add(room.time, 'ms');
+  
+        if(now.isAfter(destroyTime)) {
+          try {
+            roomDeleteDb(room._id);
+            socketRoomDelete({roomId: room._id, roomUsers: room.users});
+  
+            activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == room._id)), 1);
+          } catch(err) {
+            console.log(err);
+          }
+        }
+  
+      })
+    }, 10000)
+  }
+  planner();
   /* Activity events */
   client.on('online', userId => {
     if(activeUsers.find((u) => u.userId == userId)){
@@ -93,8 +118,15 @@ io.on('connection', (client) => {
   })
 
   /* Room events */
-  client.on('roomJoin', roomId => {
+  client.on('roomJoin', async roomId => {
     client.join(`${roomId}`);
+
+    let roomUsers = activeRooms.find(r => r._id == roomId).users;
+    io.in(`${roomId}`).clients((err, clients) => {
+      if (roomUsers.length == clients.length) {
+        // establishRoomKeys(clients)
+      }
+    });
   })
 
   client.on('roomLeave', roomId => {
@@ -152,31 +184,6 @@ io.on('connection', (client) => {
   }
 
 });
-
-const planner = async () => {
-  const rooms = await getRoomsDb();
-  rooms.forEach(r => activeRooms.push(r));
-
-  setInterval(() => {
-    activeRooms.forEach(room => {
-      const now = moment(new Date());
-      const destroyTime = moment(room.createdAt).add(room.time, 'ms');
-
-      if(now.isAfter(destroyTime)) {
-        try {
-          roomDeleteDb(room._id);
-          socketRoomDelete({roomId: room._id, roomUsers: room.users});
-
-          activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == room._id)), 1);
-        } catch(err) {
-          console.log(err);
-        }
-      }
-
-    })
-  }, 10000)
-}
-planner();
 
 /* var credentials = {
   key: fs.readFileSync(__dirname + '/ssl/private.key'),

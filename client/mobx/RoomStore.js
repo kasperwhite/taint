@@ -3,6 +3,8 @@ import { observable, action, computed } from "mobx";
 import authStore from './AuthStore';
 import messageStore from './RoomMessageStore';
 import { sendRequest, socket } from './NetService';
+import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
 
 class ObservableRoomStore {
   @observable rooms = [];
@@ -115,7 +117,10 @@ class ObservableRoomStore {
   }
 
   @action.bound openSocketListeners({onRoomDeleteNavigate}) {
-    socket.on('roomCreate', room => { this.rooms.unshift(room) });
+    socket.on('roomCreate',async room => {
+      this.rooms.unshift(room);
+      await this.presentLocalNotification(room.name)
+    });
     socket.on('roomDelete', roomId => {
       const newRooms = this.rooms.filter(r => r._id != roomId);
       this.roomList = newRooms;
@@ -128,6 +133,33 @@ class ObservableRoomStore {
   @action removeSocketListeners() {
     socket.removeEventListener('roomCreate');
     socket.removeEventListener('roomDelete');
+  }
+
+  @action async obtainNotificationPermission() {
+    let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
+    if(permission.status !== 'granted'){
+      permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
+      if(permission.status !== 'granted'){
+        Alert.alert('Permission not granted to show notifications');
+      }
+    }
+    return permission;
+  }
+
+  @action async presentLocalNotification(roomName){
+    await this.obtainNotificationPermission();
+    Notifications.presentLocalNotificationAsync({
+      title: 'New room',
+      body: 'Please check created room ' + roomName + ' for the group key establishment',
+      ios: {
+        sound: true
+      },
+      android: {
+        sound: true,
+        vibrate: true,
+        color: '#09C709'
+      }
+    })
   }
 
 }
