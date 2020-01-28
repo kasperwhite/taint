@@ -24,6 +24,18 @@ exports.getRoomsDb = async () => {
   }
 }
 
+exports.unlockRoom = async (roomId) => {
+  try {
+    const room = await RoomModel.findById(roomId);
+    if (room) {
+      room.locked = false;
+      room = await room.save();
+    }
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 exports.establishRoomKeys = (clients) => {
   try {
     let q = "";
@@ -35,7 +47,7 @@ exports.establishRoomKeys = (clients) => {
         await qEmitLast(client, q);
 
         let eq = "";
-        [...clients].reverse().forEach((eqClient, eqI) => {
+        [...clients].reverse().forEach(async (eqClient, eqI) => {
           if(eqI == 0) {
             eq = await eqEmitFirst(eqClient);
           } else if(eqI == clients.length) {

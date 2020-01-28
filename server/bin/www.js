@@ -122,15 +122,28 @@ io.on('connection', (client) => {
     client.join(`${roomId}`);
 
     let roomUsers = activeRooms.find(r => r._id == roomId).users;
-    io.in(`${roomId}`).clients((err, clients) => {
+    io.in(`${roomId}`).clients(async (err, clients) => {
+      io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
+
       if (roomUsers.length == clients.length) {
-        // establishRoomKeys(clients)
+        io.sockets.in(`${roomId}`).emit('establishStart');
+        try {
+          // establishRoomKeys(clients)
+          // unlockRoom(roomId)
+          // emit('roomUnlocked', roomId)
+          io.sockets.in(`${roomId}`).emit('establishEnd', { success: true });
+        } catch(err) {
+          io.sockets.in(`${roomId}`).emit('establishEnd', { success: false });
+        }
       }
     });
   })
 
   client.on('roomLeave', roomId => {
     client.leave(`${roomId}`);
+    io.in(`${roomId}`).clients(async (err, clients) => {
+      io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
+    })
   })
 
   client.on('messageCreate', ({message, roomId}) => {
@@ -165,7 +178,6 @@ io.on('connection', (client) => {
     }
   })
 
-  // this.roomDelete = ({roomId, roomUsers}) => {
   socketRoomDelete = ({roomId, roomUsers}) => {
     try {
       const currentUser = activeUsers.find((u) => u.socketId == client.id);

@@ -22,6 +22,7 @@ roomsRouter.route('/')
 .post(async (req, res, next) => { // ALLOW: add room
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
+    req.body.locked = true;
 
     await RoomModel.create(req.body)
     .then((room) => {
@@ -125,10 +126,16 @@ roomsRouter.route('/:roomId/messages')
     });
 
   if(room){
-    let messages = room.messages;
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(messages);
+    if(!room.locked){
+      let messages = room.messages;
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(messages);
+    } else {
+      err = new Error('Room ' + roomId + ' is locked');
+      err.status = 403;
+      return next(err);
+    }
   } else {
     err = new Error('Room ' + roomId + ' not found');
     err.status = 404;
@@ -140,21 +147,23 @@ roomsRouter.route('/:roomId/messages')
   const { roomId } = req.params;
   let room = await RoomModel.findById(roomId);
 
-  if(room && room.users.includes(req.user._id)){
-    req.body.sender = req.user._id;
+  if(room){ // TODO: refactor
+    if(room.users.includes(req.user._id) && !room.locked){
+      req.body.sender = req.user._id;
 
-    let message = await MessageModel.create(req.body);
-    room.messages.push(message._id);
-    room = await room.save();
-    message = await MessageModel.findById(message._id).populate('sender');
+      let message = await MessageModel.create(req.body);
+      room.messages.push(message._id);
+      room = await room.save();
+      message = await MessageModel.findById(message._id).populate('sender');
 
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(message);
-  } else if(!room.users.includes(req.user._id)){
-    err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(message);
+    } else {
+      err = new Error('Forbidden');
+      err.status = 403;
+      return next(err);
+    }
   } else {
     err = new Error('Room ' + roomId + ' not found')
     err.status = 404

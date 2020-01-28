@@ -8,6 +8,26 @@ import { MD5 } from 'crypto-js';
 
 import Loading from '../Shared/Loading';
 
+const EstablishStatusComponent = (props) => (
+  <View style={{flexDirection: 'column', alignItems: 'center', width: 200}}>
+    <Icon
+      name='lock' 
+      type='font-awesome'
+      color='#09C709'
+      size={40}
+    />
+    { props.establishIsLoading
+    ? <View>
+        <Text style={{color: 'grey', fontSize: 16, textAlign: 'center'}}>Establishment group key started ..</Text>
+      </View> 
+    : <View>
+        <Text style={{color: '#fff', fontSize: 30, textAlign: 'center'}}>{props.joinedUsers}/{props.roomUsers}</Text>
+        <Text style={{color: 'grey', fontSize: 16, textAlign: 'center'}}>users joined for establishment group key</Text>
+      </View>
+    }
+  </View>
+)
+
 class Room extends Component {
   constructor(props){
     super(props)
@@ -54,11 +74,7 @@ class Room extends Component {
     const roomId = this.props.navigation.getParam('roomId');
     this.props.roomMessageStore.roomId = roomId;
     await this.props.roomMessageStore.getRoomMessages();
-    if(this.props.roomMessageStore.messagesIsSuccess) {
-      this.props.roomMessageStore.joinRoom({
-        roomDeleteHandler: this.props.navigation.navigate
-      });
-    }
+    this.props.roomMessageStore.joinRoom();
   }
 
   componentWillUnmount(){
@@ -102,7 +118,20 @@ class Room extends Component {
   }
 
   render(){
-    if(this.props.roomMessageStore.messagesIsLoading){
+    const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
+
+    if(room.locked){
+      return(
+        <View style={styles.emptyScreen}>
+          <EstablishStatusComponent
+            joinedUsers={this.props.roomMessageStore.joinedUsers.length}
+            roomUsers={room.users.length}
+            establishIsLoading={this.props.roomMessageStore.establishIsLoading}
+            establishIsSuccess={this.props.roomMessageStore.establishIsSuccess}
+          />
+        </View>
+      )
+    } else if(this.props.roomMessageStore.messagesIsLoading){
       return(
         <View style={styles.emptyScreen}>
           <Loading size={'large'}/>
@@ -122,7 +151,6 @@ class Room extends Component {
             <FlatList
               ref={(ref) => { this.flatListRef = ref; }}
               inverted
-              // extraData={this.props.roomMessageStore.refresh}
               data={toJS(this.props.roomMessageStore.messages)}
               renderItem={this.renderMessage}
               keyExtractor={item => item._id.toString()}

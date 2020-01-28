@@ -13,12 +13,21 @@ class ObservableRoomMessageStore {
   @observable messagesIsSuccess = false;
   @observable postMessageIsSuccess = false;
 
-  @observable refresh = false;
+  @observable joinedSocketUsers = [];
+  @observable establishIsLoading = false;
+  @observable establishIsSuccess = false;
 
   constructor(){ }
 
   @computed get messages() {
     return this.roomMessages;
+  }
+
+  @computed get joinedUsers() {
+    return this.joinedSocketUsers;
+  }
+  set joinedUsers(users) {
+    this.joinedSocketUsers = users;
   }
   
   @action.bound async getRoomMessages() {
@@ -78,18 +87,30 @@ class ObservableRoomMessageStore {
     }
   }
 
-  @action.bound joinRoom({roomDeleteHandler}) {
-    socket.emit('roomJoin', this.roomId);
-
+  @action.bound joinRoom() {
+    socket.on('joinedUsers', users => {
+      this.joinedUsers = users;
+    });
+    socket.on('establishStart', () => {
+      this.establishIsLoading = true;
+    })
+    socket.on('establishEnd', ({success}) => {
+      this.establishIsLoading = false;
+      this.establishIsSuccess = success;
+    })
     socket.on('messageCreate', message => {
       this.roomMessages.unshift(JSON.parse(message));
-      this.refresh = true;
       this.postMessageIsLoading = false;
     });
+
+    socket.emit('roomJoin', this.roomId);
   }
 
   @action.bound leaveRoom() {
     socket.removeEventListener('messageCreate');
+    socket.removeEventListener('joinedUsers');
+    socket.removeEventListener('establishStart');
+    socket.removeEventListener('establishEnd');
     socket.emit('roomLeave', this.roomId);
   }
 }

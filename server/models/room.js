@@ -20,6 +20,10 @@ const roomSchema = new mongoose.Schema({
     ref: 'Message',
     required: true
   }],
+  locked: {
+    type: Boolean,
+    required: true
+  },
   time: {
     type: Number,
     required: true

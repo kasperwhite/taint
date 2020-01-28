@@ -122,12 +122,17 @@ class ObservableRoomStore {
       await this.presentLocalNotification(room.name)
     });
     socket.on('roomDelete', roomId => {
-      const newRooms = this.rooms.filter(r => r._id != roomId);
+      const newRooms = this.roomList.filter(r => r._id != roomId);
       this.roomList = newRooms;
       if(messageStore.roomId == roomId) {
         onRoomDeleteNavigate('Rooms');
       }
     });
+    socket.on('roomUnlocked', roomId => {
+      const rooms  = this.roomList;
+      rooms.forEach(r => r.locked = r._id == roomId ? false : r.locked );
+      this.roomList = rooms;
+    })
   }
 
   @action removeSocketListeners() {
