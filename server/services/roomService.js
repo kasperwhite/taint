@@ -24,9 +24,9 @@ exports.getRoomsDb = async () => {
   }
 }
 
-exports.unlockRoom = async (roomId) => {
+exports.unlockRoomDb = async (roomId) => {
   try {
-    const room = await RoomModel.findById(roomId);
+    let room = await RoomModel.findById(roomId);
     if (room) {
       room.locked = false;
       room = await room.save();

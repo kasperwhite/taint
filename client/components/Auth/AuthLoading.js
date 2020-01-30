@@ -45,7 +45,7 @@ class AuthLoading extends Component {
           h1Style={{color: '#09C709', fontWeight: 'bold'}}
           style={{marginBottom: 15}}
         >Taint</Text>
-        <ActivityIndicator color='#09C709' size='large'/>
+        {/* <ActivityIndicator color='#09C709' size='large'/> */}
       </View>
     )
   }

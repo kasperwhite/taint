@@ -131,6 +131,9 @@ class ObservableRoomStore {
     socket.on('roomUnlocked', roomId => {
       const rooms  = this.roomList;
       rooms.forEach(r => r.locked = r._id == roomId ? false : r.locked );
+      if(messageStore.roomId == roomId) {
+        messageStore.getRoomMessages()
+      }
       this.roomList = rooms;
     })
   }

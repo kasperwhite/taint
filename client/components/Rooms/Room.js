@@ -18,7 +18,8 @@ const EstablishStatusComponent = (props) => (
     />
     { props.establishIsLoading
     ? <View>
-        <Text style={{color: 'grey', fontSize: 16, textAlign: 'center'}}>Establishment group key started ..</Text>
+        <Text style={{color: 'grey', fontSize: 16, textAlign: 'center', marginBottom: 10}}>Establishment group key started...</Text>
+        <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>Do not leave</Text>
       </View> 
     : <View>
         <Text style={{color: '#fff', fontSize: 30, textAlign: 'center'}}>{props.joinedUsers}/{props.roomUsers}</Text>
@@ -65,14 +66,14 @@ class Room extends Component {
     };
   };
 
-  componentDidMount(){
+  componentWillMount(){
     const roomName = this.props.navigation.getParam('roomName');
     this.props.navigation.setParams({ openInfo: this.openInfo, roomName });
-  }
-
-  async componentWillMount(){
     const roomId = this.props.navigation.getParam('roomId');
     this.props.roomMessageStore.roomId = roomId;
+  }
+
+  async componentDidMount(){
     await this.props.roomMessageStore.getRoomMessages();
     this.props.roomMessageStore.joinRoom();
   }

@@ -15,6 +15,7 @@ const moment = require('moment');
 
 const roomDeleteDb = require('../services/roomService').roomDeleteDb;
 const getRoomsDb = require('../services/roomService').getRoomsDb;
+const unlockRoomDb = require('../services/roomService').unlockRoomDb;
 const establishRoomKeys = require('../services/roomService').establishRoomKeys;
 
 /**
@@ -120,17 +121,17 @@ io.on('connection', (client) => {
   /* Room events */
   client.on('roomJoin', async roomId => {
     client.join(`${roomId}`);
-
-    let roomUsers = activeRooms.find(r => r._id == roomId).users;
+    const room = activeRooms.find(r => r._id == roomId);
+    let roomUsers = room.users;
+    let roomLocked = room.locked;
     io.in(`${roomId}`).clients(async (err, clients) => {
       io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
 
-      if (roomUsers.length == clients.length) {
+      if (roomUsers.length == clients.length && roomLocked) {
         io.sockets.in(`${roomId}`).emit('establishStart');
         try {
           // establishRoomKeys(clients)
-          // unlockRoom(roomId)
-          // emit('roomUnlocked', roomId)
+          unlockRoom(roomId, clients);
           io.sockets.in(`${roomId}`).emit('establishEnd', { success: true });
         } catch(err) {
           io.sockets.in(`${roomId}`).emit('establishEnd', { success: false });
@@ -181,15 +182,28 @@ io.on('connection', (client) => {
   socketRoomDelete = ({roomId, roomUsers}) => {
     try {
       const currentUser = activeUsers.find((u) => u.socketId == client.id);
-      const users = roomUsers.filter((u) => u != currentUser.userId);
-      users.forEach((u) => {
-        const receiver = activeUsers.find((au) => au.userId == u);
-        if(receiver){
-          client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
-        }
-      })
+      if(currentUser) {
+        const users = roomUsers.filter((u) => u != currentUser.userId);
+        users.forEach((u) => {
+          const receiver = activeUsers.find((au) => au.userId == u);
+          if(receiver){
+            client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+          }
+        })
+      }
       client.emit('roomDelete', roomId);
       activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == roomId)), 1);
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  unlockRoom = (roomId, clients) => {
+    try {
+      unlockRoomDb(roomId);
+      clients.forEach((c) => { client.to(`${c}`).emit('roomUnlocked', roomId); })
+      client.emit('roomUnlocked', roomId);
+      activeRooms.forEach(r => { r.locked = r._id == roomId ? false : r.locked })
     } catch(err) {
       console.log(err)
     }

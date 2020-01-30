@@ -5,6 +5,7 @@ import { observer, inject } from 'mobx-react';
 import moment from 'moment';
 
 import Loading from '../Shared/Loading';
+import { toJS } from 'mobx';
 
 const AddButton = (props) => {
   return(
@@ -110,14 +111,7 @@ class RoomList extends Component {
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
-        leftElement={ 
-          <Icon
-            name={item.locked ? 'lock' : null} 
-            type='font-awesome'
-            color='#09C709'
-            size={24}
-          /> 
-        }
+        leftElement={ item.locked ? <Icon name='lock' type='font-awesome' color='#09C709' size={24}/> : null }
         onPress={() => this.enterRoom(item._id, item.name)}
       />
     )
@@ -147,7 +141,7 @@ class RoomList extends Component {
       return(
         <View style={{backgroundColor: '#151516', height: '100%'}}>
           <FlatList
-            data={this.props.roomStore.roomList}
+            data={toJS(this.props.roomStore.roomList)}
             renderItem={this.renderRoom}
             keyExtractor={i => i._id.toString()}
             contentContainerStyle={{backgroundColor: '#151516', flexDirection: 'column-reverse'}}
