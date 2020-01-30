@@ -36,30 +36,30 @@ exports.unlockRoomDb = async (roomId) => {
   }
 }
 
-exports.establishRoomKeys = (clients) => {
+exports.establishRoomKeys = async (clientIds, io) => {
   try {
-    let q = "";
+    const clients = clientIds.map(cId => (io.sockets.connected[cId]));
 
-    clients.forEach(async (client, i) => {
-      if(i == 0) {
-        q = await qEmitFirst(client);
-      } else if(i == clients.length) {
-        await qEmitLast(client, q);
+    const publicKeys = [];
+    let encryptedPublicKeys = [];
 
-        let eq = "";
-        [...clients].reverse().forEach(async (eqClient, eqI) => {
-          if(eqI == 0) {
-            eq = await eqEmitFirst(eqClient);
-          } else if(eqI == clients.length) {
-            await eqEmitLast(eqClient)
-          } else {
-            eq = await eqEmitInter(eqClient, eq)
-          }
-        })
-      } else {
-        q = await qEmitInter(client, q);
-      }
-    })
+    await Promise.all(clients.map(async client => {
+      const publicKey = await requestPublicKey(client)
+      publicKeys.push({ clientId: client.id, publicKey });
+    }));
+
+    /* [ { clientId: '6fQ4foyqOVMYJcIcAAAE', publicKey: '2313123' },
+    { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123' } ] */
+
+    // encryptedPublicKeys = await requestGroupKey(clients[clients.length-1], publicKeys);
+
+    /* [ { clientId: '6fQ4foyqOVMYJcIcAAAE', publicKey: '2313123', encKey: '73487834' },
+    { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123', encKey: '38928934' } ] */
+
+    /* clients.forEach(client => {
+      const key = encryptedPublicKeys.find(epc => epc.clientId == clientId).encKey;
+      sendGroupKey(client, key);
+    }) */
 
     return {success: true}
   } catch(err) {
@@ -68,44 +68,20 @@ exports.establishRoomKeys = (clients) => {
   }
 }
 
-const qEmitFirst = (client) => {
+const requestPublicKey = (client) => {
   return new Promise((res, rej) => {
-    client.on('establishResponse', (q) => { res(q) })
-    client.emit('establish', { type: constants.qFirst })
+    client.on('establishResponse', pk => res(pk));
+    client.emit('establish', { type: constants.captureMemberDefault });
   })
 }
 
-const qEmitInter = (client, prevQ) => {
+const requestGroupKey = (client, keys) => {
   return new Promise((res, rej) => {
-    client.on('establishResponse', (q) => { res(q) })
-    client.emit('establish', { type: constants.qInter, prevQ })
+    client.on('establishResponse', (ek) => { res(ek) })
+    client.emit('establish', { type: constants.captureMemberLast, publicKeys: keys })
   })
 }
 
-const qEmitLast = (client, prevQ) => {
-  return new Promise((res, rej) => {
-    client.on('establishResponse', () => { res() })
-    client.emit('establish', { type: constants.qLast, prevQ })
-  })
-}
-
-const eqEmitFirst = (client) => {
-  return new Promise((res, rej) => {
-    client.on('establishResponse', (eq) => { res(eq) })
-    client.emit('establish', { type: constants.eqFirst })
-  })
-}
-
-const eqEmitInter = (client, prevEq) => {
-  return new Promise((res, rej) => {
-    client.on('establishResponse', (eq) => { res(eq) })
-    client.emit('establish', { type: constants.eqInter, prevEq })
-  })
-}
-
-const eqEmitLast = (client, prevEq) => {
-  return new Promise((res, rej) => {
-    client.on('establishResponse', () => { res() })
-    client.emit('establish', { type: constants.eqLast, prevEq })
-  })
+const sendGroupKey = (client, key) => {
+  client.emit('publicKey', key)
 }

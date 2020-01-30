@@ -102,6 +102,9 @@ class ObservableRoomMessageStore {
       this.roomMessages.unshift(JSON.parse(message));
       this.postMessageIsLoading = false;
     });
+    socket.on('establish', data => {
+      socket.emit('establishResponse', '2313123')
+    })
 
     socket.emit('roomJoin', this.roomId);
   }
@@ -111,6 +114,7 @@ class ObservableRoomMessageStore {
     socket.removeEventListener('joinedUsers');
     socket.removeEventListener('establishStart');
     socket.removeEventListener('establishEnd');
+    socket.removeEventListener('establish');
     socket.emit('roomLeave', this.roomId);
   }
 }

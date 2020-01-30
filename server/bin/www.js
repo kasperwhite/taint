@@ -127,10 +127,10 @@ io.on('connection', (client) => {
     io.in(`${roomId}`).clients(async (err, clients) => {
       io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
 
-      if (roomUsers.length == clients.length && roomLocked) {
+      if (roomUsers.length == clients.length/*  && roomLocked */) {
         io.sockets.in(`${roomId}`).emit('establishStart');
         try {
-          // establishRoomKeys(clients)
+          establishRoomKeys(clients, io);
           unlockRoom(roomId, clients);
           io.sockets.in(`${roomId}`).emit('establishEnd', { success: true });
         } catch(err) {
