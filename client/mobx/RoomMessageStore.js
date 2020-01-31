@@ -1,7 +1,9 @@
 import { observable, action, computed } from "mobx";
-
+import * as crypto from 'crypto-js';
 import { sendRequest, socket } from './NetService';
 import authStore from './AuthStore';
+const forge = require('node-forge');
+const rsa = forge.pki.rsa;
 
 class ObservableRoomMessageStore {
   @observable roomId = '';
@@ -102,8 +104,13 @@ class ObservableRoomMessageStore {
       this.roomMessages.unshift(JSON.parse(message));
       this.postMessageIsLoading = false;
     });
-    socket.on('establish', data => {
-      socket.emit('establishResponse', '2313123')
+    socket.on('establish', async data => {
+      if(data.memberType == 'captureMemberDefault'){
+        let keyPair = await this.generateKeyPair();
+        socket.emit('establishResponse', keyPair.publicKey);
+      } else if(data.memberType == 'captureMemberLast'){
+        console.log(data.publicKeys);
+      }
     })
 
     socket.emit('roomJoin', this.roomId);
@@ -117,6 +124,22 @@ class ObservableRoomMessageStore {
     socket.removeEventListener('establish');
     socket.emit('roomLeave', this.roomId);
   }
+
+  /* @action generateKey() {
+    let salt = crypto.lib.WordArray.random(128/8);
+    let passphrase = crypto.SHA512(new Date().getTime().toString()).toString(crypto.enc.Hex);
+    let key512Bits = crypto.PBKDF2(passphrase, salt, { keySize: 512/32 }).toString(crypto.enc.Hex);
+
+    return key512Bits;
+  } */
+
+  @action generateKeyPair() {
+    return new Promise((res, rej) => {
+      let { publicKey, privateKey } = rsa.generateKeyPair({bits: 512, workers: -1});
+      res({ publicKey, privateKey });
+    })
+  }
+
 }
 
 const roomMessageStore = new ObservableRoomMessageStore();
