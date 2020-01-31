@@ -52,6 +52,7 @@ exports.establishRoomKeys = async (clientIds, io) => {
     { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123' } ] */
 
     encryptedPublicKeys = await requestGroupKey(clients[clients.length-1], publicKeys);
+    console.log(encryptedPublicKeys)
 
     /* [ { clientId: '6fQ4foyqOVMYJcIcAAAE', publicKey: '2313123', encKey: '73487834' },
     { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123', encKey: '38928934' } ] */
@@ -77,7 +78,7 @@ const requestPublicKey = (client) => {
 
 const requestGroupKey = (client, keys) => {
   return new Promise((res, rej) => {
-    client.on('establishResponse', (ek) => { res(ek) })
+    client.on('establishResponse', ek => { res(ek) })
     client.emit('establish', { memberType: constants.captureMemberLast, publicKeys: keys })
   })
 }

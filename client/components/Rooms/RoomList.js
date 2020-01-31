@@ -112,6 +112,14 @@ class RoomList extends Component {
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
         leftElement={ item.locked ? <Icon name='lock' type='font-awesome' color='#09C709' size={24}/> : null }
+        /* leftElement={
+          <Icon 
+            name={ item.locked ? 'lock' : 'unlock' }
+            type='font-awesome'
+            color='#09C709'
+            size={24}/>
+            
+        } */
         onPress={() => this.enterRoom(item._id, item.name)}
       />
     )

@@ -3,6 +3,7 @@ import * as crypto from 'crypto-js';
 import { sendRequest, socket } from './NetService';
 import authStore from './AuthStore';
 const forge = require('node-forge');
+const pki = forge.pki;
 const rsa = forge.pki.rsa;
 
 class ObservableRoomMessageStore {
@@ -109,7 +110,10 @@ class ObservableRoomMessageStore {
         let keyPair = await this.generateKeyPair();
         socket.emit('establishResponse', keyPair.publicKey);
       } else if(data.memberType == 'captureMemberLast'){
-        console.log(data.publicKeys);
+        let groupKey = await this.generateGroupKey();
+        let encryptedKeys = await this.encryptGroupKey(groupKey, data.publicKeys);
+        console.log(encryptedKeys);
+        socket.emit('establishResponse', encryptedKeys);
       }
     })
 
@@ -125,19 +129,33 @@ class ObservableRoomMessageStore {
     socket.emit('roomLeave', this.roomId);
   }
 
-  /* @action generateKey() {
-    let salt = crypto.lib.WordArray.random(128/8);
-    let passphrase = crypto.SHA512(new Date().getTime().toString()).toString(crypto.enc.Hex);
-    let key512Bits = crypto.PBKDF2(passphrase, salt, { keySize: 512/32 }).toString(crypto.enc.Hex);
-
-    return key512Bits;
-  } */
-
   @action generateKeyPair() {
     return new Promise((res, rej) => {
       let { publicKey, privateKey } = rsa.generateKeyPair({bits: 512, workers: -1});
+      publicKey = pki.publicKeyToPem(publicKey);
+      privateKey = pki.privateKeyToPem(privateKey);
+
       res({ publicKey, privateKey });
     })
+  }
+
+  @action generateGroupKey() {
+    return new Promise((res, rej) => {
+      let salt = crypto.lib.WordArray.random(128/8);
+      let passphrase = crypto.SHA512(new Date().getTime().toString()).toString(crypto.enc.Hex);
+      let key512Bits = crypto.PBKDF2(passphrase, salt, { keySize: 512/32 }).toString(crypto.enc.Hex);
+
+      res(key512Bits);
+    })
+  }
+
+  @action async encryptGroupKey(groupKey, clients) {
+    /* await [...clients].forEach(async c => {
+      let pubKey = await pki.publicKeyFromPem(c.publicKey);
+      c.ecryptedGroupKey = await pubKey.encrypt(groupKey);
+    }) */
+    
+    return clients;
   }
 
 }
