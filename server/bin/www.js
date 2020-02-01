@@ -130,7 +130,7 @@ io.on('connection', (client) => {
       if (roomUsers.length == clients.length/*  && roomLocked */) {
         io.sockets.in(`${roomId}`).emit('establishStart');
         try {
-          establishRoomKeys(clients, io);
+          establishRoomKeys(roomId, clients, io);
           unlockRoom(roomId, clients);
           io.sockets.in(`${roomId}`).emit('establishEnd', { success: true });
         } catch(err) {

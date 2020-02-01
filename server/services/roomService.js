@@ -36,44 +36,28 @@ exports.unlockRoomDb = async (roomId) => {
   }
 }
 
-exports.establishRoomKeys = async (clientIds, io) => {
+exports.establishRoomKeys = async (roomId, clientIds, io) => {
   try {
     const clients = clientIds.map(cId => (io.sockets.connected[cId]));
 
-    const publicKeys = [];
-    let encryptedPublicKeys = [];
+    // clients public keys request
+    let publicKeys = [];
+    publicKeys = await requestPublicKeys(clients, roomId, io);
 
-    await Promise.all(clients.map(async client => {
-      const publicKey = await requestPublicKey(client)
-      publicKeys.push({ clientId: client.id, publicKey });
-    }));
+    // request encrypted group key
+    const encryptedPublicKeys = await requestGroupKey(clients[clients.length-1], publicKeys);
 
-    /* [ { clientId: '6fQ4foyqOVMYJcIcAAAE', publicKey: '2313123' },
-    { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123' } ] */
-
-    encryptedPublicKeys = await requestGroupKey(clients[clients.length-1], publicKeys);
-    console.log(encryptedPublicKeys)
-
-    /* [ { clientId: '6fQ4foyqOVMYJcIcAAAE', publicKey: '2313123', encKey: '73487834' },
-    { clientId: 'ESPlY7RJeTNyzSjJAAAD', publicKey: '2313123', encKey: '38928934' } ] */
-
-    /* clients.forEach(client => {
-      const key = encryptedPublicKeys.find(epc => epc.clientId == clientId).encKey;
-      sendGroupKey(client, key);
-    }) */
+    // send encrypted group key to clients
+    clients.forEach(client => {
+      const key = encryptedPublicKeys.find(epk => epk.clientId == client.id).ecryptedGroupKey;
+      sendGroupKey(client, key)
+    })
 
     return {success: true}
   } catch(err) {
     console.log(err);
     return {success: false}
   }
-}
-
-const requestPublicKey = (client) => {
-  return new Promise((res, rej) => {
-    client.on('establishResponse', pk => res(pk));
-    client.emit('establish', { memberType: constants.captureMemberDefault });
-  })
 }
 
 const requestGroupKey = (client, keys) => {
@@ -83,6 +67,22 @@ const requestGroupKey = (client, keys) => {
   })
 }
 
+const requestPublicKeys = (clients, roomId, io) => {
+  return new Promise((res, rej) => {
+    const publicKeys = [];
+    
+    clients.forEach(client => {
+      client.on('establishResponse', pk => {
+        publicKeys.push({clientId: client.id, publicKeyPem: pk})
+        if(publicKeys.length == clients.length){
+          res(publicKeys)
+        }
+      });
+    })
+    io.sockets.in(`${roomId}`).emit('establish', { memberType: constants.captureMemberDefault });
+  })
+}
+
 const sendGroupKey = (client, key) => {
-  client.emit('publicKey', key)
+  client.emit('groupKey', key)
 }
