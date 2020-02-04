@@ -10,6 +10,7 @@ const rsa = forge.pki.rsa;
 class ObservableRoomMessageStore {
   @observable roomId = '';
   @observable roomMessages = [];
+  @observable roomKey = '';
 
   @observable messagesIsLoading = false;
   @observable postMessageIsLoading = false;
@@ -38,16 +39,19 @@ class ObservableRoomMessageStore {
   @action.bound async getRoomMessages() {
     const result = await this.fetchGetMessages(this.roomId);
     this.messagesIsSuccess = result.success;
-    if(result.success){ this.roomMessages = result.res.reverse() }
+    if(result.success){
+      const messages = result.res;
+      messages.forEach(m => { m.text = this.decryptMessage(m.text) });
+      this.roomMessages = messages.reverse();
+    }
     return result;
   }
 
   @action.bound async postRoomMessage(messageData) {
     const roomId = this.roomId;
 
-    /* const groupKey = await AsyncStorage.getItem(`room/${roomId}/groupKey`);
-    const encMessageText = crypto.AES.encrypt(messageData.text, groupKey, { padding: crypto.pad.Iso10126 });
-    messageData.text = encMessageText.toString(); */
+    messageData.text = this.encryptMessage(messageData.text);
+    messageData.hash = crypto.MD5(messageData).toString();
 
     const result = await this.fetchPostMessage(roomId, messageData);
     this.postMessageIsSuccess = result.success;
@@ -56,6 +60,10 @@ class ObservableRoomMessageStore {
       socket.emit('messageCreate', {message: JSON.stringify(message), roomId});
     }
     return result
+  }
+
+  @action async getRoomKey() {
+    this.roomKey = await AsyncStorage.getItem(`room/${this.roomId}/groupKey`);
   }
 
   @action async fetchGetMessages(roomId){
@@ -101,11 +109,11 @@ class ObservableRoomMessageStore {
       this.joinedUsers = users;
     });
     socket.on('messageCreate', async message => {
-      /* const groupKey = await AsyncStorage.getItem(`room/${this.roomId}/groupKey`);
-      const decMessageText = crypto.AES.decrypt(message.text, groupKey, { padding: crypto.pad.Iso10126 });
-      message.text = decMessageText.toString(); */
+      message = JSON.parse(message);
 
-      this.roomMessages.unshift(JSON.parse(message));
+      message.text = this.decryptMessage(message.text);
+
+      this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
     });
     this.addEstablishListeners();
@@ -143,7 +151,7 @@ class ObservableRoomMessageStore {
     socket.on('groupKey', async key => {
       let privateKey = pki.privateKeyFromPem(this.privateKeyPem);
       let groupKey = privateKey.decrypt(key);
-      console.log(groupKey);
+      this.roomKey = groupKey;
       await AsyncStorage.setItem(`room/${this.roomId}/groupKey`, groupKey);
     })
   }
@@ -181,6 +189,13 @@ class ObservableRoomMessageStore {
     })
     
     return clients;
+  }
+
+  @action encryptMessage(messageText) {
+    return crypto.AES.encrypt(messageText, this.roomKey).toString();
+  }
+  @action decryptMessage(messageText) {
+    return crypto.AES.decrypt(messageText, this.roomKey).toString(crypto.enc.Utf8);
   }
 
 }

@@ -59,7 +59,8 @@ class RoomInfo extends Component {
     super(props);
 
     this.state = {
-      room: {}
+      room: {},
+      isKeyOpened: false
     }
   }
 
@@ -167,6 +168,8 @@ class RoomInfo extends Component {
   }
 
   render(){
+    const roomKey = this.props.roomMessageStore.roomKey;
+    const roomName = this.state.room.name;
     return(
       <ScrollView
         style={{
@@ -175,14 +178,14 @@ class RoomInfo extends Component {
       >
         <ListItem
           title='Name'
-          rightTitle={this.state.room.name}
+          rightTitle={roomName.length > 13 ? roomName.slice(0, 13) + '...' : roomName}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <ListItem
           title='Key'
-          rightTitle={this.state.room.key}
+          rightTitle={roomKey ? roomKey.slice(0, 13) + '...' : 'Is not established' }
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
@@ -233,7 +236,9 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   infoListItemRigthTitle: {
-    color: 'grey'
+    color: 'grey',
+    width: 200,
+    textAlign: 'right'
   },
   submitButtonContainer: {
     flexDirection: 'row',
@@ -246,4 +251,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default inject('authStore','roomStore', 'roomUserStore','contactStore')(observer(RoomInfo));
+export default inject('authStore','roomStore', 'roomUserStore', 'roomMessageStore', 'contactStore')(observer(RoomInfo));

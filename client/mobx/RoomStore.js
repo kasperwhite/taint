@@ -117,7 +117,7 @@ class ObservableRoomStore {
   }
 
   @action.bound openSocketListeners({onRoomDeleteNavigate}) {
-    socket.on('roomCreate',async room => {
+    socket.on('roomCreate', async room => {
       this.rooms.unshift(room);
       await this.presentLocalNotification(room.name)
     });

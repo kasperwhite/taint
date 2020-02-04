@@ -131,6 +131,7 @@ class RoomCreate extends Component {
           placeholder='Name'
           inputStyle={styles.input}
           inputContainerStyle={styles.inputContainer}
+          maxLength={25}
         />
         <View style={{marginVertical: 15, paddingHorizontal: 15}}>
           <Text

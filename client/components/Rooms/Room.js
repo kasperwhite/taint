@@ -74,6 +74,7 @@ class Room extends Component {
   }
 
   async componentDidMount(){
+    await this.props.roomMessageStore.getRoomKey();
     await this.props.roomMessageStore.getRoomMessages();
     this.props.roomMessageStore.joinRoom();
   }
@@ -90,10 +91,7 @@ class Room extends Component {
   sendMessage = async () => {
     let {message} = this.state;
     message = message.trim();
-    await this.props.roomMessageStore.postRoomMessage({
-      text: message,
-      hash: MD5(message).toString()
-    })
+    await this.props.roomMessageStore.postRoomMessage({ text: message })
     this.setState({message: ''});
   }
 
