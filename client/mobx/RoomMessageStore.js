@@ -1,16 +1,17 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
 import { AsyncStorage } from 'react-native';
 import * as crypto from 'crypto-js';
 import { sendRequest, socket } from './NetService';
 import authStore from './AuthStore';
+import roomStore from "./RoomStore";
 const forge = require('node-forge');
 const pki = forge.pki;
 const rsa = forge.pki.rsa;
 
 class ObservableRoomMessageStore {
   @observable roomId = '';
-  @observable roomMessages = [];
   @observable roomKey = '';
+  @observable roomMessages = [];
 
   @observable messagesIsLoading = false;
   @observable postMessageIsLoading = false;
@@ -18,9 +19,13 @@ class ObservableRoomMessageStore {
   @observable messagesIsSuccess = false;
   @observable postMessageIsSuccess = false;
 
-  @observable joinedSocketUsers = [];
   @observable establishIsLoading = false;
   @observable establishIsSuccess = false;
+
+  @observable requestGroupKeyIsLoading = false;
+  @observable requestGroupKeyError = false;
+
+  @observable joinedSocketUsers = [];
   @observable privateKeyPem = '';
 
   constructor(){ }
@@ -37,14 +42,20 @@ class ObservableRoomMessageStore {
   }
   
   @action.bound async getRoomMessages() {
-    const result = await this.fetchGetMessages(this.roomId);
-    this.messagesIsSuccess = result.success;
-    if(result.success){
-      const messages = result.res;
-      messages.forEach(m => { m.text = this.decryptMessage(m.text) });
-      this.roomMessages = messages.reverse();
+    const room = roomStore.getRoom(this.roomId);
+    
+    if(this.roomKey && !room.locked) {
+      const result = await this.fetchGetMessages(this.roomId);
+      this.messagesIsSuccess = result.success;
+      if(result.success){
+        const messages = result.res;
+        messages.forEach(m => { m.text = this.decryptMessage(m.text) });
+        this.roomMessages = messages.reverse();
+      }
+      return result;
+    } else if(!room.locked && !this.roomKey) {
+      await this.requestGroupKeyShare();
     }
-    return result;
   }
 
   @action.bound async postRoomMessage(messageData) {
@@ -126,6 +137,9 @@ class ObservableRoomMessageStore {
     socket.removeEventListener('joinedUsers');
     this.removeEstablishListeners();
 
+    this.roomKey = '';
+    this.requestGroupKeyError = false;
+
     socket.emit('roomLeave', this.roomId);
   }
 
@@ -146,6 +160,11 @@ class ObservableRoomMessageStore {
         let groupKey = await this.generateGroupKey();
         let encryptedKeys = await this.encryptGroupKey(groupKey, data.publicKeys);
         socket.emit('establishResponse', encryptedKeys);
+      } else if(data.memberType == 'shareMember') {
+        let groupKey = this.roomKey;
+        let pubKey = pki.publicKeyFromPem(data.publicKeyPem);
+        let encGroupKey = pubKey.encrypt(groupKey);
+        socket.emit('establishResponse', encGroupKey);
       }
     })
     socket.on('groupKey', async key => {
@@ -196,6 +215,32 @@ class ObservableRoomMessageStore {
   }
   @action decryptMessage(messageText) {
     return crypto.AES.decrypt(messageText, this.roomKey).toString(crypto.enc.Utf8);
+  }
+
+  @action requestGroupKey({ publicKeyPem }) {
+    return new Promise((res, rej) => {
+      socket.on('groupKey', groupKey => {
+        res(groupKey)
+      })
+      socket.emit('groupKeyRequest', { roomId: this.roomId, publicKeyPem })
+    })
+  }
+
+  @action async requestGroupKeyShare() {
+    this.requestGroupKeyIsLoading = true;
+
+    const keyPair = await this.generateKeyPair();
+    const privateKey = pki.privateKeyFromPem(keyPair.privateKeyPem);
+    const encGroupKey = await this.requestGroupKey({ publicKeyPem: keyPair.publicKeyPem });
+    if(encGroupKey.success) {
+      const groupKey = privateKey.decrypt(encGroupKey.groupKey);
+      this.roomKey = groupKey;
+      await AsyncStorage.setItem(`room/${this.roomId}/groupKey`, groupKey);
+      this.getRoomMessages();
+    } else {
+      this.requestGroupKeyError = true;
+    }
+    this.requestGroupKeyIsLoading = false;
   }
 
 }

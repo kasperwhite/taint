@@ -60,6 +60,18 @@ exports.establishRoomKeys = async (roomId, clientIds, io) => {
   }
 }
 
+exports.getGroupKey = async (client, publicKeyPem, roomId) => {
+  const groupKey = await requestGroupKeyForUser(client, publicKeyPem, roomId)
+  return groupKey;
+}
+
+const requestGroupKeyForUser = (client, userPubKey, roomId) => {
+  return new Promise((res, rej) => {
+    client.on('establishResponse', ek => { res(ek) })
+    client.emit('establish', { memberType: constants.shareMember, publicKeyPem: userPubKey, roomId })
+  })
+}
+
 const requestGroupKey = (client, keys) => {
   return new Promise((res, rej) => {
     client.on('establishResponse', ek => { res(ek) })

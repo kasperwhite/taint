@@ -11,10 +11,10 @@ import Loading from '../Shared/Loading';
 const EstablishStatusComponent = (props) => (
   <View style={{flexDirection: 'column', alignItems: 'center', width: 200}}>
     <Icon
-      name='lock' 
-      type='font-awesome'
+      name='md-sync' 
+      type='ionicon'
       color='#09C709'
-      size={40}
+      size={45}
     />
     { props.establishIsLoading
     ? <View>
@@ -25,6 +25,27 @@ const EstablishStatusComponent = (props) => (
         <Text style={{color: '#fff', fontSize: 30, textAlign: 'center'}}>{props.joinedUsers}/{props.roomUsers}</Text>
         <Text style={{color: 'grey', fontSize: 16, textAlign: 'center'}}>users joined for establishment group key</Text>
       </View>
+    }
+  </View>
+)
+
+const RequestGroupKeyStatusComponent = (props) => (
+  <View style={{flexDirection: 'column', alignItems: 'center', width: 200}}>
+    <Icon
+      name='key'
+      type='ionicon'
+      color='#09C709'
+      size={40}
+    />
+    { props.error
+        ? <View>
+            <Text style={{color: 'grey', fontSize: 16, textAlign: 'center', marginBottom: 10}}>No one is there now</Text>
+            <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>Try again later</Text>
+          </View>
+        : <View>
+            <Text style={{color: 'grey', fontSize: 16, textAlign: 'center', marginBottom: 10}}>Seems like you do not have group key. Trying to request...</Text>
+            <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>Do not leave</Text>
+          </View>
     }
   </View>
 )
@@ -127,6 +148,14 @@ class Room extends Component {
             roomUsers={room.users.length}
             establishIsLoading={this.props.roomMessageStore.establishIsLoading}
             establishIsSuccess={this.props.roomMessageStore.establishIsSuccess}
+          />
+        </View>
+      )
+    } else if(!this.props.roomMessageStore.roomKey){
+      return(
+        <View style={styles.emptyScreen}>
+          <RequestGroupKeyStatusComponent
+            error={this.props.roomMessageStore.requestGroupKeyError}
           />
         </View>
       )

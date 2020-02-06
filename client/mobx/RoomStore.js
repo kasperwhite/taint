@@ -5,6 +5,7 @@ import messageStore from './RoomMessageStore';
 import { sendRequest, socket } from './NetService';
 import * as Permissions from 'expo-permissions';
 import { Notifications } from 'expo';
+import { AsyncStorage } from "react-native";
 
 class ObservableRoomStore {
   @observable rooms = [];
@@ -121,18 +122,19 @@ class ObservableRoomStore {
       this.rooms.unshift(room);
       await this.presentLocalNotification(room.name)
     });
-    socket.on('roomDelete', roomId => {
+    socket.on('roomDelete', async roomId => {
       const newRooms = this.roomList.filter(r => r._id != roomId);
       this.roomList = newRooms;
       if(messageStore.roomId == roomId) {
         onRoomDeleteNavigate('Rooms');
       }
+      await this.deleteRoomKey(roomId);
     });
     socket.on('roomUnlocked', roomId => {
       const rooms  = this.roomList;
       rooms.forEach(r => r.locked = r._id == roomId ? false : r.locked );
       if(messageStore.roomId == roomId) {
-        messageStore.getRoomMessages()
+        messageStore.getRoomMessages();
       }
       this.roomList = rooms;
     })
@@ -158,7 +160,7 @@ class ObservableRoomStore {
     await this.obtainNotificationPermission();
     Notifications.presentLocalNotificationAsync({
       title: 'New room',
-      body: 'Please check created room ' + roomName + ' for the group key establishment',
+      body: 'Please check new room ' + roomName + ' for the group key establishment',
       ios: {
         sound: true
       },
@@ -168,6 +170,10 @@ class ObservableRoomStore {
         color: '#09C709'
       }
     })
+  }
+
+  @action async deleteRoomKey(roomId) {
+    await AsyncStorage.removeItem(`room/${roomId}/groupKey`);
   }
 
 }

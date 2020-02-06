@@ -77,13 +77,13 @@ class Contacts extends Component {
   }
 
   componentDidMount(){
-    this.props.navigation.setParams({ 
-      addContact: this.addContact
-    });
+    this.props.contactStore.getContacts();
   }
 
   componentWillMount(){
-    this.props.contactStore.getContacts();
+    this.props.navigation.setParams({ 
+      addContact: this.addContact
+    });
   }
 
   // ADD CONTACT OPERATION

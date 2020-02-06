@@ -1,4 +1,5 @@
 module.exports = {
   'captureMemberDefault': 'captureMemberDefault',
-  'captureMemberLast': 'captureMemberLast'
+  'captureMemberLast': 'captureMemberLast',
+  'shareMember': 'shareMember'
 }

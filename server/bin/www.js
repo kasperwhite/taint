@@ -17,6 +17,7 @@ const roomDeleteDb = require('../services/roomService').roomDeleteDb;
 const getRoomsDb = require('../services/roomService').getRoomsDb;
 const unlockRoomDb = require('../services/roomService').unlockRoomDb;
 const establishRoomKeys = require('../services/roomService').establishRoomKeys;
+const getGroupKey = require('../services/roomService').getGroupKey;
 
 /**
  * Get port from environment and store in Express.
@@ -144,6 +145,18 @@ io.on('connection', (client) => {
     client.leave(`${roomId}`);
     io.in(`${roomId}`).clients(async (err, clients) => {
       io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
+    })
+  })
+
+  client.on('groupKeyRequest', data => {
+    io.in(`${data.roomId}`).clients(async (err, clients) => {
+      clients = clients.map(cId => (io.sockets.connected[cId]));
+      if(clients.length) {
+        const groupKey = await getGroupKey(clients[0], data.publicKeyPem, data.roomId);
+        client.emit('groupKey', {groupKey, success: true});
+      } else {
+        client.emit('groupKey', {success: false});
+      }
     })
   })
 
