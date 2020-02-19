@@ -1,4 +1,4 @@
-import { observable, action, computed, toJS } from "mobx";
+import { observable, action, computed } from "mobx";
 import { AsyncStorage } from 'react-native';
 import * as crypto from 'crypto-js';
 import { sendRequest, socket } from './NetService';
@@ -6,7 +6,6 @@ import authStore from './AuthStore';
 import roomStore from "./RoomStore";
 const forge = require('node-forge');
 const pki = forge.pki;
-const rsa = forge.pki.rsa;
 
 class ObservableRoomMessageStore {
   @observable roomId = '';
@@ -26,7 +25,6 @@ class ObservableRoomMessageStore {
   @observable requestGroupKeyError = false;
 
   @observable joinedSocketUsers = [];
-  @observable privateKeyPem = '';
 
   constructor(){ }
 
@@ -54,7 +52,7 @@ class ObservableRoomMessageStore {
       }
       return result;
     } else if(!room.locked && !this.roomKey) {
-      await this.requestGroupKeyShare();
+      //await this.requestGroupKeyShare();
     }
   }
 
@@ -153,9 +151,8 @@ class ObservableRoomMessageStore {
     })
     socket.on('establish', async data => {
       if(data.memberType == 'captureMemberDefault'){
-        let keyPair = await this.generateKeyPair();
-        this.privateKeyPem = keyPair.privateKeyPem;
-        socket.emit('establishResponse', keyPair.publicKeyPem);
+        let userPubKeyPem = await AsyncStorage.getItem('userPubKey');
+        socket.emit('establishResponse', userPubKeyPem);
       } else if(data.memberType == 'captureMemberLast'){
         let groupKey = await this.generateGroupKey();
         let encryptedKeys = await this.encryptGroupKey(groupKey, data.publicKeys);
@@ -168,7 +165,8 @@ class ObservableRoomMessageStore {
       }
     })
     socket.on('groupKey', async key => {
-      let privateKey = pki.privateKeyFromPem(this.privateKeyPem);
+      let userPrivateKey = await AsyncStorage.getItem('userSecKey');
+      let privateKey = pki.privateKeyFromPem(userPrivateKey);
       let groupKey = privateKey.decrypt(key);
       this.roomKey = groupKey;
       await AsyncStorage.setItem(`room/${this.roomId}/groupKey`, groupKey);
@@ -181,23 +179,13 @@ class ObservableRoomMessageStore {
     socket.removeEventListener('groupKey');
   }
 
-  @action generateKeyPair() {
-    return new Promise((res, rej) => {
-      let { publicKey, privateKey } = rsa.generateKeyPair({bits: 512, workers: -1, e: 0x10001}); // todo: fix keySize
-      let publicKeyPem = pki.publicKeyToPem(publicKey);
-      let privateKeyPem = pki.privateKeyToPem(privateKey);
-
-      res({ publicKeyPem, privateKeyPem });
-    })
-  }
-
   @action generateGroupKey() {
     return new Promise((res, rej) => {
-      let salt = crypto.lib.WordArray.random(8);
+      let salt = crypto.lib.WordArray.random(128/8);
       let passphrase = crypto.SHA512(new Date().getTime().toString()).toString(crypto.enc.Hex);
-      let key512Bits = crypto.PBKDF2(passphrase, salt, { keySize: 4 }).toString(crypto.enc.Hex); // todo: fix keySize
+      let key128Bits = crypto.PBKDF2(passphrase, salt, { keySize: 128/32 }).toString(crypto.enc.Hex);
 
-      res(key512Bits);
+      res(key128Bits);
     })
   }
 
@@ -229,9 +217,11 @@ class ObservableRoomMessageStore {
   @action async requestGroupKeyShare() {
     this.requestGroupKeyIsLoading = true;
 
-    const keyPair = await this.generateKeyPair();
-    const privateKey = pki.privateKeyFromPem(keyPair.privateKeyPem);
-    const encGroupKey = await this.requestGroupKey({ publicKeyPem: keyPair.publicKeyPem });
+    //const keyPair = await this.generateKeyPair();
+    const secKey = await AsyncStorage.getItem('userSecKey');
+    const pubKey = await AsyncStorage.getItem('userPubKey');
+    const privateKey = pki.privateKeyFromPem(secKey);
+    const encGroupKey = await this.requestGroupKey({ publicKeyPem: pubKey });
     if(encGroupKey.success) {
       const groupKey = privateKey.decrypt(encGroupKey.groupKey);
       this.roomKey = groupKey;

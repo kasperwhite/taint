@@ -32,7 +32,7 @@ const EstablishStatusComponent = (props) => (
 const RequestGroupKeyStatusComponent = (props) => (
   <View style={{flexDirection: 'column', alignItems: 'center', width: 200}}>
     <Icon
-      name='key'
+      name='md-key'
       type='ionicon'
       color='#09C709'
       size={40}
@@ -140,7 +140,7 @@ class Room extends Component {
   render(){
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
 
-    if(room.locked){
+    if(room.locked && !this.props.roomMessageStore.roomKey){
       return(
         <View style={styles.emptyScreen}>
           <EstablishStatusComponent
@@ -151,7 +151,7 @@ class Room extends Component {
           />
         </View>
       )
-    } else if(!this.props.roomMessageStore.roomKey){
+    } else if(!room.locked && !this.props.roomMessageStore.roomKey){
       return(
         <View style={styles.emptyScreen}>
           <RequestGroupKeyStatusComponent

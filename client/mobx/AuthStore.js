@@ -1,6 +1,7 @@
 import { observable, action, computed } from "mobx";
 import { AsyncStorage } from "react-native";
 import { sendRequest, socket } from './NetService';
+const forge = require('node-forge');
 
 class ObservableAuthStore {
   @observable signUpIsLoading = false;
@@ -36,6 +37,8 @@ class ObservableAuthStore {
 
   @action.bound async signOut() {
     await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('userPubKey');
+    await AsyncStorage.removeItem('userSecKey');
     socket.emit('offline', this.user._id);
   }
 
@@ -46,6 +49,23 @@ class ObservableAuthStore {
       socket.emit('online', this.user._id);
     }
     return result;
+  }
+
+  @action.bound async generateKeyPair() {
+    return new Promise(async (res, rej) => {
+      try {
+        let { publicKey, privateKey } = forge.pki.rsa.generateKeyPair({ bits: 1024, workers: 5, e: 0x10001 });
+        let publicKeyPem = forge.pki.publicKeyToPem(publicKey);
+        let privateKeyPem = forge.pki.privateKeyToPem(privateKey);
+
+        await AsyncStorage.setItem('userPubKey', publicKeyPem);
+        await AsyncStorage.setItem('userSecKey', privateKeyPem);
+
+        res();
+      } catch(err) {
+        rej({error : err});
+      }
+    })
   }
 
   @action.bound async deleteAccount() {

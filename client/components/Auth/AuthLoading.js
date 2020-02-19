@@ -20,7 +20,14 @@ class AuthLoading extends Component {
       this.props.authStore.userToken = token;
       const result = await this.props.authStore.authenticate();
       if(result.success){
-        this.props.navigation.navigate('App');
+        const userSecKey = await AsyncStorage.getItem('userSecKey');
+        if(userSecKey) {
+          this.props.navigation.navigate('App');
+        } else {
+          this.props.authStore.generateKeyPair()
+            .then(() => { this.props.navigation.navigate('App') })
+            .catch(() => { this.props.navigation.navigate('Auth') })
+        }
       } else {
         this.props.navigation.navigate('Auth');
       }
@@ -45,7 +52,6 @@ class AuthLoading extends Component {
           h1Style={{color: '#09C709', fontWeight: 'bold'}}
           style={{marginBottom: 15}}
         >Taint</Text>
-        {/* <ActivityIndicator color='#09C709' size='large'/> */}
       </View>
     )
   }
