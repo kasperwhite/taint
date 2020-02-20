@@ -95,9 +95,7 @@ class Room extends Component {
   }
 
   async componentDidMount(){
-    await this.props.roomMessageStore.getRoomKey();
-    await this.props.roomMessageStore.getRoomMessages();
-    this.props.roomMessageStore.joinRoom();
+    await this.props.roomMessageStore.initialize();
   }
 
   componentWillUnmount(){
@@ -139,33 +137,35 @@ class Room extends Component {
 
   render(){
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
+    const { establishStandby, joinedUsers, establishIsLoading, requestGroupKeyIsLoading, 
+      requestGroupKeyError, messagesIsLoading, messagesIsSuccess, messagesIsLoaded, 
+      messages, postMessageIsLoading} = this.props.roomMessageStore;
 
-    if(room.locked && !this.props.roomMessageStore.roomKey){
+    if(establishStandby){
       return(
         <View style={styles.emptyScreen}>
           <EstablishStatusComponent
-            joinedUsers={this.props.roomMessageStore.joinedUsers.length}
+            joinedUsers={joinedUsers.length}
             roomUsers={room.users.length}
-            establishIsLoading={this.props.roomMessageStore.establishIsLoading}
-            establishIsSuccess={this.props.roomMessageStore.establishIsSuccess}
+            establishIsLoading={establishIsLoading}
           />
         </View>
       )
-    } else if(!room.locked && !this.props.roomMessageStore.roomKey){
+    } else if(requestGroupKeyIsLoading){
       return(
         <View style={styles.emptyScreen}>
           <RequestGroupKeyStatusComponent
-            error={this.props.roomMessageStore.requestGroupKeyError}
+            error={requestGroupKeyError}
           />
         </View>
       )
-    } else if(this.props.roomMessageStore.messagesIsLoading){
+    } else if(messagesIsLoading){
       return(
         <View style={styles.emptyScreen}>
           <Loading size={'large'}/>
         </View>
       )
-    } else if(!this.props.roomMessageStore.messagesIsSuccess) {
+    } else if(!messagesIsSuccess && messagesIsLoaded) {
       return(
         <View style={styles.emptyScreen}>
           <Text style={{color: 'grey', fontSize: 20}}>Something went wrong</Text>
@@ -179,7 +179,7 @@ class Room extends Component {
             <FlatList
               ref={(ref) => { this.flatListRef = ref; }}
               inverted
-              data={toJS(this.props.roomMessageStore.messages)}
+              data={toJS(messages)}
               renderItem={this.renderMessage}
               keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatList}
@@ -200,7 +200,7 @@ class Room extends Component {
               />
               <View style={{width: '14%', justifyContent: 'center', alignItems: 'center'}}>
                 {
-                  this.props.roomMessageStore.postMessageIsLoading
+                  postMessageIsLoading
                   ? <Loading size={'large'}/>
                   : <Button
                       icon={

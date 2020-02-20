@@ -13,20 +13,37 @@ class ObservableRoomMessageStore {
   @observable roomMessages = [];
 
   @observable messagesIsLoading = false;
-  @observable postMessageIsLoading = false;
-
+  @observable messagesIsLoaded = false;
   @observable messagesIsSuccess = false;
+
+  @observable postMessageIsLoading = false;
   @observable postMessageIsSuccess = false;
 
+  @observable establishStandby = false;
   @observable establishIsLoading = false;
+  @observable establishIsLoaded = false;
   @observable establishIsSuccess = false;
 
   @observable requestGroupKeyIsLoading = false;
+  @observable requestGroupKeyIsLoaded = false;
   @observable requestGroupKeyError = false;
 
   @observable joinedSocketUsers = [];
 
   constructor(){ }
+
+  @action.bound async initialize() {
+    const room = roomStore.getRoom(this.roomId);
+    await this.getRoomKey();
+    this.joinRoom();
+    if(this.roomKey){
+      await this.getRoomMessages();
+    } else if(!this.roomKey && room.locked) {
+      this.addEstablishListeners();
+    } else if(!this.roomKey && !room.locked) {
+      await this.requestGroupKeyShare();
+    }
+  }
 
   @computed get messages() {
     return this.roomMessages;
@@ -39,28 +56,22 @@ class ObservableRoomMessageStore {
     this.joinedSocketUsers = users;
   }
   
-  @action.bound async getRoomMessages() {
-    const room = roomStore.getRoom(this.roomId);
-    
-    if(this.roomKey && !room.locked) {
-      const result = await this.fetchGetMessages(this.roomId);
-      this.messagesIsSuccess = result.success;
-      if(result.success){
-        const messages = result.res;
-        messages.forEach(m => { m.text = this.decryptMessage(m.text) });
-        this.roomMessages = messages.reverse();
-      }
-      return result;
-    } else if(!room.locked && !this.roomKey) {
-      //await this.requestGroupKeyShare();
+  @action.bound async getRoomMessages() {    
+    const result = await this.fetchGetMessages(this.roomId);
+    this.messagesIsSuccess = result.success;
+    if(result.success){
+      const messages = result.res;
+      messages.forEach(m => { m.text = this.decryptMessage(m.text) });
+      this.roomMessages = messages.reverse();
     }
+    return result;
   }
 
   @action.bound async postRoomMessage(messageData) {
     const roomId = this.roomId;
 
     messageData.text = this.encryptMessage(messageData.text);
-    messageData.hash = crypto.MD5(messageData).toString();
+    messageData.hash = crypto.MD5(JSON.stringify(messageData)).toString();
 
     const result = await this.fetchPostMessage(roomId, messageData);
     this.postMessageIsSuccess = result.success;
@@ -88,6 +99,7 @@ class ObservableRoomMessageStore {
     try {
       let res = await sendRequest(url, method, headers);
       this.messagesIsLoading = false;
+      this.messagesIsLoaded = true;
       this.postMessageIsLoading = false;
       return res;
     } catch(err) {
@@ -125,7 +137,6 @@ class ObservableRoomMessageStore {
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
     });
-    this.addEstablishListeners();
 
     socket.emit('roomJoin', this.roomId);
   }
@@ -142,14 +153,10 @@ class ObservableRoomMessageStore {
   }
 
   @action addEstablishListeners() {
-    socket.on('establishStart', () => {
-      this.establishIsLoading = true;
-    })
-    socket.on('establishEnd', ({success}) => {
-      this.establishIsLoading = false;
-      this.establishIsSuccess = success;
-    })
+    this.establishStandby = true;
     socket.on('establish', async data => {
+      this.establishIsLoading = true;
+      this.establishStandby = false;
       if(data.memberType == 'captureMemberDefault'){
         let userPubKeyPem = await AsyncStorage.getItem('userPubKey');
         socket.emit('establishResponse', userPubKeyPem);
@@ -170,6 +177,8 @@ class ObservableRoomMessageStore {
       let groupKey = privateKey.decrypt(key);
       this.roomKey = groupKey;
       await AsyncStorage.setItem(`room/${this.roomId}/groupKey`, groupKey);
+      this.establishIsLoading = false;
+      this.establishIsLoaded = true;
     })
   }
   @action removeEstablishListeners() {
@@ -217,7 +226,6 @@ class ObservableRoomMessageStore {
   @action async requestGroupKeyShare() {
     this.requestGroupKeyIsLoading = true;
 
-    //const keyPair = await this.generateKeyPair();
     const secKey = await AsyncStorage.getItem('userSecKey');
     const pubKey = await AsyncStorage.getItem('userPubKey');
     const privateKey = pki.privateKeyFromPem(secKey);
@@ -231,6 +239,7 @@ class ObservableRoomMessageStore {
       this.requestGroupKeyError = true;
     }
     this.requestGroupKeyIsLoading = false;
+    this.requestGroupKeyIsLoaded = true;
   }
 
 }
