@@ -53,7 +53,7 @@ io.on('connection', (client) => {
     setInterval(() => {
       activeRooms.forEach(room => {
         const now = moment(new Date());
-        const destroyTime = moment(room.createdAt).add(room.time, 'ms');
+        const destroyTime = moment(room.createdAt).add(room.time, 'hours');
   
         if(now.isAfter(destroyTime)) {
           try {

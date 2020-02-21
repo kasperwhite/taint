@@ -54,6 +54,10 @@ class Settings extends Component {
     this.props.navigation.navigate('PasswordChange')
   }
 
+  onRefreshKeypair = () => {
+    this.props.navigation.navigate('RefreshKeypair')
+  }
+
   onToggle = async () => {
     const value = !this.state.visible;
     this.setState((state, props) => ({
@@ -72,7 +76,7 @@ class Settings extends Component {
           subtitle={'Username'}
           containerStyle={styles.changeUsernameFieldContainer}
           titleStyle={styles.changeUsernameFieldTitle}
-          subtitleStyle={styles.changeUsernameFieldSubtitle}
+          subtitleStyle={styles.listItemSubtitle}
           onPress={this.onUsernameChange}
         />
         <ListItem
@@ -84,11 +88,20 @@ class Settings extends Component {
         />
         <ListItem
           bottomDivider
-          title={'Invisible'}
-          subtitle={"Others can't add me to contacts"}
+          title={'Refresh key pair'}
+          subtitle={'Try to refresh the key pair as often as possible'}
           containerStyle={styles.changePasswordFieldContainer}
           titleStyle={styles.changePasswordFieldTitle}
-          subtitleStyle={styles.changeUsernameFieldSubtitle}
+          subtitleStyle={styles.listItemSubtitle}
+          onPress={this.onRefreshKeypair}
+        />
+        <ListItem
+          bottomDivider
+          title={'Invisible'}
+          subtitle={"Others can't add you to contacts"}
+          containerStyle={styles.changePasswordFieldContainer}
+          titleStyle={styles.changePasswordFieldTitle}
+          subtitleStyle={styles.listItemSubtitle}
           rightElement={
             <Switch
               value={!this.state.visible}
@@ -130,7 +143,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17
   },
-  changeUsernameFieldSubtitle: {
+  listItemSubtitle: {
     color: '#777',
     fontSize: 13
   },

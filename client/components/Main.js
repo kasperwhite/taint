@@ -23,6 +23,7 @@ import ContactAddition from './Contacts/ContactAddition';
 import Settings from './Settings/Settings';
 import UsernameChange from './Settings/UsernameChange';
 import PasswordChange from './Settings/PasswordChange';
+import RefreshKeypair from './Settings/RefreshKeypair';
 
 import authStore from '../mobx/AuthStore';
 import roomStore from '../mobx/RoomStore';
@@ -59,7 +60,8 @@ const SettingsNavigator = createStackNavigator(
   {
     Settings: Settings,
     UsernameChange: UsernameChange,
-    PasswordChange: PasswordChange
+    PasswordChange: PasswordChange,
+    RefreshKeypair: RefreshKeypair
   }, {
     initialRouteName: 'Settings'
   }

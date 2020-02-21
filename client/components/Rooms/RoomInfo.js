@@ -5,6 +5,7 @@ import { observer, inject } from 'mobx-react';
 import TaintButton from '../Shared/TaintButton';
 import Loading from '../Shared/Loading';
 import { avatarsUrl } from '../../mobx/config';
+import moment from 'moment';
 
 const AddUserComponent = (props) => (
   <ListItem
@@ -169,7 +170,10 @@ class RoomInfo extends Component {
 
   render(){
     const roomKey = this.props.roomMessageStore.roomKey;
-    const roomName = this.state.room.name;
+    const room = this.state.room;
+    const roomName = room.name;
+    const selfDestructTime = moment(new Date(room.createdAt)).add(room.time, 'hours').fromNow();
+
     return(
       <ScrollView
         style={{
@@ -183,16 +187,23 @@ class RoomInfo extends Component {
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         />
-        <ListItem
+        {/* <ListItem
           title='Key'
           rightTitle={roomKey ? roomKey.slice(0, 13) + '...' : 'Is not established' }
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
+        /> */}
+        <ListItem
+          title='Key'
+          rightTitle={'AES-128'}
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
         />
         <ListItem
-          title='Time'
-          rightTitle={`${Math.floor(this.state.room.time/3600000)}h`}
+          title='Self-destruct time'
+          rightTitle={selfDestructTime}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}

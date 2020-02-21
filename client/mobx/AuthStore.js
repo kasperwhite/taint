@@ -39,6 +39,7 @@ class ObservableAuthStore {
     await AsyncStorage.removeItem('userToken');
     await AsyncStorage.removeItem('userPubKey');
     await AsyncStorage.removeItem('userSecKey');
+    await AsyncStorage.removeItem('userKeypairTime');
     socket.emit('offline', this.user._id);
   }
 
@@ -60,6 +61,7 @@ class ObservableAuthStore {
 
         await AsyncStorage.setItem('userPubKey', publicKeyPem);
         await AsyncStorage.setItem('userSecKey', privateKeyPem);
+        await AsyncStorage.setItem('userKeypairTime', new Date().toString());
 
         res();
       } catch(err) {

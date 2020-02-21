@@ -1,14 +1,20 @@
 import { observable, action, computed } from "mobx";
 import { sendRequest } from './NetService';
-
 import authStore from './AuthStore';
+import { AsyncStorage } from "react-native";
+const forge = require('node-forge');
 
 class ObservableSettingsStore {
-  @observable settingsData = { };
+  @observable settingsData = {
+    keyPairLastRefresh: ''
+  };
 
   @observable changePasswordIsLoading = false;
   @observable changeUsernameIsLoading = false;
   @observable changeVisibleIsLoading = false;
+
+  @observable keypairDataIsLoading = false;
+  @observable keypairIsRefreshing = false;
 
   constructor(){ }
 
@@ -47,6 +53,38 @@ class ObservableSettingsStore {
     const result = await this.fetchChangeVisible({value, userId: authStore.user._id});
     if(result.success) { authStore.user = result.res }
     return result;
+  }
+
+  @action.bound async getKeypairData() {
+    this.keypairDataIsLoading = true;
+    this.settingsData.keyPairLastRefresh = await AsyncStorage.getItem('userKeypairTime');
+    this.keypairDataIsLoading = false;
+  }
+
+  @action.bound async refreshKeypair() {
+    this.keypairIsRefreshing = true;
+    await this.setNewKeypair();
+    this.settingsData.keyPairLastRefresh = await AsyncStorage.getItem('userKeypairTime');
+    this.keypairIsRefreshing = false;
+  }
+
+  @action setNewKeypair() {
+    return new Promise(async (res, rej) => {
+      try {
+        let { publicKey, privateKey } = forge.pki.rsa.generateKeyPair({ bits: 1024, workers: 5, e: 0x10001 });
+        let publicKeyPem = forge.pki.publicKeyToPem(publicKey);
+        let privateKeyPem = forge.pki.privateKeyToPem(privateKey);
+  
+        await AsyncStorage.setItem('userPubKey', publicKeyPem);
+        await AsyncStorage.setItem('userSecKey', privateKeyPem);
+        await AsyncStorage.setItem('userKeypairTime', new Date().toString());
+
+        res();
+      } catch(err) {
+        console.log(err);
+        rej(err);
+      }
+    })
   }
 
   @action async fetchChangePassword(data) {
