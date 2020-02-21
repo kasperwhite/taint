@@ -151,7 +151,7 @@ class Room extends Component {
           />
         </View>
       )
-    } else if(requestGroupKeyIsLoading){
+    } else if(requestGroupKeyIsLoading || requestGroupKeyError){
       return(
         <View style={styles.emptyScreen}>
           <RequestGroupKeyStatusComponent
@@ -258,26 +258,27 @@ const styles = StyleSheet.create({
     margin: 5
   },
   myMessageContent: {
-    backgroundColor: 'rgb(50, 105, 45)',
+    backgroundColor: '#009C00',
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     maxWidth: 200,
     minWidth: 100
   },
   messageContent: {
-    backgroundColor: 'rgb(45, 90, 45)', 
+    backgroundColor: '#007B00', 
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     maxWidth: 200,
     minWidth: 100,
   },
   messageSender: {
     color: '#fff',
     fontSize: 13,
-    opacity: 0.6,
-    fontStyle: 'italic'
+    opacity: 0.8,
+    fontStyle: 'italic',
+    fontWeight: 'bold'
   },
   messageText: {
     color: '#fff',

@@ -151,9 +151,9 @@ io.on('connection', (client) => {
       clients = clients.map(cId => (io.sockets.connected[cId]));
       if(clients.length) {
         const groupKey = await getGroupKey(clients[0], data.publicKeyPem, data.roomId);
-        client.emit('groupKey', {groupKey, success: true});
+        client.emit('sharedGroupKey', {groupKey, success: true});
       } else {
-        client.emit('groupKey', {success: false});
+        client.emit('sharedGroupKey', {success: false});
       }
     })
   })

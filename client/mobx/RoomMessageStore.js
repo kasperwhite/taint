@@ -35,14 +35,15 @@ class ObservableRoomMessageStore {
   @action.bound async initialize() {
     const room = roomStore.getRoom(this.roomId);
     await this.getRoomKey();
-    this.joinRoom();
+    this.addEstablishListeners();
     if(this.roomKey){
       await this.getRoomMessages();
     } else if(!this.roomKey && room.locked) {
-      this.addEstablishListeners();
+      this.establishStandby = true;
     } else if(!this.roomKey && !room.locked) {
       await this.requestGroupKeyShare();
     }
+    this.joinRoom();
   }
 
   @computed get messages() {
@@ -148,12 +149,12 @@ class ObservableRoomMessageStore {
 
     this.roomKey = '';
     this.requestGroupKeyError = false;
+    this.roomMessages = [];
 
     socket.emit('roomLeave', this.roomId);
   }
 
   @action addEstablishListeners() {
-    this.establishStandby = true;
     socket.on('establish', async data => {
       this.establishIsLoading = true;
       this.establishStandby = false;
@@ -216,7 +217,7 @@ class ObservableRoomMessageStore {
 
   @action requestGroupKey({ publicKeyPem }) {
     return new Promise((res, rej) => {
-      socket.on('groupKey', groupKey => {
+      socket.on('sharedGroupKey', groupKey => {
         res(groupKey)
       })
       socket.emit('groupKeyRequest', { roomId: this.roomId, publicKeyPem })

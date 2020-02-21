@@ -136,7 +136,7 @@ class RoomCreate extends Component {
         <View style={{marginVertical: 15, paddingHorizontal: 15}}>
           <Text
             style={{textAlign:'left', color: '#fff'}}
-          >Self destruct time: <Text style={{color: '#fff', fontWeight: 'bold'}}>{this.state.timeValue}</Text> hours</Text>
+          >Lifetime: <Text style={{color: '#fff', fontWeight: 'bold'}}>{this.state.timeValue}</Text> hours</Text>
           <Slider
             value={this.state.timeValue}
             onValueChange={timeValue => this.setState({ timeValue })}

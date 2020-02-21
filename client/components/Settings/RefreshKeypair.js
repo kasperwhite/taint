@@ -36,7 +36,7 @@ class RefreshKeypair extends Component {
   onRefresh = () => {
     Alert.alert(
       'Refreshing key pair',
-      'Your phone may freeze for a while, are you sure you want to continue?',
+      'App may freeze for a while, are you sure you want to continue?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
