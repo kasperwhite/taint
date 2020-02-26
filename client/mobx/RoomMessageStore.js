@@ -28,6 +28,7 @@ class ObservableRoomMessageStore {
   @observable requestGroupKeyIsLoaded = false;
   @observable requestGroupKeyError = false;
 
+  @observable allSocketUsers = [];
   @observable joinedSocketUsers = [];
 
   constructor(){ }
@@ -127,8 +128,9 @@ class ObservableRoomMessageStore {
   }
 
   @action.bound joinRoom() {
-    socket.on('joinedUsers', users => {
-      this.joinedUsers = users;
+    socket.on('joinedUsers', ({ joinedUsers, allUsers }) => {
+      this.joinedUsers = joinedUsers;
+      this.allSocketUsers = allUsers;
     });
     socket.on('messageCreate', async message => {
       message = JSON.parse(message);

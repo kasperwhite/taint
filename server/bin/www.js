@@ -45,8 +45,13 @@ const activeRooms = [];
 
 let socketRoomDelete;
 
+let plannerIsActivated = false;
+
 io.on('connection', (client) => {
+
   const planner = async () => {
+    plannerIsActivated = true;
+
     const rooms = await getRoomsDb();
     rooms.forEach(r => activeRooms.push(r));
   
@@ -69,7 +74,8 @@ io.on('connection', (client) => {
       })
     }, 10000)
   }
-  planner();
+  if(!plannerIsActivated){ planner() }
+
   /* Activity events */
   client.on('online', userId => {
     if(activeUsers.find((u) => u.userId == userId)){
@@ -122,21 +128,7 @@ io.on('connection', (client) => {
   /* Room events */
   client.on('roomJoin', async roomId => {
     client.join(`${roomId}`);
-    const room = activeRooms.find(r => r._id == roomId);
-    let roomUsers = room.users;
-    let roomLocked = room.locked;
-    io.in(`${roomId}`).clients(async (err, clients) => {
-      io.sockets.in(`${roomId}`).emit('joinedUsers', clients);
-
-      if (roomUsers.length == clients.length && roomLocked) {
-        try {
-          await establishRoomKeys(roomId, clients, io);
-          await unlockRoom(roomId, clients);
-        } catch(err) {
-          console.log(err);
-        }
-      }
-    });
+    establishTry(roomId);
   })
 
   client.on('roomLeave', roomId => {
@@ -167,6 +159,7 @@ io.on('connection', (client) => {
   })
 
   client.on('roomUserAdd', ({room, users}) => {
+    activeRooms.forEach(r => r.users = r._id == room._id ? r.users.concat(users) : r.users)
     users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
       if(receiver){
@@ -178,6 +171,7 @@ io.on('connection', (client) => {
   client.on('roomUserDelete', ({roomId, userId}) => {
     try {
       const receiver = activeUsers.find((au) => au.userId == userId);
+      activeRooms.forEach(r => r.users = r._id == roomId ? r.users.filter(u => u != userId) : r.users)
       if(receiver) {
         if(receiver.socketId == client.id) {
           client.emit('roomDelete', roomId);
@@ -185,6 +179,7 @@ io.on('connection', (client) => {
           client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
         }
       }
+      establishTry(roomId);
     } catch(err) {
       console.log(err)
     }
@@ -218,6 +213,24 @@ io.on('connection', (client) => {
     } catch(err) {
       console.log(err)
     }
+  }
+
+  establishTry = (roomId) => {
+    const room = activeRooms.find(r => r._id == roomId);
+    let roomUsers = room.users;
+    let roomLocked = room.locked;
+    io.in(`${roomId}`).clients(async (err, clients) => {
+      io.sockets.in(`${roomId}`).emit('joinedUsers', { joinedUsers: clients, allUsers: roomUsers });
+
+      if (roomUsers.length == clients.length && roomLocked) {
+        try {
+          await establishRoomKeys(roomId, clients, io);
+          await unlockRoom(roomId, clients);
+        } catch(err) {
+          console.log(err);
+        }
+      }
+    });
   }
 
 });

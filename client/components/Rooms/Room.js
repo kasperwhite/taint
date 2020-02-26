@@ -22,7 +22,7 @@ const EstablishStatusComponent = (props) => (
         <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>Do not leave</Text>
       </View> 
     : <View>
-        <Text style={{color: '#fff', fontSize: 30, textAlign: 'center'}}>{props.joinedUsers}/{props.roomUsers}</Text>
+        <Text style={{color: '#fff', fontSize: 30, textAlign: 'center'}}>{props.joinedUsers}/{props.allUsers}</Text>
         <Text style={{color: 'grey', fontSize: 16, textAlign: 'center'}}>users joined for establishment group key</Text>
       </View>
     }
@@ -109,9 +109,9 @@ class Room extends Component {
   // SEND MESSAGE OPERATION
   sendMessage = async () => {
     let {message} = this.state;
+    this.setState({ message: '' });
     message = message.trim();
     await this.props.roomMessageStore.postRoomMessage({ text: message })
-    this.setState({message: ''});
   }
 
   renderMessage = ({item, index}) => {
@@ -139,12 +139,13 @@ class Room extends Component {
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
     const { establishStandby, joinedUsers, establishIsLoading, requestGroupKeyIsLoading, 
       requestGroupKeyError, messagesIsLoading, messagesIsSuccess, messagesIsLoaded, 
-      messages, postMessageIsLoading} = this.props.roomMessageStore;
+      messages, postMessageIsLoading, allSocketUsers} = this.props.roomMessageStore;
 
     if(establishStandby){
       return(
         <View style={styles.emptyScreen}>
           <EstablishStatusComponent
+            allUsers={allSocketUsers.length}
             joinedUsers={joinedUsers.length}
             roomUsers={room.users.length}
             establishIsLoading={establishIsLoading}
