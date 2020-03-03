@@ -6,6 +6,7 @@ import TaintButton from '../Shared/TaintButton';
 import Loading from '../Shared/Loading';
 import { avatarsUrl } from '../../mobx/config';
 import moment from 'moment';
+import { toJS } from 'mobx';
 
 const AddUserComponent = (props) => (
   <ListItem
@@ -211,7 +212,7 @@ class RoomInfo extends Component {
         <ListItem
           title='Users'
           bottomDivider
-          rightTitle={`${this.state.room.users.length}`}
+          rightTitle={`${this.props.roomUserStore.users.length}`}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
@@ -221,7 +222,7 @@ class RoomInfo extends Component {
           : this.props.roomUserStore.usersIsSuccess
             ? <FlatList
                 keyExtractor={item => item._id.toString()}
-                data={this.props.roomUserStore.users}
+                data={toJS(this.props.roomUserStore.users)}
                 renderItem={this.renderUser}
                 ListHeaderComponent={<AddUserComponent addUser={this.addUser}/>}
               />

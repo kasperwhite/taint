@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
 
 import authStore from './AuthStore';
 import { sendRequest, socket } from './NetService';
@@ -20,7 +20,7 @@ class ObservableRoomUserStore {
     return this.roomUsers;
   }
   
-  @action.bound async getRoomUsers(roomId) { // todo: socket.io ON roomUsers
+  @action.bound async getRoomUsers(roomId) {
     const result = await this.fetchGetUsers(roomId);
     this.usersIsSuccess = result.success;
     if(result.success){
@@ -29,7 +29,7 @@ class ObservableRoomUserStore {
     return result;
   }
 
-  @action.bound async postRoomUsers(room, users) { // todo: socket.io EMIT addRoomUser
+  @action.bound async postRoomUsers(room, users) {
     const result = await this.fetchPostUsers(room._id, {users});
     this.postUsersSuccess = result.success;
     if(result.success){
@@ -39,7 +39,7 @@ class ObservableRoomUserStore {
     return result;
   }
 
-  @action.bound async deleteRoomUser(roomId, userId) { // todo: socket.io EMIT deleteRoomUser
+  @action.bound async deleteRoomUser(roomId, userId) {
     const result = await this.fetchDeleteUser(roomId, userId);
     this.deleteUserSuccess = result.success;
     if(result.success){
