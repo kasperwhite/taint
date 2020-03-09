@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "client",
-    "slug": "client",
+    "name": "Taint",
+    "slug": "Taint",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -24,7 +24,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.kerite.taint",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.kerite.taint",
+      "versionCode": 1
     }
   }
 }

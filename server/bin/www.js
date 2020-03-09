@@ -43,6 +43,8 @@ server.on('listening', onListening);
 const activeUsers = [];
 const activeRooms = [];
 
+getRoomsDb().then(rooms => rooms.forEach(r => activeRooms.push(r)));
+
 let socketRoomDelete;
 
 let plannerIsActivated = false;
@@ -51,9 +53,6 @@ io.on('connection', (client) => {
 
   const planner = async () => {
     plannerIsActivated = true;
-
-    const rooms = await getRoomsDb();
-    rooms.forEach(r => activeRooms.push(r));
   
     setInterval(() => {
       activeRooms.forEach(room => {
@@ -105,6 +104,7 @@ io.on('connection', (client) => {
 
   /* Room List events */
   client.on('roomCreate', room => {
+    activeRooms.push(room);
     try {
       const currentUser = activeUsers.find((u) => u.socketId == client.id);
       const users = room.users.filter((u) => u != currentUser.userId);
@@ -114,7 +114,6 @@ io.on('connection', (client) => {
           client.to(`${receiver.socketId}`).emit('roomCreate', room);
         }
       })
-      activeRooms.push(room);
     } catch(err) {
       console.log(err)
     }
