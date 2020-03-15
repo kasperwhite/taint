@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { AsyncStorage, View, ActivityIndicator, StatusBar } from 'react-native';
 import { Text } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
+import Loading from '../Shared/Loading';
 
 class AuthLoading extends Component {
   constructor(props){
@@ -47,11 +48,12 @@ class AuthLoading extends Component {
           backgroundColor: '#151516'
         }}
       >
-        <Text
-          h1
-          h1Style={{color: '#09C709', fontWeight: 'bold'}}
+        {/* <Text
+          h3
+          h3Style={{color: '#09C709', fontWeight: 'bold'}}
           style={{marginBottom: 15}}
-        >Taint</Text>
+        >Authentication</Text> */}
+        <Loading size={'large'}/>
       </View>
     )
   }

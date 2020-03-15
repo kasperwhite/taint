@@ -43,7 +43,10 @@ server.on('listening', onListening);
 const activeUsers = [];
 const activeRooms = [];
 
-getRoomsDb().then(rooms => rooms.forEach(r => activeRooms.push(r)));
+getRoomsDb().then(rooms => { 
+  rooms.forEach(r => activeRooms.push(r));
+  console.log('Rooms recieved');
+});
 
 let socketRoomDelete;
 
