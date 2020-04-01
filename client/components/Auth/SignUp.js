@@ -30,6 +30,10 @@ class SignUp extends Component {
     };
   };
 
+  componentDidMount(){
+    this.refreshUsername()
+  }
+
   resetForm = () => {
     this.setState({
       username: '',
@@ -48,14 +52,26 @@ class SignUp extends Component {
     } else {
       console.log(result);
     }
-  } 
+  }
+
+  onPasswordEyeClick = () => {
+    this.setState({passwordIsVisible: !this.state.passwordIsVisible})
+  }
+
+  onUsernameRefreshClick = () => {
+    this.refreshUsername();
+  }
+
+  refreshUsername = () => {
+    this.setState({username: this.props.authStore.generateUsername()})
+  }
 
   render(){
     return(
       <View style={styles.view}>
         <View style={styles.inputBlock}>
           <Input 
-            placeholder='Username'
+            disabled={true}
             leftIconContainerStyle={{marginRight: 7}}
             value={this.state.username}
             onChangeText={(u) => {this.setState({username: u.replace(/\s/g,'')})}}
@@ -67,6 +83,20 @@ class SignUp extends Component {
             inputStyle={{color: '#fff'}}
             maxLength={20}
             inputContainerStyle={{borderBottomColor: '#167B14'}}
+            rightIcon={
+              <Button
+                type='clear'
+                icon={
+                  <Icon
+                    name='refresh'
+                    type='font-awesome'
+                    color='#167B14'
+                    size={20}
+                  />
+                }
+                onPress={this.onUsernameRefreshClick}
+              />
+            }
           />
           <Input 
             placeholder='Password'
@@ -82,7 +112,7 @@ class SignUp extends Component {
                     size={20}
                   />
                 }
-                onPress={() => this.setState({passwordIsVisible: !this.state.passwordIsVisible})}
+                onPress={this.onPasswordEyeClick}
               />
             }
             value={this.state.password}

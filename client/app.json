@@ -30,6 +30,9 @@
     "android": {
       "package": "com.kerite.taint",
       "versionCode": 1
+    },
+    "notification": {
+      "icon": "./assets/icon.png"
     }
   }
 }

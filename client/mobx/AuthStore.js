@@ -122,6 +122,21 @@ class ObservableAuthStore {
       console.log(err);
     }
   }
+
+  @action generateUsername() {
+    let username = '';
+    let letters = 'abcdefghijklmnopqrstuvwxyz';
+    let figures = '0123456789';
+
+    for(let i = 0; i < 5; i++) {
+      username += letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+    for(let i = 0; i < 3; i++) {
+      username += figures.charAt(Math.floor(Math.random() * figures.length));
+    }
+
+    return username;
+  }
 }
 
 const authStore = new ObservableAuthStore();
