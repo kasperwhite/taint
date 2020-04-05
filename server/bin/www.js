@@ -12,9 +12,13 @@ const moment = require('moment');
 
 const fs = require('fs');
 const httpsOptions = {
-  key: fs.readFileSync(__dirname + '/ssl/taintservkey.key', 'utf8'),
-  cert: fs.readFileSync(__dirname + '/ssl/taintservcert.pem', 'utf8'),
-  ca: fs.readFileSync(__dirname + '/ssl/taintservcacert.pem', 'utf8')
+  key: fs.readFileSync(__dirname + '/ssl/taintkey.key', 'utf8'),
+  cert: fs.readFileSync(__dirname + '/ssl/taintcert.pem', 'utf8'),
+  ca: [
+    fs.readFileSync(__dirname + '/ssl/ca_root.pem', 'utf8'),
+    fs.readFileSync(__dirname + '/ssl/ca_bundle.pem', 'utf8')
+  ]
+  
 }
 const secureServer = require('https').createServer(httpsOptions, app);
 
@@ -38,19 +42,12 @@ app.set('secPort', port + 443);
  * Listen on provided port, on all network interfaces.
  */
 
-if(env === 'https') {
-  secureServer.listen(app.get('secPort'), () => {
-    console.log('HTTPS server listening on port', app.get('secPort'));
-  });
-  secureServer.on('error', onError);
-  secureServer.on('listening', onListening);
-} else {
-  server.listen(app.get('port'), () => {
-    console.log('HTTP server listening on port', app.get('port'));
-  });
-  server.on('error', onError);
-  server.on('listening', onListening);
-}
+secureServer.listen(app.get('secPort'), () => {
+  console.log('HTTPS server listening on port', app.get('secPort'));
+});
+secureServer.on('error', onError);
+secureServer.on('listening', onListening);
+
 
 /**
  * Socket.io listener
@@ -317,7 +314,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = env === 'https' ? secureServer.address() : server.address();
+  var addr = secureServer.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
