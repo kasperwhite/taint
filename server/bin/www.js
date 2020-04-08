@@ -20,7 +20,6 @@ const httpsOptions = {
   
 }
 const secureServer = require('https').createServer(httpsOptions, app);
-const io = require('socket.io')(secureServer);
 
 const roomDeleteDb = require('../services/roomService').roomDeleteDb;
 const getRoomsDb = require('../services/roomService').getRoomsDb;
@@ -56,7 +55,7 @@ if(env === 'dev'){
   secureServer.on('listening', onListening);
 }
 
-
+const io = require('socket.io')(env === 'dev' ? server : secureServer);
 
 
 /**

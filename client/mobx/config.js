@@ -1,4 +1,4 @@
 module.exports = {
-  'serverUrl': 'http://192.168.1.2:3000/',
-  'avatarsUrl': 'http://192.168.1.2:3000/images/avatar'
+  'serverUrl': 'https://taintapp.xyz:3443/',
+  'avatarsUrl': 'https://taintapp.xyz:3443/images/avatar'
 }
