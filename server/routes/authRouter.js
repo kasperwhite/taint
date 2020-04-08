@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const authRouter = express.Router();
 const authenticate = require('../authenticate');
+
 const UserModel = require('../models/user');
+const RoomModel = require('../models/room');
+const MessageModel = require('../models/message');
 
 authRouter.use(bodyParser.json());
 
@@ -92,6 +95,34 @@ authRouter.post('/change_visible', async (req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
     res.json({error: err});
   }
+})
+
+authRouter.delete('/account', async (req, res, next) => {
+  const { password, userId } = req.body;
+
+  const user = await UserModel.findById(userId);
+
+  user.authenticate(password, async (err, user) => {
+    if(user){
+      try {
+        await UserModel.findByIdAndRemove(userId);
+        await RoomModel.remove({ creator: userId });
+        await MessageModel.remove({ sender: userId });
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({success: true});
+      } catch(err) {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({success: false});
+      }
+    } else {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: false});
+    }
+  })
 })
 
 module.exports = authRouter;

@@ -24,6 +24,7 @@ import Settings from './Settings/Settings';
 import UsernameChange from './Settings/UsernameChange';
 import PasswordChange from './Settings/PasswordChange';
 import RefreshKeypair from './Settings/RefreshKeypair';
+import DeleteAccount from './Settings/DeleteAccount';
 
 import authStore from '../mobx/AuthStore';
 import roomStore from '../mobx/RoomStore';
@@ -61,7 +62,8 @@ const SettingsNavigator = createStackNavigator(
     Settings: Settings,
     UsernameChange: UsernameChange,
     PasswordChange: PasswordChange,
-    RefreshKeypair: RefreshKeypair
+    RefreshKeypair: RefreshKeypair,
+    DeleteAccount: DeleteAccount
   }, {
     initialRouteName: 'Settings'
   }

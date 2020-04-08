@@ -6,6 +6,7 @@ const forge = require('node-forge');
 class ObservableAuthStore {
   @observable signUpIsLoading = false;
   @observable signInIsLoading = false;
+  @observable deleteAccountIsLoading = false;
 
   @observable userData;
   @observable userToken = '';
@@ -69,8 +70,14 @@ class ObservableAuthStore {
     })
   }
 
-  @action.bound async deleteAccount() {
+  @action.bound async deleteAccount({password}) {
+    const userId = this.user._id;
+    const result = await this.fetchDeleteAccount({userId, password})
+    if(result.success){
+      await AsyncStorage.clear()
+    }
 
+    return result;
   }
 
   @action emitOnline = () => {
@@ -124,6 +131,26 @@ class ObservableAuthStore {
     } catch(err) {
       console.log(err);
     }
+  }
+
+  @action async fetchDeleteAccount(data){
+    this.deleteAccountIsLoading = true;
+
+    const url = 'auth/account';
+    const method = 'DELETE';
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+
+    try {
+      let res = await sendRequest(url, method, headers, data);
+      this.deleteAccountIsLoading = false;
+      
+      return res;
+    } catch(err) {
+      console.log(err)
+    }
+
   }
 }
 

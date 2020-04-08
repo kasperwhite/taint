@@ -58,6 +58,10 @@ class Settings extends Component {
     this.props.navigation.navigate('RefreshKeypair')
   }
 
+  onDeleteAccount = () => {
+    this.props.navigation.navigate('DeleteAccount')
+  }
+
   onToggle = async () => {
     const value = !this.state.visible;
     this.setState((state, props) => ({
@@ -111,6 +115,15 @@ class Settings extends Component {
             />
           }
         />
+        <ListItem
+          bottomDivider
+          title={'Delete account'}
+          subtitle={'Delete account and everything related to it'}
+          containerStyle={styles.changePasswordFieldContainer}
+          titleStyle={styles.deleteAccountFieldTitle}
+          subtitleStyle={styles.listItemSubtitle}
+          onPress={this.onDeleteAccount}
+        />
       </ScrollView>
     )
   }
@@ -153,6 +166,10 @@ const styles = StyleSheet.create({
   },
   changePasswordFieldTitle: {
     color: '#fff',
+    fontSize: 17
+  },
+  deleteAccountFieldTitle: {
+    color: '#f20000',
     fontSize: 17
   }
 })

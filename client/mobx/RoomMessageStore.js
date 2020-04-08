@@ -28,10 +28,13 @@ class ObservableRoomMessageStore {
   @observable requestGroupKeyIsLoaded = false;
   @observable requestGroupKeyError = false;
 
-  @observable allSocketUsers = [];
-  @observable joinedSocketUsers = [];
+  @observable allSocketUsers;
+  @observable joinedSocketUsers;
 
-  constructor(){ }
+  constructor(){
+    this.allSocketUsers = [];
+    this.joinedUsers = [];
+  }
 
   @action.bound async initialize() {
     const room = roomStore.getRoom(this.roomId);
