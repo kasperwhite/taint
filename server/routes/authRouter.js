@@ -9,7 +9,7 @@ authRouter.use(bodyParser.json());
 
 authRouter.post('/signup', (req, res, next) => {
   const { username, password } = req.body;
-  if(username.length < 20 && username.length > 4 && password.length >= 12){
+  if(username.length <= 20 && username.length > 3 && password.length >= 12){
     let avatarId = Math.floor(Math.random() * 2);
     const visible = true;
     UserModel.register(new UserModel({username: username, avatarId, visible}),

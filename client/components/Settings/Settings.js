@@ -70,7 +70,7 @@ class Settings extends Component {
     const { avatarId, username, visible } = this.props.authStore.user;
     return(
       <ScrollView style={styles.screen}>
-        {/* <ListItem
+        <ListItem
           bottomDivider
           title={username}
           subtitle={'Username'}
@@ -78,7 +78,7 @@ class Settings extends Component {
           titleStyle={styles.changeUsernameFieldTitle}
           subtitleStyle={styles.listItemSubtitle}
           onPress={this.onUsernameChange}
-        /> */}
+        />
         <ListItem
           bottomDivider
           title={'Change password'}

@@ -47,7 +47,6 @@ class ObservableAuthStore {
     const result = await this.fetchCurrentUser();
     if(result.success){
       this.user = result.res;
-      socket.emit('online', this.user._id);
     }
     return result;
   }
@@ -72,6 +71,10 @@ class ObservableAuthStore {
 
   @action.bound async deleteAccount() {
 
+  }
+
+  @action emitOnline = () => {
+    socket.emit('online', this.user._id);
   }
 
   @action async fetchSignUp(data){
@@ -121,21 +124,6 @@ class ObservableAuthStore {
     } catch(err) {
       console.log(err);
     }
-  }
-
-  @action generateUsername() {
-    let username = '';
-    let letters = 'abcdefghijklmnopqrstuvwxyz';
-    let figures = '0123456789';
-
-    for(let i = 0; i < 5; i++) {
-      username += letters.charAt(Math.floor(Math.random() * letters.length));
-    }
-    for(let i = 0; i < 3; i++) {
-      username += figures.charAt(Math.floor(Math.random() * figures.length));
-    }
-
-    return username;
   }
 }
 

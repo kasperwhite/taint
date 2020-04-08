@@ -23,10 +23,10 @@ class AuthLoading extends Component {
       if(result.success){
         const userSecKey = await AsyncStorage.getItem('userSecKey');
         if(userSecKey) {
-          this.props.navigation.navigate('App');
+          this.enterApp();
         } else {
           this.props.authStore.generateKeyPair()
-            .then(() => { this.props.navigation.navigate('App') })
+            .then(() => { this.enterApp() })
             .catch(() => { this.props.navigation.navigate('Auth') })
         }
       } else {
@@ -35,6 +35,11 @@ class AuthLoading extends Component {
     } else {
       this.props.navigation.navigate('Auth');
     }
+  }
+
+  enterApp = () => {
+    this.props.authStore.emitOnline();
+    this.props.navigation.navigate('App');
   }
 
   render(){
