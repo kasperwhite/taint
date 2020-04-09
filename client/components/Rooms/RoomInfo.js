@@ -173,6 +173,7 @@ class RoomInfo extends Component {
     const roomKey = this.props.roomMessageStore.roomKey;
     const room = this.state.room;
     const roomName = room.name;
+    const roomType = room.type;
     const selfDestructTime = moment(new Date(room.createdAt)).add(room.time, 'hours').fromNow();
 
     return(
@@ -181,6 +182,13 @@ class RoomInfo extends Component {
           backgroundColor: '#151516'
         }}
       >
+        <ListItem
+          title='Type'
+          rightTitle={roomType == 'secure' ? 'Secure' : 'Non-secure'}
+          containerStyle={styles.infoListItemCont}
+          titleStyle={styles.infoListItemTitle}
+          rightTitleStyle={styles.infoListItemRigthTitle}
+        />
         <ListItem
           title='Name'
           rightTitle={roomName.length > 13 ? roomName.slice(0, 13) + '...' : roomName}
@@ -195,20 +203,26 @@ class RoomInfo extends Component {
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}
         /> */}
-        <ListItem
-          title='Key'
-          rightTitle={'AES-128'}
-          containerStyle={styles.infoListItemCont}
-          titleStyle={styles.infoListItemTitle}
-          rightTitleStyle={styles.infoListItemRigthTitle}
-        />
-        <ListItem
-          title='Self-destruct time'
-          rightTitle={selfDestructTime}
-          containerStyle={styles.infoListItemCont}
-          titleStyle={styles.infoListItemTitle}
-          rightTitleStyle={styles.infoListItemRigthTitle}
-        />
+        {
+          roomType == 'secure'
+          ? <View>
+              <ListItem
+                title='Key'
+                rightTitle={'AES-128'}
+                containerStyle={styles.infoListItemCont}
+                titleStyle={styles.infoListItemTitle}
+                rightTitleStyle={styles.infoListItemRigthTitle}
+              />
+              <ListItem
+                title='Self-destruct time'
+                rightTitle={selfDestructTime}
+                containerStyle={styles.infoListItemCont}
+                titleStyle={styles.infoListItemTitle}
+                rightTitleStyle={styles.infoListItemRigthTitle}
+              />
+            </View>
+          : null
+        }
         <ListItem
           title='Users'
           bottomDivider

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, Switch } from 'react-native';
 import { Overlay, Input, Button, Slider, ButtonGroup, ListItem, Icon, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 import Loading from '../Shared/Loading';
@@ -29,6 +29,7 @@ class RoomCreate extends Component {
     super(props);
 
     this.state = {
+      isRoomSecure: false,
       roomName: '',
       timeValue: 1,
       roomUsers: []
@@ -57,15 +58,16 @@ class RoomCreate extends Component {
   }
 
   handleSubmit = async () => {
-    const { timeValue, roomName, roomUsers } = this.state;
+    const { timeValue, roomName, roomUsers, isRoomSecure } = this.state;
     const result = await this.props.roomStore.postRoom({
+      type: isRoomSecure ? 'secure' : 'nonsecure',
       time: timeValue,
       name: roomName,
       users: roomUsers.map(el => { return el._id })
     });
     if(result.success){
       const room = result.res;
-      this.props.navigation.navigate('Room', { roomId: room._id, roomName: room.name });
+      this.props.navigation.navigate('Room', { roomId: room._id, roomName: room.name, roomType: room.type });
       this.resetForm();
     } else {
       console.log(result);
@@ -121,10 +123,38 @@ class RoomCreate extends Component {
     />
   )
 
+  onSwitchToggle = () => {
+    this.setState({ isRoomSecure: !this.state.isRoomSecure })
+  }
+
   render(){
+    const { isRoomSecure } = this.state;
     return(
       <View style={styles.form}>
         <ScrollView>
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+          {/* <Icon
+            name='unlock'
+            type='font-awesome'
+            color='#09C709'
+            size={22}
+          /> */}
+          <Text style={{color: isRoomSecure ? '#fff' : '#09C709', textAlign: 'right'}}>Non-secure</Text>
+          <Switch
+            value={this.state.isRoomSecure}
+            onValueChange={this.onSwitchToggle}
+            thumbColor='#09C709'
+            trackColor={{ false: '#099609', true: '#099609' }}
+            style={{ marginHorizontal: 10 }}
+          />
+          {/* <Icon
+            name='lock'
+            type='font-awesome'
+            color='#09C709'
+            size={22}
+          /> */}
+          <Text style={{color: !isRoomSecure ? '#fff' : '#09C709', textAlign: 'left'}}>Secure</Text>
+        </View>
         <Input
           value={this.state.roomName}
           onChangeText={(n) => this.setState({roomName: n.replace(/\s/g,'')})}
@@ -133,10 +163,18 @@ class RoomCreate extends Component {
           inputContainerStyle={styles.inputContainer}
           maxLength={25}
         />
-        <View style={{marginVertical: 15, paddingHorizontal: 15}}>
-          <Text
-            style={{textAlign:'left', color: '#fff'}}
-          >Lifetime: <Text style={{color: '#fff', fontWeight: 'bold'}}>{this.state.timeValue}</Text> hours</Text>
+        <View style={{display: isRoomSecure ? 'flex' : 'none', paddingHorizontal: 10, marginVertical: 10}}>
+          <View style={{flexDirection: 'row'}}>
+            <Icon
+              name='clock-o'
+              type='font-awesome'
+              color='#09C709'
+              size={19}
+            />
+            <Text
+              style={{textAlign:'left', color: '#fff', marginLeft: 5}}
+            >Lifetime: <Text style={{color: '#fff', fontWeight: 'bold'}}>{this.state.timeValue}</Text> hours</Text>
+          </View>
           <Slider
             value={this.state.timeValue}
             onValueChange={timeValue => this.setState({ timeValue })}
@@ -152,7 +190,7 @@ class RoomCreate extends Component {
           keyExtractor={item => item._id.toString()}
           data={this.state.roomUsers}
           renderItem={this.renderUser}
-          contentContainerStyle={{paddingHorizontal: 10, marginBottom: 20}}
+          contentContainerStyle={{paddingHorizontal: 10, marginVertical: 10}}
           ListHeaderComponent={
               <ListItem
                 title='Users'
@@ -162,9 +200,18 @@ class RoomCreate extends Component {
                 rightElement={
                   <AddUserButton addUser={this.addUser}/>
                 }
+                leftElement={
+                  <Icon
+                    name='users'
+                    type='font-awesome'
+                    color='#09C709'
+                    size={19}
+                  />
+                }
               />
           }
         />
+        <View style={{ marginVertical: 10 }}>
         {
           this.props.roomStore.postRoomIsLoading
           ? <Loading size={'large'}/>
@@ -174,6 +221,7 @@ class RoomCreate extends Component {
               onPress={this.handleSubmit}
             />
         }
+        </View>
         </ScrollView>
       </View>
     )
@@ -193,7 +241,8 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   inputContainer: {
-    borderColor: '#167B14'
+    borderColor: '#167B14',
+    marginVertical: 10
   },
   slider: {
     

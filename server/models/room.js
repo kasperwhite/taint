@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
@@ -21,12 +25,10 @@ const roomSchema = new mongoose.Schema({
     required: true
   }],
   locked: {
-    type: Boolean,
-    required: true
+    type: Boolean
   },
   time: {
-    type: Number,
-    required: true
+    type: Number
   }
 }, {
   timestamps: true

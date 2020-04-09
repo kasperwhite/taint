@@ -80,20 +80,21 @@ io.on('connection', (client) => {
   
     setInterval(() => {
       activeRooms.forEach(room => {
-        const now = moment(new Date());
-        const destroyTime = moment(room.createdAt).add(room.time, 'hours');
-  
-        if(now.isAfter(destroyTime)) {
-          try {
-            roomDeleteDb(room._id);
-            socketRoomDelete({roomId: room._id, roomUsers: room.users});
-  
-            activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == room._id)), 1);
-          } catch(err) {
-            console.log(err);
+        if(room.type == 'secure'){
+          const now = moment(new Date());
+          const destroyTime = moment(room.createdAt).add(room.time, 'hours');
+    
+          if(now.isAfter(destroyTime)) {
+            try {
+              roomDeleteDb(room._id);
+              socketRoomDelete({roomId: room._id, roomUsers: room.users});
+    
+              activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == room._id)), 1);
+            } catch(err) {
+              console.log(err);
+            }
           }
         }
-  
       })
     }, 10000)
   }
@@ -151,7 +152,9 @@ io.on('connection', (client) => {
   /* Room events */
   client.on('roomJoin', async roomId => {
     client.join(`${roomId}`);
-    establishTry(roomId);
+    if(activeRooms.find(r => r._id == roomId).type == 'secure'){
+      establishTry(roomId);
+    }
   })
 
   client.on('roomLeave', roomId => {

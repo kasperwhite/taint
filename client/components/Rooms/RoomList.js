@@ -97,30 +97,26 @@ class RoomList extends Component {
     }
   }
 
-  enterRoom = (roomId, roomName) => {
-    this.props.navigation.navigate('Room', { roomId, roomName })
+  enterRoom = (roomId, roomName, roomType) => {
+    this.props.navigation.navigate('Room', { roomId, roomName, roomType })
   }
 
   renderRoom = ({item, index}) => {
     return(
       <ListItem
         key={index}
-        title={item.name}
+        title={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon name={item.type == 'secure' ? 'lock' : 'unlock-alt' } type='font-awesome' color='#797575' size={20}/>
+            <Text style={{ color: '#fff', marginLeft: 10 }}>{item.name}</Text>
+          </View>
+        }
         bottomDivider
         rightTitle={moment(item.createdAt).format('LT')}
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
         rightTitleStyle={{fontSize: 12, color: 'grey'}}
-        leftElement={ item.locked ? <Icon name='lock' type='font-awesome' color='#09C709' size={24}/> : null }
-        /* leftElement={
-          <Icon 
-            name={ item.locked ? 'lock' : 'unlock' }
-            type='font-awesome'
-            color='#09C709'
-            size={24}/>
-            
-        } */
-        onPress={() => this.enterRoom(item._id, item.name)}
+        onPress={() => this.enterRoom(item._id, item.name, item.type)}
       />
     )
   }

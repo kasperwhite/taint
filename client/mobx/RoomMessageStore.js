@@ -9,6 +9,7 @@ const pki = forge.pki;
 
 class ObservableRoomMessageStore {
   @observable roomId = '';
+  @observable roomType = '';
   @observable roomKey = '';
   @observable roomMessages = [];
 
@@ -28,16 +29,19 @@ class ObservableRoomMessageStore {
   @observable requestGroupKeyIsLoaded = false;
   @observable requestGroupKeyError = false;
 
-  @observable allSocketUsers = [];
-  @observable joinedSocketUsers = [];
+  @observable allSocketUsers;
+  @observable joinedSocketUsers;
 
-  constructor(){ }
+  constructor(){
+    this.allSocketUsers = [];
+    this.joinedUsers = [];
+  }
 
   @action.bound async initialize() {
     const room = roomStore.getRoom(this.roomId);
     await this.getRoomKey();
     this.addEstablishListeners();
-    if(this.roomKey){
+    if(this.roomKey || this.roomType == 'nonsecure'){
       await this.getRoomMessages();
     } else if(!this.roomKey && room.locked) {
       this.establishStandby = true;
@@ -63,7 +67,7 @@ class ObservableRoomMessageStore {
     this.messagesIsSuccess = result.success;
     if(result.success){
       const messages = result.res;
-      messages.forEach(m => { m.text = this.decryptMessage(m.text) });
+      if(this.roomType == 'secure'){ messages.forEach(m => { m.text = this.decryptMessage(m.text) }) }
       this.roomMessages = messages.reverse();
     }
     return result;
@@ -72,7 +76,7 @@ class ObservableRoomMessageStore {
   @action.bound async postRoomMessage(messageData) {
     const roomId = this.roomId;
 
-    messageData.text = this.encryptMessage(messageData.text);
+    if(this.roomType == 'secure'){ messageData.text = this.encryptMessage(messageData.text) }
     messageData.hash = crypto.MD5(JSON.stringify(messageData)).toString();
 
     const result = await this.fetchPostMessage(roomId, messageData);
@@ -135,7 +139,7 @@ class ObservableRoomMessageStore {
     socket.on('messageCreate', async message => {
       message = JSON.parse(message);
 
-      message.text = this.decryptMessage(message.text);
+      if(this.roomType == 'secure'){ message.text = this.decryptMessage(message.text) }
 
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;

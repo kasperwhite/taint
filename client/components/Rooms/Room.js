@@ -90,8 +90,9 @@ class Room extends Component {
   componentWillMount(){
     const roomName = this.props.navigation.getParam('roomName');
     this.props.navigation.setParams({ openInfo: this.openInfo, roomName });
-    const roomId = this.props.navigation.getParam('roomId');
-    this.props.roomMessageStore.roomId = roomId;
+
+    this.props.roomMessageStore.roomId = this.props.navigation.getParam('roomId');
+    this.props.roomMessageStore.roomType = this.props.navigation.getParam('roomType');
   }
 
   async componentDidMount(){
@@ -139,9 +140,9 @@ class Room extends Component {
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
     const { establishStandby, joinedUsers, establishIsLoading, requestGroupKeyIsLoading, 
       requestGroupKeyError, messagesIsLoading, messagesIsSuccess, messagesIsLoaded, 
-      messages, postMessageIsLoading, allSocketUsers} = this.props.roomMessageStore;
+      messages, postMessageIsLoading, allSocketUsers, roomType} = this.props.roomMessageStore;
 
-    if(establishStandby){
+    if(establishStandby && roomType == 'secure'){
       return(
         <View style={styles.emptyScreen}>
           <EstablishStatusComponent

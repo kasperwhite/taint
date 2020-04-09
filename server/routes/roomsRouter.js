@@ -22,7 +22,7 @@ roomsRouter.route('/')
 .post(async (req, res, next) => { // ALLOW: add room
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
-    req.body.locked = true;
+    req.body.locked = req.body.type == 'secure';
 
     await RoomModel.create(req.body)
     .then((room) => {
