@@ -79,17 +79,15 @@ io.on('connection', (client) => {
     plannerIsActivated = true;
   
     setInterval(() => {
-      activeRooms.forEach(room => {
+      activeRooms.forEach(async room => {
         if(room.type == 'secure'){
           const now = moment(new Date());
           const destroyTime = moment(room.createdAt).add(room.time, 'hours');
     
           if(now.isAfter(destroyTime)) {
             try {
-              roomDeleteDb(room._id);
+              await roomDeleteDb(room._id);
               socketRoomDelete({roomId: room._id, roomUsers: room.users});
-    
-              activeRooms.splice(activeRooms.indexOf(activeRooms.find((r) => r._id == room._id)), 1);
             } catch(err) {
               console.log(err);
             }

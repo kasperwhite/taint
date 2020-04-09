@@ -20,6 +20,9 @@ class ObservableRoomMessageStore {
   @observable postMessageIsLoading = false;
   @observable postMessageIsSuccess = false;
 
+  @observable allSocketUsers = [];
+  @observable joinedSocketUsers = [];
+
   @observable establishStandby = false;
   @observable establishIsLoading = false;
   @observable establishIsLoaded = false;
@@ -29,18 +32,14 @@ class ObservableRoomMessageStore {
   @observable requestGroupKeyIsLoaded = false;
   @observable requestGroupKeyError = false;
 
-  @observable allSocketUsers;
-  @observable joinedSocketUsers;
-
-  constructor(){
-    this.allSocketUsers = [];
-    this.joinedUsers = [];
-  }
+  constructor(){ }
 
   @action.bound async initialize() {
     const room = roomStore.getRoom(this.roomId);
-    await this.getRoomKey();
-    this.addEstablishListeners();
+    if(this.roomType == 'secure'){
+      await this.getRoomKey();
+      this.addEstablishListeners();
+    } 
     if(this.roomKey || this.roomType == 'nonsecure'){
       await this.getRoomMessages();
     } else if(!this.roomKey && room.locked) {
@@ -49,6 +48,20 @@ class ObservableRoomMessageStore {
       await this.requestGroupKeyShare();
     }
     this.joinRoom();
+  }
+
+  @action resetEstablish = () => {
+    this.allSocketUsers = [];
+    this.joinedSocketUsers = [];
+
+    this.establishStandby = false;
+    this.establishIsLoading = false;
+    this.establishIsLoaded = false;
+    this.establishIsSuccess = false;
+
+    this.requestGroupKeyIsLoading = false;
+    this.requestGroupKeyIsLoaded = false;
+    this.requestGroupKeyError = false;
   }
 
   @computed get messages() {

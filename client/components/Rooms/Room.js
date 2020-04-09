@@ -101,6 +101,7 @@ class Room extends Component {
 
   componentWillUnmount(){
     this.props.roomMessageStore.leaveRoom();
+    this.props.roomMessageStore.resetEstablish();
   }
 
   openInfo = () => {
@@ -138,16 +139,16 @@ class Room extends Component {
 
   render(){
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
-    const { establishStandby, joinedUsers, establishIsLoading, requestGroupKeyIsLoading, 
+    const { establishStandby, establishIsLoading, requestGroupKeyIsLoading, 
       requestGroupKeyError, messagesIsLoading, messagesIsSuccess, messagesIsLoaded, 
-      messages, postMessageIsLoading, allSocketUsers, roomType} = this.props.roomMessageStore;
+      messages, postMessageIsLoading, roomType} = this.props.roomMessageStore;
 
     if(establishStandby && roomType == 'secure'){
       return(
         <View style={styles.emptyScreen}>
           <EstablishStatusComponent
-            allUsers={allSocketUsers.length}
-            joinedUsers={joinedUsers.length}
+            allUsers={this.props.roomMessageStore.allSocketUsers.length}
+            joinedUsers={this.props.roomMessageStore.joinedUsers.length}
             roomUsers={room.users.length}
             establishIsLoading={establishIsLoading}
           />

@@ -108,7 +108,7 @@ class RoomList extends Component {
         title={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name={item.type == 'secure' ? 'lock' : 'unlock-alt' } type='font-awesome' color='#797575' size={20}/>
-            <Text style={{ color: '#fff', marginLeft: 10 }}>{item.name}</Text>
+            <Text style={{ color: '#fff', marginLeft: 10, fontSize: 17, fontWeight: 'bold' }}>{item.name}</Text>
           </View>
         }
         bottomDivider

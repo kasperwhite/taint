@@ -40,8 +40,8 @@ class ObservableRoomStore {
     this.postRoomIsSuccess = result.success;
     if(result.success){
       const room = result.res;
-      this.rooms.unshift(room);
-      socket.emit('roomCreate',  room);
+      this.rooms.push(room);
+      socket.emit('roomCreate', room);
     } 
     return result;
   }
@@ -119,7 +119,7 @@ class ObservableRoomStore {
 
   @action.bound openSocketListeners({onRoomDeleteNavigate}) {
     socket.on('roomCreate', async room => {
-      this.rooms.unshift(room);
+      this.rooms.push(room);
       await this.presentLocalNotification(room.name)
     });
     socket.on('roomDelete', async roomId => {
@@ -143,6 +143,7 @@ class ObservableRoomStore {
   @action removeSocketListeners() {
     socket.removeEventListener('roomCreate');
     socket.removeEventListener('roomDelete');
+    socket.removeEventListener('roomUnlocked')
   }
 
   @action async obtainNotificationPermission() {

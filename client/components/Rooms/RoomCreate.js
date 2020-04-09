@@ -54,7 +54,7 @@ class RoomCreate extends Component {
   }
 
   resetForm = () => {
-    this.setState({roomName: '', timeValue: 1, roomUsers: []})
+    this.setState({isRoomSecure: false, roomName: '', timeValue: 1, roomUsers: []})
   }
 
   handleSubmit = async () => {
@@ -133,12 +133,6 @@ class RoomCreate extends Component {
       <View style={styles.form}>
         <ScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-          {/* <Icon
-            name='unlock'
-            type='font-awesome'
-            color='#09C709'
-            size={22}
-          /> */}
           <Text style={{color: isRoomSecure ? '#fff' : '#09C709', textAlign: 'right'}}>Non-secure</Text>
           <Switch
             value={this.state.isRoomSecure}
@@ -147,12 +141,6 @@ class RoomCreate extends Component {
             trackColor={{ false: '#099609', true: '#099609' }}
             style={{ marginHorizontal: 10 }}
           />
-          {/* <Icon
-            name='lock'
-            type='font-awesome'
-            color='#09C709'
-            size={22}
-          /> */}
           <Text style={{color: !isRoomSecure ? '#fff' : '#09C709', textAlign: 'left'}}>Secure</Text>
         </View>
         <Input
