@@ -184,7 +184,7 @@ class RoomInfo extends Component {
       >
         <ListItem
           title='Type'
-          rightTitle={roomType == 'secure' ? 'Secure' : 'Non-secure'}
+          rightTitle={roomType == 'secure' ? 'Encrypted' : 'Basic'}
           containerStyle={styles.infoListItemCont}
           titleStyle={styles.infoListItemTitle}
           rightTitleStyle={styles.infoListItemRigthTitle}

@@ -64,6 +64,11 @@ const io = require('socket.io')(env === 'dev' ? server : secureServer);
 const activeUsers = [];
 const activeRooms = [];
 
+const deleteUserFromOnline = (socketId) => {
+  const uId = activeUsers.indexOf(activeUsers.find(au => au.socketId == socketId));
+  if(uId !== -1){ activeUsers.splice(uId,1); }
+}
+
 getRoomsDb().then(rooms => { 
   rooms.forEach(r => activeRooms.push(r));
   console.log('Rooms recieved');
@@ -112,7 +117,8 @@ io.on('connection', (client) => {
   })
 
   client.on('offline', userId => {
-    activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId && u.socketId == client.id)), 1);
+    deleteUserFromOnline(client.id);
+    // activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId && u.socketId == client.id)), 1);
     console.log('Client offline: ', activeUsers);
   })
 
@@ -120,7 +126,9 @@ io.on('connection', (client) => {
     if(reason == 'io server disconnect' || reason == 'io client disconnect' || reason == 'ping timeout'){
 
     } else {
-      activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.socketId == client.id)), 1);
+      deleteUserFromOnline(client.id)
+      console.log('User trying to disconnect: ', socketId)
+      // activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.socketId == client.id)), 1);
       console.log('Client disconnected: ', reason, activeUsers);
     }
   })
