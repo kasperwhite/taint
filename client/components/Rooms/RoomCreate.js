@@ -133,7 +133,7 @@ class RoomCreate extends Component {
       <View style={styles.form}>
         <ScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{color: isRoomSecure ? '#fff' : '#09C709', textAlign: 'right'}}>Non-secure</Text>
+          <Text style={{color: isRoomSecure ? '#fff' : '#09C709', textAlign: 'right'}}>Basic</Text>
           <Switch
             value={this.state.isRoomSecure}
             onValueChange={this.onSwitchToggle}
@@ -141,7 +141,7 @@ class RoomCreate extends Component {
             trackColor={{ false: '#099609', true: '#099609' }}
             style={{ marginHorizontal: 10 }}
           />
-          <Text style={{color: !isRoomSecure ? '#fff' : '#09C709', textAlign: 'left'}}>Secure</Text>
+          <Text style={{color: !isRoomSecure ? '#fff' : '#09C709', textAlign: 'left'}}>Encrypted</Text>
         </View>
         <Input
           value={this.state.roomName}

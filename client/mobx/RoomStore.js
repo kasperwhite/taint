@@ -120,7 +120,7 @@ class ObservableRoomStore {
   @action.bound openSocketListeners({onRoomDeleteNavigate}) {
     socket.on('roomCreate', async room => {
       this.rooms.push(room);
-      await this.presentLocalNotification(room.name)
+      await this.presentLocalNotification(room.name, room.type)
     });
     socket.on('roomDelete', async roomId => {
       const newRooms = this.roomList.filter(r => r._id != roomId);
@@ -157,18 +157,20 @@ class ObservableRoomStore {
     return permission;
   }
 
-  @action async presentLocalNotification(roomName){
+  @action async presentLocalNotification(roomName, roomType){
     await this.obtainNotificationPermission();
     Notifications.presentLocalNotificationAsync({
       title: 'New room',
-      body: 'Please check new room ' + roomName + ' for the group key establishment',
+      body: `You were invited to the room ${roomName}. ${roomType == 'secure' ? 'You should join for group key establishment.' : ''}`,
+      //body: 'Please check new room ' + roomName + ' for the group key establishment',
       ios: {
         sound: true
       },
       android: {
         sound: true,
         vibrate: true,
-        color: '#09C709'
+        color: '#09C709',
+        icon: '../assets/icon.png'
       }
     })
   }
