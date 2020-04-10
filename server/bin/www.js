@@ -118,7 +118,6 @@ io.on('connection', (client) => {
 
   client.on('offline', userId => {
     deleteUserFromOnline(client.id);
-    // activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.userId == userId && u.socketId == client.id)), 1);
     console.log('Client offline: ', activeUsers);
   })
 
@@ -127,8 +126,6 @@ io.on('connection', (client) => {
 
     } else {
       deleteUserFromOnline(client.id)
-      console.log('User trying to disconnect: ', socketId)
-      // activeUsers.splice(activeUsers.indexOf(activeUsers.find((u) => u.socketId == client.id)), 1);
       console.log('Client disconnected: ', reason, activeUsers);
     }
   })
@@ -137,9 +134,7 @@ io.on('connection', (client) => {
   client.on('roomCreate', room => {
     activeRooms.push(room);
     try {
-      const currentUser = activeUsers.find((u) => u.socketId == client.id);
-      const users = room.users.filter((u) => u != currentUser.userId);
-      users.forEach((u) => {
+      room.users.forEach((u) => {
         const receiver = activeUsers.find((au) => au.userId == u);
         if(receiver){
           client.to(`${receiver.socketId}`).emit('roomCreate', room);
