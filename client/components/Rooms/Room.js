@@ -13,7 +13,7 @@ const UserTypingComponent = (props) => {
 
   return (
     <View style={{ width: '100%', alignSelf: 'flex-end', paddingVertical: 2, paddingHorizontal: 5 }}>
-      <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 15 }}>
+      <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 16 }}>
         { 
           typingUsers.length 
           ? typingUsers.length > 2 

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { ListItem, Icon, Button, Avatar } from 'react-native-elements';
 import { observer, inject } from 'mobx-react';
 
@@ -128,6 +128,12 @@ class Contacts extends Component {
       return(
         <View style={styles.emptyScreen}>
           <Loading size={'large'}/>
+        </View>
+      )
+    } else if(!this.props.contactStore.contactList.length){
+      return(
+        <View style={styles.emptyScreen}>
+          <Text style={{color: 'grey', fontSize: 20}}>Contact list is empty</Text>
         </View>
       )
     } else {
