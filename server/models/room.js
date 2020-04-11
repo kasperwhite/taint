@@ -29,6 +29,13 @@ const roomSchema = new mongoose.Schema({
   },
   time: {
     type: Number
+  },
+  newForUsers: [{
+    type: String
+  }],
+  lastUpdate: {
+    type: String,
+    required: true
   }
 }, {
   timestamps: true

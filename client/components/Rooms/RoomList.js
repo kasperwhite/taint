@@ -112,11 +112,14 @@ class RoomList extends Component {
           </View>
         }
         bottomDivider
-        rightTitle={moment(item.createdAt).format('LT')}
         containerStyle={styles.roomCont}
         titleStyle={styles.roomTitle}
-        rightTitleStyle={{fontSize: 12, color: 'grey'}}
         onPress={() => this.enterRoom(item._id, item.name, item.type)}
+        rightElement={
+          item.hasNewMessage
+          ? <Badge badgeStyle={{ backgroundColor: '#09C709', width: 10, height: 10, borderColor: '#09C709' }} />
+          : null
+        }
       />
     )
   }

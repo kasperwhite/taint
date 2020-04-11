@@ -23,6 +23,7 @@ roomsRouter.route('/')
     req.body.creator = req.user._id;
     req.body.users.push(req.user._id);
     req.body.locked = req.body.type == 'secure';
+    req.body.lastUpdate = new Date().toString();
 
     await RoomModel.create(req.body)
     .then((room) => {
@@ -153,6 +154,7 @@ roomsRouter.route('/:roomId/messages')
 
       let message = await MessageModel.create(req.body);
       room.messages.push(message._id);
+      room.lastUpdate = new Date().toString();
       room = await room.save();
       message = await MessageModel.findById(message._id).populate('sender');
 
