@@ -9,7 +9,8 @@ import { MD5 } from 'crypto-js';
 import Loading from '../Shared/Loading';
 
 const UserTypingComponent = (props) => {
-  const typingUsers = props.typingUsers;
+  const { typingUsers } = props;
+
   return (
     <View style={{ width: '100%', alignSelf: 'flex-end', paddingVertical: 3, paddingHorizontal: 15 }}>
       <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 16 }}>
@@ -120,6 +121,8 @@ class Room extends Component {
   componentWillUnmount(){
     this.props.roomMessageStore.leaveRoom();
     this.props.roomMessageStore.resetEstablish();
+    if(this.state.typingTimeoutId){ clearTimeout(this.state.typingTimeoutId) }
+    this.props.roomMessageStore.emitUserTyping('typingEnd');
   }
 
   openInfo = () => {
@@ -157,11 +160,11 @@ class Room extends Component {
 
   onUserType = (text) => {
     this.setState({ message: text });
-    this.props.roomMessageStore.emitUserType('typeStart');
+    this.props.roomMessageStore.emitUserTyping('typingStart');
 
     if(this.state.typingTimeoutId){ clearTimeout(this.state.typingTimeoutId) }
     this.state.typingTimeoutId = setTimeout(() => {
-      this.props.roomMessageStore.emitUserType('typeEnd');
+      this.props.roomMessageStore.emitUserTyping('typingEnd');
     }, 3000)
   }
 
@@ -276,7 +279,7 @@ const styles = StyleSheet.create({
   flatList: {
     flexDirection: 'column',
     paddingHorizontal: 15,
-    paddingVertical: 10
+    paddingVertical: 5
   },
   message: {
     flexDirection: 'row',

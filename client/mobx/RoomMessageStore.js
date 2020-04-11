@@ -107,11 +107,11 @@ class ObservableRoomMessageStore {
     this.roomKey = await AsyncStorage.getItem(`room/${this.roomId}/groupKey`);
   }
 
-  @action emitUserType(action) {
+  @action emitUserTyping(action) {
     const userName = authStore.user.username;
     const roomId = this.roomId;
 
-    socket.emit('roomUserType', { roomId, userName, action });
+    socket.emit('roomUserTyping', { roomId, userName, action });
   }
 
   @action async fetchGetMessages(roomId){
@@ -166,11 +166,11 @@ class ObservableRoomMessageStore {
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
     });
-    socket.on('roomUserType', ({ userName, action }) => {
+    socket.on('roomUserTyping', ({ userName, action }) => {
       if(userName != authStore.user.username){
-        if(action == 'typeStart' && !this.typingUsers.find(tu => tu == userName)) {
+        if(action == 'typingStart' && !this.typingUsers.find(tu => tu == userName)) {
           this.typingUsers.push(userName);
-        } else if(action == 'typeEnd') {
+        } else if(action == 'typingEnd') {
           this.typingUsers.splice(this.typingUsers.indexOf(this.typingUsers.find(tu => tu == userName)), 1)
         }
       }

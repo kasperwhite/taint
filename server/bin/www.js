@@ -165,8 +165,8 @@ io.on('connection', (client) => {
     })
   })
 
-  client.on('roomUserType', ({ roomId, userName, action }) => {
-    io.sockets.in(`${roomId}`).emit('roomUserType', { userName, action });
+  client.on('roomUserTyping', ({ roomId, userName, action }) => {
+    io.sockets.in(`${roomId}`).emit('roomUserTyping', { userName, action });
   })
 
   client.on('groupKeyRequest', data => {
