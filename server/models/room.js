@@ -29,7 +29,10 @@ const roomSchema = new mongoose.Schema({
   },
   time: {
     type: Number
-  }
+  },
+  newForUsers: [{
+    type: String
+  }]
 }, {
   timestamps: true
 })

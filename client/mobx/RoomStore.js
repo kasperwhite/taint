@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
 
 import authStore from './AuthStore';
 import messageStore from './RoomMessageStore';
@@ -33,7 +33,11 @@ class ObservableRoomStore {
     this.roomsIsSuccess = result.success;
     if(result.success){
       this.rooms = result.res;
-      this.rooms.forEach(r => r.hasNewMessage = false);
+      this.rooms.forEach(r => {
+        if(r.newForUsers.includes(authStore.user._id)){
+          r.hasNewMessage = true;
+        }
+      })
     }
     return result;
   }

@@ -21,6 +21,8 @@ const httpsOptions = {
 }
 const secureServer = require('https').createServer(httpsOptions, app);
 
+const addToNewForUsers = require('../services/roomService').addToNewForUsers;
+const removeFromNewForUsers = require('../services/roomService').removeFromNewForUsers;
 const roomDeleteDb = require('../services/roomService').roomDeleteDb;
 const getRoomsDb = require('../services/roomService').getRoomsDb;
 const unlockRoomDb = require('../services/roomService').unlockRoomDb;
@@ -156,6 +158,7 @@ io.on('connection', (client) => {
     if(activeRooms.find(r => r._id == roomId).type == 'secure'){
       establishTry(roomId);
     }
+    removeFromNewForUsers(roomId, activeUsers.find(au => au.socketId == client.id).userId)
   })
 
   client.on('roomLeave', roomId => {
@@ -184,12 +187,18 @@ io.on('connection', (client) => {
   client.on('messageCreate', ({message, roomId}) => {
     io.sockets.in(`${roomId}`).emit('messageCreate', message);
 
-    const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
-    roomUsers.forEach((ru) => {
-      const receiver = activeUsers.find((au) => au.userId == ru);
-      if(receiver){
-        client.to(`${receiver.socketId}`).emit('newMessage', roomId);
-      }
+    io.in(`${roomId}`).clients(async (err, clients) => {
+      const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
+
+      roomUsers.forEach((ru) => {
+        const receiver = activeUsers.find((au) => au.userId == ru);
+        if(receiver && !clients.includes(receiver.socketId)){
+          client.to(`${receiver.socketId}`).emit('newMessage', roomId);
+          addToNewForUsers(roomId, ru);
+        } else if(!receiver) {
+          addToNewForUsers(roomId, ru);
+        }
+      })
     })
   })
 

@@ -2,6 +2,27 @@ const RoomModel = require('../models/room');
 const MessageModel = require('../models/message');
 const constants = require('./constants');
 
+exports.addToNewForUsers = async (roomId, userId) => {
+  try {
+    let room = await RoomModel.findById(roomId);
+    room.newForUsers.push(userId);
+    room = await room.save();
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+exports.removeFromNewForUsers = async (roomId, userId) => {
+  try {
+    let room = await RoomModel.findById(roomId);
+    let userIndex = room.newForUsers.indexOf(userId);
+    if(userIndex != -1){ room.newForUsers.splice(userIndex, 1) }
+    room = await room.save();
+  } catch(err) {
+    console.log(err);
+  }
+}
+
 exports.roomDeleteDb = async (roomId) => {
   try {
     const room = await RoomModel.findById(roomId);
