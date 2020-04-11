@@ -12,8 +12,8 @@ const UserTypingComponent = (props) => {
   const { typingUsers } = props;
 
   return (
-    <View style={{ width: '100%', alignSelf: 'flex-end', paddingVertical: 3, paddingHorizontal: 15 }}>
-      <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 16 }}>
+    <View style={{ width: '100%', alignSelf: 'flex-end', paddingVertical: 2, paddingHorizontal: 5 }}>
+      <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 15 }}>
         { 
           typingUsers.length 
           ? typingUsers.length > 2 
@@ -220,9 +220,9 @@ class Room extends Component {
               windowSize={10}
               removeClippedSubviews={true}
               onContentSizeChange={this.onContentSizeChange}
-            />
-            <UserTypingComponent
-              typingUsers={toJS(typingUsers)}
+              ListHeaderComponent={
+                <UserTypingComponent typingUsers={toJS(typingUsers)}/>
+              }
             />
             <View style={styles.messageInputCont}>
               <Input
