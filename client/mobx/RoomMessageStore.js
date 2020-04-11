@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
 import { AsyncStorage } from 'react-native';
 import * as crypto from 'crypto-js';
 import { sendRequest, socket } from './NetService';
@@ -22,6 +22,7 @@ class ObservableRoomMessageStore {
 
   @observable allSocketUsers = [];
   @observable joinedSocketUsers = [];
+  @observable typingUsers = [];
 
   @observable establishStandby = false;
   @observable establishIsLoading = false;
@@ -53,6 +54,7 @@ class ObservableRoomMessageStore {
   @action resetEstablish = () => {
     this.allSocketUsers = [];
     this.joinedSocketUsers = [];
+    this.typingUsers = [];
 
     this.establishStandby = false;
     this.establishIsLoading = false;
@@ -103,6 +105,13 @@ class ObservableRoomMessageStore {
 
   @action async getRoomKey() {
     this.roomKey = await AsyncStorage.getItem(`room/${this.roomId}/groupKey`);
+  }
+
+  @action emitUserType(action) {
+    const userName = authStore.user.username;
+    const roomId = this.roomId;
+
+    socket.emit('roomUserType', { roomId, userName, action });
   }
 
   @action async fetchGetMessages(roomId){
@@ -157,6 +166,15 @@ class ObservableRoomMessageStore {
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
     });
+    socket.on('roomUserType', ({ userName, action }) => {
+      if(userName != authStore.user.username){
+        if(action == 'typeStart' && !this.typingUsers.find(tu => tu == userName)) {
+          this.typingUsers.push(userName);
+        } else if(action == 'typeEnd') {
+          this.typingUsers.splice(this.typingUsers.indexOf(this.typingUsers.find(tu => tu == userName)), 1)
+        }
+      }
+    })
 
     socket.emit('roomJoin', this.roomId);
   }

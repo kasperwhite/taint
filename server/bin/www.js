@@ -165,6 +165,10 @@ io.on('connection', (client) => {
     })
   })
 
+  client.on('roomUserType', ({ roomId, userName, action }) => {
+    io.sockets.in(`${roomId}`).emit('roomUserType', { userName, action });
+  })
+
   client.on('groupKeyRequest', data => {
     io.in(`${data.roomId}`).clients(async (err, clients) => {
       clients = clients.map(cId => (io.sockets.connected[cId]));

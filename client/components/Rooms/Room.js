@@ -8,6 +8,23 @@ import { MD5 } from 'crypto-js';
 
 import Loading from '../Shared/Loading';
 
+const UserTypingComponent = (props) => {
+  const typingUsers = props.typingUsers;
+  return (
+    <View style={{ width: '100%', alignSelf: 'flex-end', paddingVertical: 3, paddingHorizontal: 15 }}>
+      <Text style={{ color: '#797575', fontStyle: 'italic', fontSize: 16 }}>
+        { 
+          typingUsers.length 
+          ? typingUsers.length > 2 
+            ? `${typingUsers[0]} and other ${typingUsers.length-1} is typing ...` 
+            : `${typingUsers.join(' and ')} is typing ...` 
+          : ''
+        }
+      </Text>
+    </View>
+  )
+}
+
 const EstablishStatusComponent = (props) => (
   <View style={{flexDirection: 'column', alignItems: 'center', width: 200}}>
     <Icon
@@ -55,7 +72,8 @@ class Room extends Component {
     super(props)
 
     this.state = {
-      message: ''
+      message: '',
+      typingTimeoutId: ''
     }
   }
 
@@ -137,11 +155,21 @@ class Room extends Component {
     this.props.roomMessageStore.refresh = false;
   }
 
+  onUserType = (text) => {
+    this.setState({ message: text });
+    this.props.roomMessageStore.emitUserType('typeStart');
+
+    if(this.state.typingTimeoutId){ clearTimeout(this.state.typingTimeoutId) }
+    this.state.typingTimeoutId = setTimeout(() => {
+      this.props.roomMessageStore.emitUserType('typeEnd');
+    }, 3000)
+  }
+
   render(){
     const room = this.props.roomStore.getRoom(this.props.roomMessageStore.roomId);
     const { establishStandby, establishIsLoading, requestGroupKeyIsLoading, 
       requestGroupKeyError, messagesIsLoading, messagesIsSuccess, messagesIsLoaded, 
-      messages, postMessageIsLoading, roomType} = this.props.roomMessageStore;
+      messages, postMessageIsLoading, roomType, typingUsers} = this.props.roomMessageStore;
 
     if(establishStandby && roomType == 'secure'){
       return(
@@ -190,6 +218,9 @@ class Room extends Component {
               removeClippedSubviews={true}
               onContentSizeChange={this.onContentSizeChange}
             />
+            <UserTypingComponent
+              typingUsers={toJS(typingUsers)}
+            />
             <View style={styles.messageInputCont}>
               <Input
                 placeholder='Type message...'
@@ -197,7 +228,7 @@ class Room extends Component {
                 containerStyle={{width: '84%', paddingHorizontal: 0}}
                 inputContainerStyle={styles.messageInput}
                 inputStyle={{fontSize: 20, borderColor: '#222222', paddingVertical: 5}}
-                onChangeText={(text) => this.setState({ message: text })}
+                onChangeText={this.onUserType}
                 value={this.state.message}
                 multiline
               />
