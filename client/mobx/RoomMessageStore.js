@@ -165,6 +165,7 @@ class ObservableRoomMessageStore {
 
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
+      roomStore.rooms.find(r => r._id == this.roomId).hasNewMessage = false;
     });
     socket.on('roomUserType', ({ userName, action }) => {
       if(userName != authStore.user.username){
@@ -175,6 +176,9 @@ class ObservableRoomMessageStore {
         }
       }
     })
+
+    roomStore.rooms.find(r => r._id == this.roomId).hasNewMessage = false;
+    roomStore.pushRoomToTop(this.roomId);
 
     socket.emit('roomJoin', this.roomId);
   }

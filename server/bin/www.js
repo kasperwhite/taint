@@ -183,6 +183,14 @@ io.on('connection', (client) => {
 
   client.on('messageCreate', ({message, roomId}) => {
     io.sockets.in(`${roomId}`).emit('messageCreate', message);
+
+    const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
+    roomUsers.forEach((ru) => {
+      const receiver = activeUsers.find((au) => au.userId == ru);
+      if(receiver){
+        client.to(`${receiver.socketId}`).emit('newMessage', roomId);
+      }
+    })
   })
 
   client.on('roomDeleteForActive', roomId => {

@@ -31,7 +31,10 @@ class ObservableRoomStore {
   @action.bound async getRooms() {
     const result = await this.fetchGetRooms();
     this.roomsIsSuccess = result.success;
-    if(result.success){ this.rooms = result.res }
+    if(result.success){
+      this.rooms = result.res;
+      this.rooms.forEach(r => r.hasNewMessage = false);
+    }
     return result;
   }
 
@@ -138,12 +141,17 @@ class ObservableRoomStore {
       }
       this.roomList = rooms;
     })
+    socket.on('newMessage', roomId => {
+      this.pushRoomToTop(roomId);
+      this.rooms.find(r => r._id == roomId).hasNewMessage = true;
+    })
   }
 
   @action removeSocketListeners() {
     socket.removeEventListener('roomCreate');
     socket.removeEventListener('roomDelete');
-    socket.removeEventListener('roomUnlocked')
+    socket.removeEventListener('roomUnlocked');
+    socket.removeEventListener('newMessage');
   }
 
   @action async obtainNotificationPermission() {
@@ -177,6 +185,12 @@ class ObservableRoomStore {
 
   @action async deleteRoomKey(roomId) {
     await AsyncStorage.removeItem(`room/${roomId}/groupKey`);
+  }
+
+  @action pushRoomToTop(roomId) {
+    const room = JSON.parse(JSON.stringify(this.rooms.find(r => r._id == roomId)));
+    this.rooms.splice(this.rooms.indexOf(this.rooms.find(r => r._id == roomId)), 1);
+    this.rooms.push(room)
   }
 
 }
