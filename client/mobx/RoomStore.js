@@ -38,6 +38,7 @@ class ObservableRoomStore {
           r.hasNewMessage = true;
         }
       })
+      this.rooms = this.rooms.slice().sort((a,b) => { return new Date(a.lastUpdate) - new Date(b.lastUpdate) })
     }
     return result;
   }

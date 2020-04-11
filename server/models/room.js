@@ -32,7 +32,11 @@ const roomSchema = new mongoose.Schema({
   },
   newForUsers: [{
     type: String
-  }]
+  }],
+  lastUpdate: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true
 })
