@@ -30,21 +30,21 @@ class ObservableRoomUserStore {
   }
 
   @action.bound async postRoomUsers(room, users) {
-    const result = await this.fetchPostUsers(room._id, {users});
+    const result = await this.fetchPostUsers(room._id, { users });
     this.postUsersSuccess = result.success;
     if(result.success){
       this.roomUsers = this.sort(result.res);
-      socket.emit('roomUserAdd', { room, users });
+      socket.emit('roomUserAdd', { room, users: users.map(u => u._id), usernames: users.map(u => u.username), execName: authStore.user.username });
     };
     return result;
   }
 
-  @action.bound async deleteRoomUser(roomId, userId) {
+  @action.bound async deleteRoomUser(roomId, userId, userName) {
     const result = await this.fetchDeleteUser(roomId, userId);
     this.deleteUserSuccess = result.success;
     if(result.success){
       this.roomUsers = this.sort(result.res);
-      socket.emit('roomUserDelete', {roomId, userId});
+      socket.emit('roomUserDelete', {roomId, userId, userName, execName: authStore.user.username});
     };
     return result;
   }

@@ -52,6 +52,18 @@ class ObservableRoomMessageStore {
   }
 
   @action resetEstablish = () => {
+    this.roomId = '';
+    this.roomType = '';
+    this.roomKey = '';
+    this.roomMessages = [];
+
+    this.messagesIsLoading = false;
+    this.messagesIsLoaded = false;
+    this.messagesIsSuccess = false;
+
+    this.postMessageIsLoading = false;
+    this.postMessageIsSuccess = false;
+
     this.allSocketUsers = [];
     this.joinedSocketUsers = [];
     this.typingUsers = [];
@@ -82,7 +94,7 @@ class ObservableRoomMessageStore {
     this.messagesIsSuccess = result.success;
     if(result.success){
       const messages = result.res;
-      if(this.roomType == 'secure'){ messages.forEach(m => { m.text = this.decryptMessage(m.text) }) }
+      if(this.roomType == 'secure'){ messages.forEach(m => { m.text = m.senderType == 'system' ? m.text : this.decryptMessage(m.text) }) }
       this.roomMessages = messages.reverse();
     }
     return result;
@@ -161,12 +173,12 @@ class ObservableRoomMessageStore {
     socket.on('messageCreate', async message => {
       message = JSON.parse(message);
 
-      if(this.roomType == 'secure'){ message.text = this.decryptMessage(message.text) }
+      if(this.roomType == 'secure' && message.senderType != 'system'){ message.text = this.decryptMessage(message.text) }
 
       this.roomMessages.unshift(message);
       this.postMessageIsLoading = false;
       
-      roomStore.pushRoomToTop(this.roomId);
+      // roomStore.pushRoomToTop(this.roomId);
     });
     socket.on('roomUserTyping', ({ userName, action }) => {
       if(userName != authStore.user.username){
@@ -180,19 +192,19 @@ class ObservableRoomMessageStore {
 
     roomStore.rooms.find(r => r._id == this.roomId).hasNewMessage = false;
 
-    socket.emit('roomJoin', this.roomId);
+    socket.emit('roomJoin', {roomId: this.roomId, userId: authStore.user._id});
   }
 
   @action.bound leaveRoom() {
+    socket.emit('roomLeave', this.roomId);
     socket.removeEventListener('messageCreate');
     socket.removeEventListener('joinedUsers');
+    socket.removeEventListener('roomUserTyping');
     this.removeEstablishListeners();
 
     this.roomKey = '';
     this.requestGroupKeyError = false;
     this.roomMessages = [];
-
-    socket.emit('roomLeave', this.roomId);
   }
 
   @action addEstablishListeners() {

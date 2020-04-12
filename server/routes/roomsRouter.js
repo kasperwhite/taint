@@ -151,6 +151,7 @@ roomsRouter.route('/:roomId/messages')
   if(room){ // TODO: refactor
     if(room.users.includes(req.user._id) && !room.locked){
       req.body.sender = req.user._id;
+      req.body.senderType = 'user';
 
       let message = await MessageModel.create(req.body);
       room.messages.push(message._id);

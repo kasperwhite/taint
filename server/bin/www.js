@@ -21,6 +21,7 @@ const httpsOptions = {
 }
 const secureServer = require('https').createServer(httpsOptions, app);
 
+const createSystemMessage = require('../services/roomService').createSystemMessage;
 const addToNewForUsers = require('../services/roomService').addToNewForUsers;
 const removeFromNewForUsers = require('../services/roomService').removeFromNewForUsers;
 const roomDeleteDb = require('../services/roomService').roomDeleteDb;
@@ -153,12 +154,12 @@ io.on('connection', (client) => {
   })
 
   /* Room events */
-  client.on('roomJoin', async roomId => {
+  client.on('roomJoin', async ({roomId, userId}) => {
     client.join(`${roomId}`);
     if(activeRooms.find(r => r._id == roomId).type == 'secure'){
       establishTry(roomId);
     }
-    removeFromNewForUsers(roomId, activeUsers.find(au => au.socketId == client.id).userId)
+    removeFromNewForUsers(roomId, userId)
   })
 
   client.on('roomLeave', roomId => {
@@ -184,29 +185,11 @@ io.on('connection', (client) => {
     })
   })
 
-  client.on('messageCreate', ({message, roomId}) => {
-    io.sockets.in(`${roomId}`).emit('messageCreate', message);
-
-    io.in(`${roomId}`).clients(async (err, clients) => {
-      const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
-
-      roomUsers.forEach((ru) => {
-        const receiver = activeUsers.find((au) => au.userId == ru);
-        if(receiver && !clients.includes(receiver.socketId)){
-          client.to(`${receiver.socketId}`).emit('newMessage', roomId);
-          addToNewForUsers(roomId, ru);
-        } else if(!receiver) {
-          addToNewForUsers(roomId, ru);
-        }
-      })
-    })
+  client.on('messageCreate', ({ message, roomId }) => {
+    sendMessage({ message, roomId });
   })
 
-  client.on('roomDeleteForActive', roomId => {
-    io.sockets.in(`${roomId}`).emit('roomDeleteForActive', roomId);
-  })
-
-  client.on('roomUserAdd', ({room, users}) => {
+  client.on('roomUserAdd', ({room, users, usernames, execName}) => {
     activeRooms.forEach(r => r.users = r._id == room._id ? r.users.concat(users) : r.users)
     users.forEach((u) => {
       const receiver = activeUsers.find((au) => au.userId == u);
@@ -214,20 +197,33 @@ io.on('connection', (client) => {
         client.to(`${receiver.socketId}`).emit('roomCreate', room);
       }
     })
+    sendSystemMessage({
+      text: `${execName} invited ${usernames.join(', ')}`,
+      roomId: room._id
+    })
   })
 
-  client.on('roomUserDelete', ({roomId, userId}) => {
+  client.on('roomUserDelete', ({roomId, userId, userName, execName}) => {
     try {
       const receiver = activeUsers.find((au) => au.userId == userId);
+      let systemMessageText = '';
+
       activeRooms.forEach(r => r.users = r._id == roomId ? r.users.filter(u => u != userId) : r.users)
       if(receiver) {
         if(receiver.socketId == client.id) {
           client.emit('roomDelete', roomId);
+          systemMessageText = `${execName} left the room`
         } else {
           client.to(`${receiver.socketId}`).emit('roomDelete', roomId);
+          systemMessageText = `${execName} kicked ${userName}`;
         }
       }
+
       establishTry(roomId);
+      sendSystemMessage({
+        text: systemMessageText,
+        roomId
+      })
     } catch(err) {
       console.log(err)
     }
@@ -279,6 +275,35 @@ io.on('connection', (client) => {
         }
       }
     });
+  }
+
+  sendMessage = ({ message, roomId }) => {
+    io.sockets.in(`${roomId}`).emit('messageCreate', message);
+
+    io.in(`${roomId}`).clients(async (err, clients) => {
+
+      const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
+      roomUsers.forEach((ru) => {
+        const receiver = activeUsers.find((au) => au.userId == ru);
+        if(receiver && !clients.includes(receiver.socketId)){
+          console.log('New mess sent to online user', receiver.userId)
+          client.to(`${receiver.socketId}`).emit('newMessage', roomId);
+          addToNewForUsers(roomId, ru);
+        } else if(!receiver) {
+          console.log('New mess sent to offline user', receiver.userId)
+          addToNewForUsers(roomId, ru);
+        }
+      })
+    })
+  }
+
+  sendSystemMessage = ({ text, roomId }) => {
+    let message = { text, senderType: 'system' };
+    createSystemMessage(roomId, message)
+    .then(message => {
+      message = JSON.stringify(message);
+      sendMessage({ message, roomId });
+    })
   }
 
 });

@@ -6,6 +6,7 @@ import { sendRequest, socket } from './NetService';
 import * as Permissions from 'expo-permissions';
 import { Notifications } from 'expo';
 import { AsyncStorage } from "react-native";
+import roomMessageStore from "./RoomMessageStore";
 
 class ObservableRoomStore {
   @observable rooms = [];
@@ -147,8 +148,10 @@ class ObservableRoomStore {
       this.roomList = rooms;
     })
     socket.on('newMessage', roomId => {
-      this.pushRoomToTop(roomId);
-      this.rooms.find(r => r._id == roomId).hasNewMessage = true;
+      // this.pushRoomToTop(roomId);
+      const rooms = toJS(this.rooms);
+      rooms.find(r => r._id == roomId).hasNewMessage = true;
+      this.rooms = rooms;
     })
   }
 
@@ -175,7 +178,6 @@ class ObservableRoomStore {
     Notifications.presentLocalNotificationAsync({
       title: 'New room',
       body: `You were invited to the room ${roomName}. ${roomType == 'secure' ? 'You should join for group key establishment.' : ''}`,
-      //body: 'Please check new room ' + roomName + ' for the group key establishment',
       ios: {
         sound: true
       },
@@ -193,9 +195,12 @@ class ObservableRoomStore {
   }
 
   @action pushRoomToTop(roomId) {
-    const room = JSON.parse(JSON.stringify(this.rooms.find(r => r._id == roomId)));
-    this.rooms.splice(this.rooms.indexOf(this.rooms.find(r => r._id == roomId)), 1);
-    this.rooms.push(room)
+    let room = this.rooms.find(r => r._id == roomId);
+    if(room){
+      room = JSON.parse(JSON.stringify(room));
+      this.rooms.splice(this.rooms.indexOf(room), 1);
+      this.rooms.push(room)
+    }
   }
 
 }

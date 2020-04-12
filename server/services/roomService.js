@@ -2,6 +2,20 @@ const RoomModel = require('../models/room');
 const MessageModel = require('../models/message');
 const constants = require('./constants');
 
+exports.createSystemMessage = async (roomId, body) => {
+  try {
+    let room = await RoomModel.findById(roomId);
+    let message = await MessageModel.create(body);
+    room.messages.push(message._id);
+    room.lastUpdate = new Date().toString();
+    room = await room.save();
+
+    return message;
+  } catch(err) {
+    console.log(err);
+  }
+}
+
 exports.addToNewForUsers = async (roomId, userId) => {
   try {
     let room = await RoomModel.findById(roomId);

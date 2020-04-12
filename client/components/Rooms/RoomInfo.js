@@ -33,7 +33,7 @@ const AddUserComponent = (props) => (
         type='clear'
       />
     }
-    title={'Add user'}
+    title={'Invite users'}
     titleStyle={{color: '#fff'}}
     containerStyle={styles.infoListItemCont}
   />
@@ -121,7 +121,7 @@ class RoomInfo extends Component {
   handleUsersSelect = async (users) => {
     await this.props.roomUserStore.postRoomUsers(
       this.state.room,
-      users.map(u => u._id)
+      users.map(u => ({ _id: u._id, username: u.username }))
     );
   }
 
@@ -137,7 +137,7 @@ class RoomInfo extends Component {
           text: user._id == this.props.authStore.user._id ? 'Leave' :'Delete',
           style: 'default',
           onPress: () => {
-            this.props.roomUserStore.deleteRoomUser(this.state.room._id, user._id)
+            this.props.roomUserStore.deleteRoomUser(this.state.room._id, user._id, user.username)
           } 
         }
       ]

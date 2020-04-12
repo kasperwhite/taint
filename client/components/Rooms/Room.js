@@ -138,19 +138,27 @@ class Room extends Component {
   }
 
   renderMessage = ({item, index}) => {
-    const isMyMessage = item.sender._id === this.props.authStore.user._id;
-    return(
-      <View
-        style={isMyMessage ? styles.myMessage : styles.message}
-        key={item._id}
-      >
-        <View style={isMyMessage ? styles.myMessageContent : styles.messageContent}>
-          <Text style={styles.messageSender}>{item.sender.username}</Text>
-          <Text style={styles.messageText}>{item.text}</Text>
-          <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
+    if(item.senderType == 'system'){
+      return(
+        <View style={styles.systemMessageCont}>
+          <Text style={styles.systemMessageText}>{item.text}</Text>
         </View>
-      </View>
-    );
+      )
+    } else {
+      const isMyMessage = item.sender._id === this.props.authStore.user._id;
+      return(
+        <View
+          style={isMyMessage ? styles.myMessage : styles.message}
+          key={item._id}
+        >
+          <View style={isMyMessage ? styles.myMessageContent : styles.messageContent}>
+            <Text style={styles.messageSender}>{item.sender.username}</Text>
+            <Text style={styles.messageText}>{item.text}</Text>
+            <Text style={styles.messageTime}>{moment(item.createdAt).format('LT')}</Text>
+          </View>
+        </View>
+      );
+    }
   }
 
   onContentSizeChange = () => {
@@ -342,6 +350,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center'
+  },
+  systemMessageCont: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 5
+  },
+  systemMessageText: {
+    color: '#797575',
+    fontWeight: 'bold',
+    fontSize: 16
   }
 })
 
