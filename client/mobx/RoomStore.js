@@ -36,10 +36,10 @@ class ObservableRoomStore {
       this.rooms = result.res;
       this.rooms.forEach(r => {
         if(r.newForUsers.includes(authStore.user._id)){
-          r.hasNewMessage = true;
+          r.hasUpdate = true;
         }
       })
-      this.rooms = this.rooms.slice().sort((a,b) => { return new Date(a.lastUpdate) - new Date(b.lastUpdate) })
+      this.rooms = this.rooms.slice().sort((a,b) => { return new Date(a.updatedAt) - new Date(b.updatedAt) })
     }
     return result;
   }
@@ -148,9 +148,9 @@ class ObservableRoomStore {
       this.roomList = rooms;
     })
     socket.on('roomUpdate', roomId => {
-      // this.pushRoomToTop(roomId);
+      this.pushRoomToTop(roomId);
       const rooms = toJS(this.rooms);
-      rooms.find(r => r._id == roomId).hasNewMessage = true;
+      rooms.find(r => r._id == roomId).hasUpdate = true;
       this.rooms = rooms;
     })
   }
@@ -159,7 +159,7 @@ class ObservableRoomStore {
     socket.removeEventListener('roomCreate');
     socket.removeEventListener('roomDelete');
     socket.removeEventListener('roomUnlocked');
-    socket.removeEventListener('newMessage');
+    socket.removeEventListener('roomUpdate');
   }
 
   @action async obtainNotificationPermission() {
@@ -195,10 +195,10 @@ class ObservableRoomStore {
   }
 
   @action pushRoomToTop(roomId) {
-    let room = this.rooms.find(r => r._id == roomId);
+    let room = toJS(this.rooms).find(r => r._id == roomId);
     if(room){
       room = JSON.parse(JSON.stringify(room));
-      this.rooms.splice(this.rooms.indexOf(room), 1);
+      this.rooms = this.rooms.filter(r => r._id != roomId);
       this.rooms.push(room)
     }
   }

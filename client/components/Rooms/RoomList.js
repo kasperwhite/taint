@@ -116,7 +116,7 @@ class RoomList extends Component {
         titleStyle={styles.roomTitle}
         onPress={() => this.enterRoom(item._id, item.name, item.type)}
         rightElement={
-          item.hasNewMessage
+          item.hasUpdate
           ? <Badge badgeStyle={{ backgroundColor: '#09C709', width: 10, height: 10, borderColor: '#09C709' }} />
           : null
         }
