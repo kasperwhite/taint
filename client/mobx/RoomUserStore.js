@@ -35,6 +35,7 @@ class ObservableRoomUserStore {
     if(result.success){
       this.roomUsers = this.sort(result.res);
       socket.emit('roomUserAdd', { room, users: users.map(u => u._id), usernames: users.map(u => u.username), execName: authStore.user.username });
+      socket.emit('roomUpdate', room._id);
     };
     return result;
   }
@@ -45,6 +46,7 @@ class ObservableRoomUserStore {
     if(result.success){
       this.roomUsers = this.sort(result.res);
       socket.emit('roomUserDelete', {roomId, userId, userName, execName: authStore.user.username});
+      socket.emit('roomUpdate', roomId);
     };
     return result;
   }

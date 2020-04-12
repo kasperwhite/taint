@@ -189,6 +189,22 @@ io.on('connection', (client) => {
     sendMessage({ message, roomId });
   })
 
+  client.on('roomUpdate', roomId => {
+    io.in(`${roomId}`).clients(async (err, clients) => {
+
+      const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
+      roomUsers.forEach((ru) => {
+        const receiver = activeUsers.find((au) => au.userId == ru);
+        if(receiver && !clients.includes(receiver.socketId)){
+          client.to(`${receiver.socketId}`).emit('roomUpdate', roomId);
+          addToNewForUsers(roomId, ru);
+        } else if(!receiver) {
+          addToNewForUsers(roomId, ru);
+        }
+      })
+    })
+  })
+
   client.on('roomUserAdd', ({room, users, usernames, execName}) => {
     activeRooms.forEach(r => r.users = r._id == room._id ? r.users.concat(users) : r.users)
     users.forEach((u) => {
@@ -279,22 +295,6 @@ io.on('connection', (client) => {
 
   sendMessage = ({ message, roomId }) => {
     io.sockets.in(`${roomId}`).emit('messageCreate', message);
-
-    io.in(`${roomId}`).clients(async (err, clients) => {
-
-      const roomUsers = activeRooms.find(ar => ar._id == roomId).users;
-      roomUsers.forEach((ru) => {
-        const receiver = activeUsers.find((au) => au.userId == ru);
-        if(receiver && !clients.includes(receiver.socketId)){
-          console.log('New mess sent to online user', receiver.userId)
-          client.to(`${receiver.socketId}`).emit('newMessage', roomId);
-          addToNewForUsers(roomId, ru);
-        } else if(!receiver) {
-          console.log('New mess sent to offline user', receiver.userId)
-          addToNewForUsers(roomId, ru);
-        }
-      })
-    })
   }
 
   sendSystemMessage = ({ text, roomId }) => {

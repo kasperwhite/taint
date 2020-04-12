@@ -111,6 +111,7 @@ class ObservableRoomMessageStore {
     if(result.success){
       const message = result.res;
       socket.emit('messageCreate', {message: JSON.stringify(message), roomId});
+      socket.emit('roomUpdate', roomId);
     }
     return result
   }

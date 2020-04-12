@@ -147,7 +147,7 @@ class ObservableRoomStore {
       }
       this.roomList = rooms;
     })
-    socket.on('newMessage', roomId => {
+    socket.on('roomUpdate', roomId => {
       // this.pushRoomToTop(roomId);
       const rooms = toJS(this.rooms);
       rooms.find(r => r._id == roomId).hasNewMessage = true;
