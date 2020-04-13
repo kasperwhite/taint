@@ -21,4 +21,4 @@ export const sendRequest = async (url, method, headers, data) => {
   }
 }
 
-export const socket = io.connect(serverUrl, { secure: true });
+export const socket = io(serverUrl);
