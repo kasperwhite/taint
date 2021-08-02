@@ -9,7 +9,7 @@ const debug = require('debug')('server:server');
 const server = require('http').createServer(app);
 const moment = require('moment');
 
-const fs = require('fs');
+/* const fs = require('fs');
 const httpsOptions = {
   key: fs.readFileSync(__dirname + '/ssl/taintkey.key', 'utf8'),
   cert: fs.readFileSync(__dirname + '/ssl/taintcert.pem', 'utf8'),
@@ -19,7 +19,7 @@ const httpsOptions = {
   ]
   
 }
-const secureServer = require('https').createServer(httpsOptions, app);
+const secureServer = require('https').createServer(httpsOptions, app); */
 
 const createSystemMessage = require('../services/roomService').createSystemMessage;
 const addToNewForUsers = require('../services/roomService').addToNewForUsers;
