@@ -1,6 +1,6 @@
 # Taint Messenger
 
-Taint Messenger is a a service that allows a group of people to exchange information safely and anonymously.
+Taint Messenger is a service that allows a group of people to exchange information safely and anonymously.
 
 - Safe group communication
 - Сontact management
