@@ -10,13 +10,13 @@
     "db-server": "cd C:/Program Files/MongoDB/Server/4.2/bin && mongod --dbpath=C:/Projects/taint/db/data --bind_ip 127.0.0.1"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
     "crypto-js": "^3.1.9-1",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "~4.18.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
